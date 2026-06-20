@@ -324,33 +324,51 @@
             -webkit-text-fill-color: transparent;
             white-space: nowrap;
         }
+
+        /* ===== ИСПРАВЛЕНА КНОПКА КОПИРОВАТЬ ===== */
         .earn-card .ref-link-mini {
             background: rgba(0, 10, 0, 0.4);
             border-radius: 10px;
-            padding: 6px 10px;
+            padding: 8px 12px;
             border: 1px solid rgba(76, 175, 80, 0.06);
-            font-size: 11px;
-            color: #8aaa8a;
-            word-break: break-all;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             margin: 6px 0;
         }
+        .earn-card .ref-link-mini .ref-text {
+            flex: 1;
+            word-break: break-all;
+            font-size: 11px;
+            color: #8aaa8a;
+            line-height: 1.4;
+        }
         .earn-card .ref-link-mini .copy-mini {
-            background: rgba(76, 175, 80, 0.12);
+            background: rgba(76, 175, 80, 0.2);
             border: none;
             color: #69f0ae;
-            padding: 3px 10px;
+            padding: 8px 18px;
             border-radius: 16px;
-            font-size: 10px;
+            font-size: 12px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             transition: 0.3s;
             white-space: nowrap;
+            flex-shrink: 0;
+            display: inline-block;
+            min-width: 90px;
+            text-align: center;
+            z-index: 10;
+            position: relative;
         }
-        .earn-card .ref-link-mini .copy-mini:hover { background: rgba(76, 175, 80, 0.2); }
+        .earn-card .ref-link-mini .copy-mini:hover {
+            background: rgba(76, 175, 80, 0.35);
+            transform: scale(1.02);
+        }
+        .earn-card .ref-link-mini .copy-mini:active {
+            transform: scale(0.95);
+        }
         .earn-card .earn-btn {
             width: 100%;
             padding: 10px;
@@ -384,12 +402,8 @@
         .stats-grid .stat-item .icon { font-size: 16px; display: block; margin-bottom: 2px; }
 
         .reviews-scroll {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 4px 0 8px;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory;
+            display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 8px;
+            -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
         }
         .reviews-scroll::-webkit-scrollbar { height: 2px; }
         .reviews-scroll::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
@@ -468,6 +482,7 @@
             font-size: 12px; font-weight: 700; color: #fff;
         }
 
+        /* ===== КОНКУРС iPhone ===== */
         .contest-card {
             background: rgba(0, 30, 0, 0.25);
             backdrop-filter: blur(20px);
@@ -499,6 +514,8 @@
             box-shadow: 0 0 30px rgba(156, 39, 176, 0.3);
             z-index: 1;
         }
+
+        /* ===== ВАШЕ ФОТО iPhone ===== */
         .contest-card .product-image {
             width: 100%;
             border-radius: 16px;
@@ -514,6 +531,7 @@
             transform: scale(1.01);
             border-color: rgba(156, 39, 176, 0.4);
         }
+
         .contest-card h4 {
             color: #ce93d8;
             font-size: 18px;
@@ -525,6 +543,7 @@
             font-size: 13px;
         }
 
+        /* ===== ШКАЛА ПРОГРЕССА ===== */
         .goal-text {
             font-size: 13px;
             color: #8aaa8a;
@@ -634,33 +653,6 @@
         .chart-bar-wrap .cvalue { font-weight: 700; color: #69f0ae; font-size: 12px; min-width: 50px; text-align: right; }
         .chart-bar-wrap.user-row { background: rgba(0, 255, 100, 0.05); border-radius: 10px; border: 1px solid rgba(76, 175, 80, 0.1); }
 
-        .referral-card {
-            background: linear-gradient(135deg, rgba(0, 30, 0, 0.3), rgba(0, 50, 0, 0.1));
-            border-radius: 24px; padding: 24px 20px; text-align: center;
-            border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
-        }
-        .referral-card .ref-icon { font-size: 48px; margin-bottom: 8px; }
-        .referral-card h3 { color: #69f0ae; font-size: 20px; font-weight: 700; }
-        .referral-card p { color: #6a8a6a; font-size: 13px; margin: 6px 0 16px; }
-        .referral-card .ref-link-box {
-            background: rgba(0, 10, 0, 0.5); border-radius: 16px; padding: 12px 16px;
-            border: 1px solid rgba(76, 175, 80, 0.08); color: #a5d6a7; font-size: 13px;
-            word-break: break-all; font-weight: 300; letter-spacing: 0.3px; margin-bottom: 14px; position: relative;
-        }
-        .referral-card .ref-link-box .copy-btn {
-            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-            background: rgba(76, 175, 80, 0.12); border: none; color: #69f0ae;
-            padding: 4px 12px; border-radius: 30px; font-size: 11px; cursor: pointer; font-weight: 600; transition: 0.3s;
-        }
-        .referral-card .ref-link-box .copy-btn:hover { background: rgba(76, 175, 80, 0.2); }
-        .referral-card .ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .referral-card .ref-stats .stat {
-            background: rgba(0, 30, 0, 0.2); border-radius: 14px; padding: 10px;
-            border: 1px solid rgba(76, 175, 80, 0.04);
-        }
-        .referral-card .ref-stats .stat .num { font-size: 22px; font-weight: 900; color: #69f0ae; }
-        .referral-card .ref-stats .stat .lbl { font-size: 11px; color: #6a8a6a; }
-
         .wallet-card {
             background: rgba(0, 30, 0, 0.15); border-radius: 20px; padding: 16px;
             border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
@@ -685,15 +677,29 @@
         .history-item .h-status.done { color: #69f0ae; }
 
         .profile-card {
-            background: rgba(0, 30, 0, 0.15); border-radius: 24px; padding: 24px 20px;
-            border: 1px solid rgba(76, 175, 80, 0.06); text-align: center; backdrop-filter: blur(10px);
+            background: rgba(0, 30, 0, 0.15);
+            border-radius: 24px;
+            padding: 24px 20px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            text-align: center;
+            backdrop-filter: blur(10px);
         }
         .profile-card .avatar {
-            width: 80px; height: 80px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 36px; font-weight: 700; color: #fff;
-            margin: 0 auto 12px; border: 2px solid rgba(76, 175, 80, 0.15);
-            box-shadow: 0 0 40px rgba(0,200,80,0.05); transition: 0.3s;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 auto 12px;
+            border: 2px solid rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 40px rgba(0,200,80,0.05);
+            transition: 0.3s;
+            background-size: cover;
+            background-position: center;
         }
         .profile-card .avatar:hover { transform: scale(1.05); }
         .profile-card .nick { color: #69f0ae; font-size: 24px; font-weight: 800; }
@@ -839,7 +845,7 @@
         <button class="btn-continue" id="btnAgeContinue">Продолжить</button>
     </div>
 
-    <!-- ОСНОВНОЙ ЭКРАН -->
+    <!-- ===== ОСНОВНОЙ ЭКРАН (БЕЗ ВКЛАДКИ РЕФЕРАЛКА) ===== -->
     <div class="main-screen" id="mainScreen">
         <div class="header">
             <div class="promo-badge">⚡ Акция</div>
@@ -863,11 +869,11 @@
         <button class="withdraw-btn disabled" id="withdrawBtn">💸 Вывести деньги</button>
         <div class="withdraw-hint" id="withdrawHint">Накопите 3000 ₽ для вывода</div>
 
+        <!-- ===== ВКЛАДКИ (6 ШТУК, БЕЗ РЕФЕРАЛКИ) ===== -->
         <div class="tabs">
             <button class="tab-btn active" data-tab="tabFeed">🏠</button>
             <button class="tab-btn" data-tab="tabContests">🎁</button>
             <button class="tab-btn" data-tab="tabLeaders">🏆</button>
-            <button class="tab-btn" data-tab="tabReferral">🔗</button>
             <button class="tab-btn" data-tab="tabWallet">💰</button>
             <button class="tab-btn" data-tab="tabProfile">👤</button>
             <button class="tab-btn" data-tab="tabHelp">📖</button>
@@ -889,8 +895,8 @@
                     <span class="amount-big">+300 ₽</span>
                 </div>
                 <div class="ref-link-mini" id="refLinkMini">
-                    <span id="refLinkMiniText">https://t.me/Green_marketBot?start=...</span>
-                    <button class="copy-mini" id="copyRefLinkMini">Копировать</button>
+                    <span class="ref-text" id="refLinkMiniText">https://t.me/Green_marketBot?start=GM3900</span>
+                    <button class="copy-mini" id="copyRefLinkMini">📋 Копировать</button>
                 </div>
                 <button class="earn-btn" id="earnInviteBtn">🚀 Пригласить друга</button>
             </div>
@@ -920,11 +926,11 @@
             <div class="online-ribbon" id="onlineRibbon"></div>
         </div>
 
-        <!-- КОНКУРСЫ (iPhone) -->
+        <!-- КОНКУРСЫ -->
         <div class="tab-content" id="tabContests">
             <div class="contest-card" id="iphoneCard">
                 <span class="prize-badge">🏆 ГЛАВНЫЙ ПРИЗ</span>
-                <img class="product-image" src="https://imgfy.ru/ib/3o6DMaB9r3n3slA_1781952994.webp" alt="iPhone 17 Pro Max" id="iphoneImg">
+                <img class="product-image" src="https://imgfy.ru/ib/fkgtDZGfNawRlKL_1781976450.webp" alt="iPhone 17 Pro Max" id="iphoneImg">
                 <h4>📱 iPhone 17 Pro Max</h4>
                 <p>Белый · 256GB · Розыгрыш</p>
                 <div class="goal-text">
@@ -956,29 +962,6 @@
             </div>
         </div>
 
-        <!-- РЕФЕРАЛКА -->
-        <div class="tab-content" id="tabReferral">
-            <div class="referral-card">
-                <div class="ref-icon">🔗</div>
-                <h3>Реферальная ссылка</h3>
-                <p>Приглашайте друзей и получайте <strong style="color:#fdd835;">300 ₽</strong> за каждого!</p>
-                <div class="ref-link-box" id="refLinkBox">
-                    <span id="refLinkText">https://t.me/Green_marketBot?start=...</span>
-                    <button class="copy-btn" id="copyRefLink">Копировать</button>
-                </div>
-                <div class="ref-stats">
-                    <div class="stat">
-                        <div class="num" id="refInvites">0</div>
-                        <div class="lbl">Приглашено</div>
-                    </div>
-                    <div class="stat">
-                        <div class="num" id="refEarned">0</div>
-                        <div class="lbl">Заработано ₽</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- КОШЕЛЁК -->
         <div class="tab-content" id="tabWallet">
             <div class="wallet-card">
@@ -999,12 +982,13 @@
             <div id="walletHistory"></div>
         </div>
 
-        <!-- ПРОФИЛЬ С ОТЗЫВАМИ -->
+        <!-- ПРОФИЛЬ -->
         <div class="tab-content" id="tabProfile">
             <div class="profile-card">
                 <div class="avatar" id="profileAvatar">👤</div>
                 <div class="nick" id="profileNick">Гость</div>
                 <div class="info">🆔 <span id="profileId">#GM0000</span></div>
+                <div class="info">📱 Telegram: <span id="profileTelegram">@username</span></div>
                 
                 <div class="stat-grid">
                     <div class="item">
@@ -1140,12 +1124,15 @@
         slideAge.classList.add('active');
     });
 
-    ageCheck.addEventListener('change', () => {
-        btnAgeContinue.classList.toggle('active', ageCheck.checked);
+    ageCheck.addEventListener('change', function() {
+        btnAgeContinue.classList.toggle('active', this.checked);
     });
-    ageCheckWrap.addEventListener('click', () => {
-        ageCheck.checked = !ageCheck.checked;
-        btnAgeContinue.classList.toggle('active', ageCheck.checked);
+
+    ageCheckWrap.querySelector('label').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const checkbox = document.getElementById('ageCheck');
+        checkbox.checked = !checkbox.checked;
+        btnAgeContinue.classList.toggle('active', checkbox.checked);
     });
 
     btnAgeContinue.addEventListener('click', () => {
@@ -1162,19 +1149,39 @@
         let invites = parseInt(sessionStorage.getItem('swill_invites')) || 0;
         const WITHDRAW_THRESHOLD = 3000;
 
-        const nicks = [
-            'MC Грегор', 'NektoS', 'SkyWolfWalker', 'K1A', 'Zayka_3', 'CryptoKing',
-            'Ghost_FPS', 'Lil_Pump', 'Boss_420', 'DiamondHands', 'MoonBoy',
-            'CyberPunk', 'FrostByte', 'ShadowStrike', 'NightHawk', 'StormBreaker'
-        ];
+        // Telegram данные
+        let tgUser = null;
+        let tgUsername = '';
+        let tgFirstName = '';
+        let tgAvatar = '';
+        let tgId = '';
 
-        function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-        let profileNick = sessionStorage.getItem('swill_nick');
-        if (!profileNick) {
-            profileNick = randomItem(nicks);
-            sessionStorage.setItem('swill_nick', profileNick);
+        try {
+            const tg = window.Telegram?.WebApp;
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                tgUser = tg.initDataUnsafe.user;
+                tgUsername = tgUser.username || '';
+                tgFirstName = tgUser.first_name || '';
+                tgAvatar = tgUser.photo_url || '';
+                tgId = tgUser.id || '';
+                console.log('✅ Telegram user loaded:', tgFirstName);
+            }
+        } catch (e) {
+            console.log('⚠️ Telegram WebApp not available');
         }
+
+        if (!tgFirstName) {
+            const nicks = ['MC Грегор', 'NektoS', 'SkyWolfWalker', 'K1A', 'Zayka_3', 'CryptoKing', 'Ghost_FPS', 'Lil_Pump', 'Boss_420', 'DiamondHands', 'MoonBoy', 'CyberPunk', 'FrostByte', 'ShadowStrike', 'NightHawk', 'StormBreaker'];
+            function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+            tgFirstName = sessionStorage.getItem('swill_nick') || randomItem(nicks);
+            tgUsername = tgFirstName.toLowerCase().replace(/\s/g, '');
+            tgId = 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
+        }
+
+        const profileNick = tgFirstName;
+        const profileTelegram = tgUsername ? '@' + tgUsername : '@' + profileNick.toLowerCase().replace(/\s/g, '');
+        const profileId = tgId || 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
+        const userAvatar = tgAvatar || null;
 
         const balanceEl = document.getElementById('balanceDisplay');
         const ticketDisplay = document.getElementById('ticketDisplay');
@@ -1184,6 +1191,21 @@
         const walletInvites = document.getElementById('walletInvites');
         const withdrawBtn = document.getElementById('withdrawBtn');
         const hintEl = document.getElementById('withdrawHint');
+
+        // ===== КНОПКА КОПИРОВАТЬ =====
+        document.getElementById('copyRefLinkMini').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const link = document.getElementById('refLinkMiniText').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                this.textContent = '✅ Скопировано!';
+                setTimeout(() => {
+                    this.textContent = '📋 Копировать';
+                }, 2000);
+                createConfetti(['confetti-green', 'confetti-gold'], 30);
+            }).catch(() => {
+                alert('🔗 Ссылка: ' + link);
+            });
+        });
 
         // ===== ОТЗЫВЫ =====
         const reviewData = [
@@ -1227,8 +1249,6 @@
             document.getElementById('pTickets').textContent = tickets;
             document.getElementById('pInvites').textContent = invites;
             document.getElementById('pBalance').textContent = balance;
-            document.getElementById('refInvites').textContent = invites;
-            document.getElementById('refEarned').textContent = (invites * 300).toLocaleString();
             document.getElementById('leaderTickets').textContent = tickets;
 
             const place = getPlace();
@@ -1247,13 +1267,12 @@
             checkContestProgress();
         }
 
-        // ===== КОНКУРС (iPhone) =====
+        // ===== КОНКУРС =====
         let iphoneCompleted = false;
 
         function checkContestProgress() {
             const iphoneInvites = Math.min(invites, 15);
             document.getElementById('iphoneInvites').textContent = iphoneInvites;
-
             const iphonePercent = (iphoneInvites / 15 * 100);
             document.getElementById('iphoneProgress').style.width = iphonePercent + '%';
             document.getElementById('iphoneLabel').textContent = Math.round(iphonePercent) + '%';
@@ -1272,7 +1291,6 @@
             }
         }
 
-        // ===== МЕСТО В ТОПЕ =====
         function getPlace() {
             const allData = [...leaderData];
             if (tickets > 0) allData.push({ name: profileNick, tickets: tickets });
@@ -1281,12 +1299,15 @@
             return index >= 0 ? '#' + (index + 1) : '#--';
         }
 
-        // ===== ЛЕНТА ВЫВОДОВ =====
+        // ===== ЛЕНТА =====
         const timeOptions = ['только что', '1 мин', '2 мин', '5 мин', '10 мин', '15 мин', '20 мин', '30 мин', '45 мин', '1 ч', '2 ч', '3 ч', '5 ч', '8 ч', '12 ч', 'вчера'];
         const amountOptions = [3200,4500,5100,6800,7300,8200,9400,10100,12500,13800,15200,16700,18400,20300,22600,25400,28900,31200,34700,38900,41200,45600,50200,57800];
 
+        const feedNicks = ['MC Грегор', 'NektoS', 'SkyWolfWalker', 'K1A', 'Zayka_3', 'CryptoKing', 'Ghost_FPS', 'Lil_Pump', 'Boss_420', 'DiamondHands', 'MoonBoy', 'CyberPunk', 'FrostByte', 'ShadowStrike', 'NightHawk', 'StormBreaker'];
+        function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
         function genFeedCard() {
-            return { name: randomItem(nicks), amount: randomItem(amountOptions), time: randomItem(timeOptions) };
+            return { name: randomItem(feedNicks), amount: randomItem(amountOptions), time: randomItem(timeOptions) };
         }
 
         const feedScroll = document.getElementById('feedScroll');
@@ -1343,16 +1364,16 @@
 
         // ===== ТОП =====
         const leaderData = [
-            { name: 'SkyWolfWalker', tickets: 28400 },
-            { name: 'K1A', tickets: 23100 },
-            { name: 'Zayka_3', tickets: 19700 },
-            { name: 'MC Грегор', tickets: 16500 },
-            { name: 'NektoS', tickets: 14200 },
-            { name: 'CryptoKing', tickets: 11800 },
-            { name: 'Ghost_FPS', tickets: 9400 },
-            { name: 'Lil_Pump', tickets: 7600 },
-            { name: 'Boss_420', tickets: 5800 },
-            { name: 'ShadowStrike', tickets: 4200 }
+            { name: 'SkyWolfWalker', tickets: 5000 },
+            { name: 'K1A', tickets: 4200 },
+            { name: 'Zayka_3', tickets: 3500 },
+            { name: 'MC Грегор', tickets: 2800 },
+            { name: 'NektoS', tickets: 2200 },
+            { name: 'CryptoKing', tickets: 1700 },
+            { name: 'Ghost_FPS', tickets: 1300 },
+            { name: 'Lil_Pump', tickets: 900 },
+            { name: 'Boss_420', tickets: 600 },
+            { name: 'ShadowStrike', tickets: 350 }
         ];
 
         function getUserRank() {
@@ -1420,31 +1441,24 @@
 
         // ===== ПРОФИЛЬ =====
         document.getElementById('profileNick').textContent = profileNick;
-        document.getElementById('profileId').textContent = 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
+        document.getElementById('profileTelegram').textContent = profileTelegram;
+        document.getElementById('profileId').textContent = typeof tgId === 'string' && tgId.startsWith('GM') ? tgId : 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
+
         const avatarEl = document.getElementById('profileAvatar');
-        avatarEl.style.background = `linear-gradient(135deg, ${randomItem(onlineColors)}, ${randomItem(onlineColors)})`;
-        avatarEl.textContent = profileNick.charAt(0).toUpperCase();
+        if (userAvatar) {
+            avatarEl.style.backgroundImage = `url(${userAvatar})`;
+            avatarEl.style.backgroundSize = 'cover';
+            avatarEl.textContent = '';
+        } else {
+            const color = randomItem(onlineColors);
+            avatarEl.style.background = `linear-gradient(135deg, ${color}, ${randomItem(onlineColors)})`;
+            avatarEl.textContent = profileNick.charAt(0).toUpperCase();
+        }
 
         // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
-        const refLink = 'https://t.me/Green_marketBot?start=' + Math.random().toString(36).substring(7);
-        document.getElementById('refLinkText').textContent = refLink;
+        const userId = tgId || Math.floor(Math.random() * 1000000);
+        const refLink = 'https://t.me/Green_marketBot?start=' + userId;
         document.getElementById('refLinkMiniText').textContent = refLink;
-
-        document.getElementById('copyRefLinkMini').addEventListener('click', function() {
-            navigator.clipboard.writeText(refLink).then(() => {
-                this.textContent = '✅ Скопировано';
-                setTimeout(() => this.textContent = 'Копировать', 2000);
-                createConfetti(['confetti-green', 'confetti-gold'], 30);
-            });
-        });
-
-        document.getElementById('copyRefLink').addEventListener('click', function() {
-            navigator.clipboard.writeText(refLink).then(() => {
-                this.textContent = '✅ Скопировано';
-                setTimeout(() => this.textContent = 'Копировать', 2000);
-                createConfetti(['confetti-green', 'confetti-gold'], 30);
-            });
-        });
 
         // ===== ПРИГЛАШЕНИЕ =====
         window.addRealInvite = function() {
@@ -1501,7 +1515,7 @@
             });
         });
 
-        // ===== МОДАЛКА ВЫВОДА =====
+        // ===== МОДАЛКА =====
         const modal = document.getElementById('withdrawModal');
         const modalSubmit = document.getElementById('modalSubmit');
         const withdrawAmount = document.getElementById('withdrawAmount');
@@ -1602,10 +1616,13 @@
 
         console.log('🔥 GREEN MARKET ЗАПУЩЕН');
         console.log('👤 Пользователь:', profileNick);
+        console.log('📱 Telegram:', profileTelegram);
+        console.log('🆔 ID:', profileId);
         console.log('💰 Баланс:', balance, '₽');
         console.log('📱 Реферальная ссылка:', refLink);
         console.log('💡 Для теста вызовите addRealInvite() в консоли');
-        console.log('📱 Бот: @Green_marketBot');
+        console.log('📸 Фото iPhone: https://imgfy.ru/ib/fkgtDZGfNawRlKL_1781976450.webp');
+        console.log('✅ Вкладка "Рефералка" УДАЛЕНА!');
     }
 </script>
 </body>
