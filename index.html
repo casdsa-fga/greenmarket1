@@ -1079,81 +1079,120 @@
     // ============================================================
     // ===== 1. ПОЛУЧАЕМ ДАННЫЕ TELEGRAM СРАЗУ ПРИ ЗАГРУЗКЕ =====
     // ============================================================
-    let tgUserData = {
-        firstName: 'Гость',
-        username: 'username',
-        id: 'GM0000',
-        avatar: null,
-        isTelegram: false
-    };
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<script>
+
+const tg = window.Telegram?.WebApp;
+
+if (tg) {
+    tg.ready();
+    tg.expand();
+}
+
+let profileNick = 'Гость';
+let profileTelegram = '@guest';
+let profileId = '0';
+let userAvatar = '';
+
+function displayProfile() {
+
+    const nick =
+        document.getElementById('profileNick');
+
+    const username =
+        document.getElementById('profileUsername');
+
+    const id =
+        document.getElementById('profileId');
+
+    const avatar =
+        document.getElementById('profileAvatar');
+
+    if (nick)
+        nick.textContent = profileNick;
+
+    if (username)
+        username.textContent = profileTelegram;
+
+    if (id)
+        id.textContent = '🆔 ' + profileId;
+
+    if (!avatar)
+        return;
+
+    if (userAvatar) {
+
+        avatar.innerHTML =
+            `<img src="${userAvatar}">`;
+
+    } else {
+
+        avatar.innerHTML =
+            profileNick
+                .charAt(0)
+                .toUpperCase();
+
+        avatar.style.background =
+            'linear-gradient(135deg,#2e7d32,#66bb6a)';
+    }
+}
+
+function loadTelegramProfile() {
 
     try {
-        if (window.Telegram && window.Telegram.WebApp) {
-            const tg = window.Telegram.WebApp;
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                const user = tg.initDataUnsafe.user;
-                tgUserData.firstName = user.first_name || 'Гость';
-                tgUserData.username = user.username || 'username';
-                tgUserData.id = user.id || 'GM0000';
-                tgUserData.avatar = user.photo_url || null;
-                tgUserData.isTelegram = true;
-                console.log('✅ Telegram user loaded:', tgUserData.firstName);
-            }
+
+        const user =
+            tg?.initDataUnsafe?.user;
+
+        if (!user) {
+
+            displayProfile();
+            return;
         }
+
+        profileNick =
+            [
+                user.first_name,
+                user.last_name
+            ]
+            .filter(Boolean)
+            .join(' ');
+
+        profileTelegram =
+            user.username
+            ? '@' + user.username
+            : '@telegram';
+
+        profileId =
+            String(user.id);
+
+        userAvatar =
+            user.photo_url || '';
+
+        displayProfile();
+
+        console.log(
+            'Telegram profile loaded'
+        );
+
     } catch (e) {
-        console.log('⚠️ Telegram WebApp not available');
+
+        console.log(
+            'Profile load error',
+            e
+        );
+
+        displayProfile();
     }
+}
 
-    // Если не Telegram — гостевой режим
-    if (!tgUserData.isTelegram || tgUserData.firstName === 'Гость') {
-        const guestNicks = ['MC Грегор', 'NektoS', 'SkyWolfWalker', 'K1A', 'Zayka_3', 'CryptoKing', 'Ghost_FPS', 'Lil_Pump', 'Boss_420', 'DiamondHands', 'MoonBoy', 'CyberPunk', 'FrostByte', 'ShadowStrike', 'NightHawk', 'StormBreaker'];
-        const randomNick = guestNicks[Math.floor(Math.random() * guestNicks.length)];
-        tgUserData.firstName = randomNick;
-        tgUserData.username = randomNick.toLowerCase().replace(/\s/g, '');
-        tgUserData.id = 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
-        tgUserData.avatar = null;
-        tgUserData.isTelegram = false;
-        console.log('👤 Guest mode:', tgUserData.firstName);
-    }
+document.addEventListener(
+    'DOMContentLoaded',
+    loadTelegramProfile
+);
 
-    // ============================================================
-    // ===== 2. СОХРАНЯЕМ ДАННЫЕ В ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ =====
-    // ============================================================
-    let profileNick = tgUserData.firstName;
-    let profileTelegram = tgUserData.username ? '@' + tgUserData.username : '@' + tgUserData.firstName.toLowerCase().replace(/\s/g, '');
-    let profileId = tgUserData.id;
-    let userAvatar = tgUserData.avatar;
-
-    // ============================================================
-    // ===== 3. ОТОБРАЖАЕМ ПРОФИЛЬ СРАЗУ (ДАЖЕ ДО initApp) =====
-    // ============================================================
-    function displayProfile() {
-        const nickEl = document.getElementById('profileNick');
-        const usernameEl = document.getElementById('profileUsername');
-        const idEl = document.getElementById('profileId');
-        const avatarEl = document.getElementById('profileAvatar');
-
-        if (nickEl) nickEl.textContent = profileNick;
-        if (usernameEl) usernameEl.textContent = profileTelegram;
-        if (idEl) idEl.textContent = '🆔 #' + profileId;
-
-        // Аватар
-        if (avatarEl) {
-            if (userAvatar) {
-                avatarEl.style.backgroundImage = `url(${userAvatar})`;
-                avatarEl.style.backgroundSize = 'cover';
-                avatarEl.textContent = '';
-            } else {
-                const colors = ['#1b5e20','#2e7d32','#388e3c','#43a047','#4caf50','#66bb6a','#81c784','#a5d6a7'];
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                avatarEl.style.background = `linear-gradient(135deg, ${randomColor}, ${colors[Math.floor(Math.random() * colors.length)]})`;
-                avatarEl.textContent = profileNick.charAt(0).toUpperCase();
-            }
-        }
-    }
-
-    // Отображаем профиль сразу
-    displayProfile();
+</script>
 
     // ============================================================
     // ===== 4. ПАРТИКЛЫ =====
