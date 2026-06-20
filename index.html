@@ -5,75 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Green Market</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-        body {
-            background: #050a05;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            overflow-x: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background: #050a05; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; overflow-x: hidden; }
         .app {
-            max-width: 420px;
-            width: 100%;
+            max-width: 420px; width: 100%;
             background: linear-gradient(170deg, #071207, #030803);
-            border-radius: 40px;
-            padding: 18px 14px 24px;
+            border-radius: 40px; padding: 18px 14px 24px;
             border: 1px solid rgba(76, 175, 80, 0.15);
-            box-shadow: 0 0 100px rgba(0, 255, 100, 0.03), inset 0 0 100px rgba(0, 255, 100, 0.01);
-            position: relative;
-            overflow: hidden;
-            min-height: 700px;
+            box-shadow: 0 0 100px rgba(0, 255, 100, 0.03);
+            position: relative; overflow: hidden; min-height: 700px;
         }
-
         .bg-grid {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(76, 175, 80, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(76, 175, 80, 0.02) 1px, transparent 1px);
-            background-size: 30px 30px;
-            pointer-events: none;
-            z-index: 0;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(76,175,80,0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(76,175,80,0.02) 1px, transparent 1px);
+            background-size: 30px 30px; pointer-events: none; z-index: 0;
         }
         .bg-glow {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            pointer-events: none;
-            z-index: 0;
+            position: absolute; border-radius: 50%; filter: blur(100px);
+            pointer-events: none; z-index: 0;
         }
         .bg-glow.g1 { width: 400px; height: 400px; background: rgba(0, 200, 80, 0.04); top: -200px; right: -100px; animation: glowPulse 6s ease-in-out infinite; }
         .bg-glow.g2 { width: 300px; height: 300px; background: rgba(255, 215, 0, 0.03); bottom: -100px; left: -100px; animation: glowPulse 8s ease-in-out infinite reverse; }
-        .bg-glow.g3 { width: 200px; height: 200px; background: rgba(156, 39, 176, 0.03); top: 40%; left: 20%; animation: glowPulse 10s ease-in-out infinite; }
-        @keyframes glowPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
+        @keyframes glowPulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
 
-        .particles {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
+        .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
         .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
+            position: absolute; width: 4px; height: 4px;
             background: radial-gradient(circle, #4caf50, transparent);
-            border-radius: 50%;
-            opacity: 0;
+            border-radius: 50%; opacity: 0;
             animation: floatParticle 10s infinite;
         }
         @keyframes floatParticle {
@@ -84,18 +44,11 @@
         }
 
         .confetti-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1000; overflow: hidden;
         }
         .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
+            position: absolute; width: 10px; height: 10px; opacity: 0;
             animation: confettiFall 2.5s ease-out forwards;
         }
         @keyframes confettiFall {
@@ -104,20 +57,14 @@
         }
         .confetti-purple { background: #9c27b0; box-shadow: 0 0 15px #9c27b0; }
         .confetti-red { background: #f44336; box-shadow: 0 0 15px #f44336; }
-        .confetti-pink { background: #e91e63; box-shadow: 0 0 15px #e91e63; }
         .confetti-gold { background: #fdd835; box-shadow: 0 0 15px #fdd835; }
         .confetti-green { background: #4caf50; box-shadow: 0 0 15px #4caf50; }
 
         .slide {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 650px;
-            padding: 20px 10px;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 650px; padding: 20px 10px;
             animation: fadeSlide 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
         }
         .slide.active { display: flex; }
         @keyframes fadeSlide {
@@ -127,50 +74,22 @@
 
         .slide-welcome { text-align: center; }
         .slide-welcome .logo {
-            font-size: 52px;
-            font-weight: 900;
+            font-size: 52px; font-weight: 900;
             background: linear-gradient(135deg, #69f0ae, #00c853, #69f0ae);
             background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: gradientMove 4s ease infinite;
             filter: drop-shadow(0 0 40px rgba(0, 200, 80, 0.2));
         }
-        @keyframes gradientMove {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        .slide-welcome .sub {
-            color: #4caf50;
-            font-size: 14px;
-            letter-spacing: 6px;
-            font-weight: 300;
-            margin: 6px 0 30px;
-            opacity: 0.7;
-        }
-        .slide-welcome .features {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 20px 0 35px;
-        }
+        @keyframes gradientMove { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .slide-welcome .sub { color: #4caf50; font-size: 14px; letter-spacing: 6px; font-weight: 300; margin: 6px 0 30px; opacity: 0.7; }
+        .slide-welcome .features { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 20px 0 35px; }
         .slide-welcome .features span {
-            background: rgba(0, 255, 100, 0.05);
-            padding: 10px 22px;
-            border-radius: 50px;
-            border: 1px solid rgba(76, 175, 80, 0.12);
-            font-size: 13px;
-            font-weight: 600;
-            color: #a5d6a7;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            background: rgba(0, 255, 100, 0.05); padding: 10px 22px; border-radius: 50px;
+            border: 1px solid rgba(76, 175, 80, 0.12); font-size: 13px; font-weight: 600;
+            color: #a5d6a7; backdrop-filter: blur(10px); transition: 0.3s;
         }
-        .slide-welcome .features span:hover {
-            background: rgba(0, 255, 100, 0.1);
-            border-color: rgba(76, 175, 80, 0.3);
-            transform: translateY(-2px);
-        }
+        .slide-welcome .features span:hover { background: rgba(0, 255, 100, 0.1); border-color: rgba(76, 175, 80, 0.3); transform: translateY(-2px); }
         .slide-welcome .btn-start {
             background: linear-gradient(135deg, #fdd835, #f9a825);
             color: #000;
@@ -189,8 +108,7 @@
         }
         .slide-welcome .btn-start::after {
             content: '';
-            position: absolute;
-            top: -50%; left: -50%;
+            position: absolute; top: -50%; left: -50%;
             width: 200%; height: 200%;
             background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
             animation: shimmer 3s infinite;
@@ -200,284 +118,138 @@
             100% { transform: translateX(100%) rotate(45deg); }
         }
         .slide-welcome .btn-start:active { transform: scale(0.95); }
-        .slide-welcome .footer-text {
-            font-size: 11px;
-            color: #3a5a3a;
-            margin-top: 30px;
-            letter-spacing: 0.5px;
-        }
+        .slide-welcome .footer-text { font-size: 11px; color: #3a5a3a; margin-top: 30px; letter-spacing: 0.5px; }
 
         .slide-age { text-align: center; position: relative; }
         .slide-age .age-icon { font-size: 80px; margin-bottom: 15px; filter: drop-shadow(0 0 40px rgba(0,200,80,0.15)); }
         .slide-age h2 { color: #69f0ae; font-size: 24px; margin-bottom: 8px; font-weight: 700; }
         .slide-age p { color: #6a8a6a; font-size: 14px; margin-bottom: 30px; }
         .slide-age .checkbox-wrap {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: rgba(0, 30, 0, 0.3);
-            padding: 16px 24px;
-            border-radius: 20px;
-            border: 1px solid rgba(76, 175, 80, 0.15);
-            margin-bottom: 30px;
-            width: 100%;
-            max-width: 300px;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            display: flex; align-items: center; gap: 14px;
+            background: rgba(0, 30, 0, 0.3); padding: 16px 24px; border-radius: 20px;
+            border: 1px solid rgba(76, 175, 80, 0.15); margin-bottom: 30px;
+            width: 100%; max-width: 300px; cursor: pointer;
+            backdrop-filter: blur(10px); transition: 0.3s;
         }
         .slide-age .checkbox-wrap:hover { border-color: rgba(76, 175, 80, 0.3); transform: scale(1.02); }
-        .slide-age .checkbox-wrap input[type="checkbox"] {
-            width: 22px; height: 22px;
-            accent-color: #4caf50;
-            cursor: pointer;
-        }
-        .slide-age .checkbox-wrap label {
-            color: #b0d0b0;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: 500;
-        }
+        .slide-age .checkbox-wrap input[type="checkbox"] { width: 22px; height: 22px; accent-color: #4caf50; cursor: pointer; }
+        .slide-age .checkbox-wrap label { color: #b0d0b0; font-size: 16px; cursor: pointer; font-weight: 500; }
         .slide-age .btn-continue {
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
-            color: #e0f0e0;
-            padding: 18px 70px;
-            border-radius: 60px;
-            font-weight: 800;
-            font-size: 18px;
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.3;
-            pointer-events: none;
-            box-shadow: 0 0 40px rgba(0,200,80,0);
+            color: #e0f0e0; padding: 18px 70px; border-radius: 60px;
+            font-weight: 800; font-size: 18px;
+            border: 1px solid rgba(76, 175, 80, 0.2); cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+            opacity: 0.3; pointer-events: none; box-shadow: 0 0 40px rgba(0,200,80,0);
         }
-        .slide-age .btn-continue.active {
-            opacity: 1;
-            pointer-events: auto;
-            box-shadow: 0 0 60px rgba(0,200,80,0.15);
-        }
+        .slide-age .btn-continue.active { opacity: 1; pointer-events: auto; box-shadow: 0 0 60px rgba(0,200,80,0.15); }
         .slide-age .btn-continue:active { transform: scale(0.95); }
         .slide-age .deco-bg {
-            position: absolute;
-            font-size: 180px;
-            opacity: 0.03;
-            pointer-events: none;
+            position: absolute; font-size: 180px; opacity: 0.03; pointer-events: none;
             animation: floatDeco 10s ease-in-out infinite;
         }
-        @keyframes floatDeco {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
+        @keyframes floatDeco { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
         .slide-age .deco-bg.d1 { bottom: -20px; right: -30px; }
         .slide-age .deco-bg.d2 { top: -20px; left: -30px; }
 
-        .main-screen {
-            display: none;
-            flex-direction: column;
-            position: relative;
-            z-index: 1;
-        }
+        .main-screen { display: none; flex-direction: column; position: relative; z-index: 1; }
         .main-screen.active { display: flex; }
 
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-            gap: 6px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px; flex-wrap: wrap; gap: 6px;
         }
         .promo-badge {
             background: linear-gradient(135deg, #00c853, #00e676);
-            color: #000;
-            padding: 5px 16px;
-            border-radius: 40px;
-            font-weight: 800;
-            font-size: 11px;
+            color: #000; padding: 5px 16px; border-radius: 40px;
+            font-weight: 800; font-size: 11px;
             box-shadow: 0 0 40px rgba(0,200,80,0.2);
             animation: pulseBadge 2s infinite;
         }
-        @keyframes pulseBadge {
-            0%, 100% { box-shadow: 0 0 30px rgba(0,200,80,0.2); }
-            50% { box-shadow: 0 0 60px rgba(0,200,80,0.4); }
-        }
+        @keyframes pulseBadge { 0%, 100% { box-shadow: 0 0 30px rgba(0,200,80,0.2); } 50% { box-shadow: 0 0 60px rgba(0,200,80,0.4); } }
         .timer-block {
-            background: rgba(15, 26, 15, 0.7);
-            padding: 6px 16px;
-            border-radius: 30px;
-            border: 1px solid rgba(76, 175, 80, 0.12);
-            font-size: 14px;
-            font-weight: 700;
-            color: #8bc34a;
-            backdrop-filter: blur(10px);
-            font-variant-numeric: tabular-nums;
+            background: rgba(15, 26, 15, 0.7); padding: 6px 16px; border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.12); font-size: 14px; font-weight: 700;
+            color: #8bc34a; backdrop-filter: blur(10px); font-variant-numeric: tabular-nums;
         }
         .online-count {
-            background: rgba(15, 26, 15, 0.7);
-            padding: 6px 14px;
-            border-radius: 30px;
-            border: 1px solid rgba(76, 175, 80, 0.12);
-            font-size: 13px;
-            font-weight: 700;
-            color: #69f0ae;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            backdrop-filter: blur(10px);
+            background: rgba(15, 26, 15, 0.7); padding: 6px 14px; border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.12); font-size: 13px; font-weight: 700;
+            color: #69f0ae; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);
         }
         .online-count .dot {
-            width: 7px; height: 7px;
-            background: #00e676;
-            border-radius: 50%;
-            animation: blink 1.4s infinite;
-            box-shadow: 0 0 15px #00e676;
+            width: 7px; height: 7px; background: #00e676; border-radius: 50%;
+            animation: blink 1.4s infinite; box-shadow: 0 0 15px #00e676;
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.7); }
-        }
+        @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.7); } }
 
         .balance-banner {
             background: linear-gradient(135deg, rgba(0, 30, 0, 0.4), rgba(0, 50, 0, 0.2));
-            border-radius: 24px;
-            padding: 18px 20px;
-            border: 1px solid rgba(76, 175, 80, 0.1);
-            margin-bottom: 14px;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
+            border-radius: 24px; padding: 18px 20px;
+            border: 1px solid rgba(76, 175, 80, 0.1); margin-bottom: 14px;
+            backdrop-filter: blur(10px); position: relative; overflow: hidden;
         }
         .balance-banner::before {
             content: '';
-            position: absolute;
-            top: -50%; right: -50%;
+            position: absolute; top: -50%; right: -50%;
             width: 100%; height: 100%;
             background: radial-gradient(circle, rgba(0,255,100,0.03), transparent);
             border-radius: 50%;
         }
-        .balance-banner .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .balance-banner .label {
-            color: #6a8a6a;
-            font-size: 13px;
-            font-weight: 300;
-            letter-spacing: 0.5px;
-        }
+        .balance-banner .row { display: flex; justify-content: space-between; align-items: center; }
+        .balance-banner .label { color: #6a8a6a; font-size: 13px; font-weight: 300; letter-spacing: 0.5px; }
         .balance-banner .amount {
-            font-size: 36px;
-            font-weight: 900;
+            font-size: 36px; font-weight: 900;
             background: linear-gradient(135deg, #69f0ae, #00c853);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 30px rgba(0,200,80,0.15));
         }
         .balance-banner .sub-info {
-            display: flex;
-            gap: 16px;
-            margin-top: 8px;
-            font-size: 12px;
-            color: #4a7a4a;
+            display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: #4a7a4a;
         }
-        .balance-banner .sub-info span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+        .balance-banner .sub-info span { display: flex; align-items: center; gap: 4px; }
 
         .withdraw-btn {
-            width: 100%;
-            padding: 16px;
-            margin: 8px 0 4px;
+            width: 100%; padding: 16px; margin: 8px 0 4px;
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            border-radius: 60px;
-            font-weight: 800;
-            font-size: 17px;
-            color: #e0f0e0;
-            box-shadow: 0 4px 40px rgba(0,200,80,0.1);
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 60px;
+            font-weight: 800; font-size: 17px; color: #e0f0e0;
+            box-shadow: 0 4px 40px rgba(0,200,80,0.1); cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+            position: relative; overflow: hidden;
         }
         .withdraw-btn::before {
             content: '';
-            position: absolute;
-            top: 0; left: -100%;
+            position: absolute; top: 0; left: -100%;
             width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
             transition: 0.5s;
         }
         .withdraw-btn:hover::before { left: 100%; }
         .withdraw-btn:active { transform: scale(0.97); }
-        .withdraw-btn.disabled {
-            opacity: 0.3;
-            filter: grayscale(0.8);
-            pointer-events: none;
-        }
-        .withdraw-hint {
-            color: #a5d6a7;
-            font-size: 13px;
-            text-align: center;
-            margin-bottom: 6px;
-            opacity: 0.6;
-        }
+        .withdraw-btn.disabled { opacity: 0.3; filter: grayscale(0.8); pointer-events: none; }
+        .withdraw-hint { color: #a5d6a7; font-size: 13px; text-align: center; margin-bottom: 6px; opacity: 0.6; }
 
         .tabs {
-            display: flex;
-            gap: 2px;
-            margin: 14px 0 12px;
-            border-bottom: 1px solid rgba(26, 58, 26, 0.3);
-            padding-bottom: 8px;
+            display: flex; gap: 2px; margin: 14px 0 12px;
+            border-bottom: 1px solid rgba(26, 58, 26, 0.3); padding-bottom: 8px;
         }
         .tab-btn {
-            flex: 1;
-            min-width: 32px;
-            padding: 10px 2px;
-            background: transparent;
-            border: none;
-            color: #4a7a4a;
-            font-weight: 700;
-            font-size: 10px;
-            cursor: pointer;
-            border-radius: 14px 14px 0 0;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            position: relative;
+            flex: 1; min-width: 32px; padding: 10px 2px; background: transparent;
+            border: none; color: #4a7a4a; font-weight: 700; font-size: 10px;
+            cursor: pointer; border-radius: 14px 14px 0 0; transition: all 0.3s;
+            text-transform: uppercase; letter-spacing: 0.3px; position: relative;
         }
         .tab-btn::after {
             content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 20%;
-            width: 60%;
-            height: 2px;
-            background: transparent;
-            transition: 0.3s;
+            position: absolute; bottom: -1px; left: 20%; width: 60%; height: 2px;
+            background: transparent; transition: 0.3s;
         }
-        .tab-btn.active {
-            color: #69f0ae;
-            background: rgba(0, 255, 100, 0.04);
-        }
-        .tab-btn.active::after {
-            background: linear-gradient(90deg, transparent, #4caf50, transparent);
-        }
+        .tab-btn.active { color: #69f0ae; background: rgba(0, 255, 100, 0.04); }
+        .tab-btn.active::after { background: linear-gradient(90deg, transparent, #4caf50, transparent); }
         .tab-content {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 430px;
-            overflow-y: auto;
-            padding-right: 3px;
+            display: none; flex-direction: column; gap: 10px;
+            max-height: 430px; overflow-y: auto; padding-right: 3px;
         }
         .tab-content.active { display: flex; }
         .tab-content::-webkit-scrollbar { width: 3px; }
@@ -485,318 +257,268 @@
 
         .feed-banner {
             background: linear-gradient(135deg, rgba(0, 30, 0, 0.2), rgba(0, 50, 0, 0.1));
-            border-radius: 18px;
-            padding: 14px;
-            border: 1px solid rgba(76, 175, 80, 0.06);
-            backdrop-filter: blur(10px);
+            border-radius: 18px; padding: 14px;
+            border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
         }
-        .feed-banner .title {
-            color: #6a8a6a;
-            font-size: 12px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
+        .feed-banner .title { color: #6a8a6a; font-size: 12px; font-weight: 300; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; }
         .feed-scroll {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 4px 2px 8px;
-            scroll-snap-type: x mandatory;
+            display: flex; gap: 10px; overflow-x: auto;
+            padding: 4px 2px 8px; scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
         }
         .feed-scroll::-webkit-scrollbar { height: 2px; }
         .feed-scroll::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
         .feed-card {
-            min-width: 140px;
-            background: rgba(0, 30, 0, 0.3);
-            border-radius: 16px;
-            padding: 12px 14px;
-            border: 1px solid rgba(76, 175, 80, 0.08);
-            scroll-snap-align: start;
-            transition: 0.3s;
-            flex-shrink: 0;
+            min-width: 140px; background: rgba(0, 30, 0, 0.3); border-radius: 16px;
+            padding: 12px 14px; border: 1px solid rgba(76, 175, 80, 0.08);
+            scroll-snap-align: start; transition: 0.3s; flex-shrink: 0;
         }
-        .feed-card:hover {
-            border-color: rgba(76, 175, 80, 0.2);
-            transform: translateY(-2px);
-        }
-        .feed-card .f-name {
-            font-weight: 700;
-            color: #a5d6a7;
-            font-size: 14px;
-        }
+        .feed-card:hover { border-color: rgba(76, 175, 80, 0.2); transform: translateY(-2px); }
+        .feed-card .f-name { font-weight: 700; color: #a5d6a7; font-size: 14px; }
         .feed-card .f-amount {
-            font-weight: 900;
-            font-size: 18px;
+            font-weight: 900; font-size: 18px;
             background: linear-gradient(135deg, #69f0ae, #00c853);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin: 4px 0 2px;
         }
-        .feed-card .f-time {
-            color: #4a7a4a;
-            font-size: 11px;
-        }
+        .feed-card .f-time { color: #4a7a4a; font-size: 11px; }
 
-        /* ===== БЛОК ЗАРАБОТАЙ ДЕНЬГИ ===== */
+        /* ===== УМЕНЬШЕННАЯ ЯЧЕЙКА +300 ₽ ===== */
         .earn-card {
-            background: linear-gradient(135deg, rgba(0, 30, 0, 0.4), rgba(0, 50, 0, 0.2));
-            border-radius: 20px;
-            padding: 18px 16px;
-            border: 2px solid rgba(253, 216, 53, 0.2);
+            background: linear-gradient(135deg, rgba(0, 30, 0, 0.35), rgba(0, 50, 0, 0.15));
+            border-radius: 16px;
+            padding: 12px 14px;
+            border: 1px solid rgba(253, 216, 53, 0.15);
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 60px rgba(253, 216, 53, 0.05);
         }
         .earn-card::before {
             content: '💰';
-            position: absolute;
-            font-size: 150px;
-            opacity: 0.04;
-            right: -30px;
-            bottom: -40px;
-            transform: rotate(15deg);
+            position: absolute; font-size: 80px; opacity: 0.04;
+            right: -10px; bottom: -20px; transform: rotate(15deg);
         }
         .earn-card .earn-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            gap: 8px;
         }
-        .earn-card .earn-header h4 {
+        .earn-card .earn-header .earn-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .earn-card .earn-header .earn-left .icon {
+            font-size: 20px;
+        }
+        .earn-card .earn-header .earn-left h4 {
             color: #a5d6a7;
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 600;
         }
         .earn-card .earn-header .amount-big {
-            font-size: 38px;
+            font-size: 28px;
             font-weight: 900;
             background: linear-gradient(135deg, #fdd835, #f9a825);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: pulseAmount 2s infinite;
-        }
-        @keyframes pulseAmount {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .earn-card .earn-sub {
-            color: #6a8a6a;
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-        .earn-card .earn-sub strong {
-            color: #69f0ae;
+            white-space: nowrap;
         }
         .earn-card .ref-link-mini {
-            background: rgba(0, 10, 0, 0.5);
-            border-radius: 12px;
-            padding: 10px 14px;
-            border: 1px solid rgba(76, 175, 80, 0.08);
-            font-size: 12px;
+            background: rgba(0, 10, 0, 0.4);
+            border-radius: 10px;
+            padding: 6px 10px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            font-size: 11px;
             color: #8aaa8a;
             word-break: break-all;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 8px;
-            margin: 8px 0;
+            gap: 6px;
+            margin: 6px 0;
         }
         .earn-card .ref-link-mini .copy-mini {
-            background: rgba(76, 175, 80, 0.15);
+            background: rgba(76, 175, 80, 0.12);
             border: none;
             color: #69f0ae;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 16px;
+            font-size: 10px;
             cursor: pointer;
             font-weight: 600;
             transition: 0.3s;
             white-space: nowrap;
         }
-        .earn-card .ref-link-mini .copy-mini:hover {
-            background: rgba(76, 175, 80, 0.25);
-        }
+        .earn-card .ref-link-mini .copy-mini:hover { background: rgba(76, 175, 80, 0.2); }
         .earn-card .earn-btn {
             width: 100%;
-            padding: 14px;
-            margin-top: 8px;
+            padding: 10px;
+            margin-top: 4px;
             background: linear-gradient(135deg, #fdd835, #f9a825);
             border: none;
-            border-radius: 40px;
+            border-radius: 30px;
             font-weight: 800;
             color: #000;
             cursor: pointer;
             transition: 0.3s;
-            font-size: 16px;
-            box-shadow: 0 4px 40px rgba(253, 216, 53, 0.2);
+            font-size: 13px;
+            box-shadow: 0 4px 30px rgba(253, 216, 53, 0.15);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         .earn-card .earn-btn:active { transform: scale(0.97); }
 
-        /* ===== СТАТИСТИКА ===== */
         .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 6px;
-            margin-top: 4px;
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 4px;
         }
         .stats-grid .stat-item {
-            background: rgba(0, 30, 0, 0.2);
-            border-radius: 14px;
-            padding: 12px 6px;
-            text-align: center;
-            border: 1px solid rgba(76, 175, 80, 0.04);
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            background: rgba(0, 30, 0, 0.2); border-radius: 14px; padding: 10px 4px;
+            text-align: center; border: 1px solid rgba(76, 175, 80, 0.04);
+            backdrop-filter: blur(10px); transition: 0.3s;
         }
-        .stats-grid .stat-item:hover {
-            border-color: rgba(76, 175, 80, 0.1);
-            transform: translateY(-2px);
-        }
-        .stats-grid .stat-item .num {
-            font-size: 16px;
-            font-weight: 900;
-            color: #69f0ae;
-            line-height: 1.2;
-        }
+        .stats-grid .stat-item:hover { border-color: rgba(76, 175, 80, 0.1); transform: translateY(-2px); }
+        .stats-grid .stat-item .num { font-size: 14px; font-weight: 900; color: #69f0ae; line-height: 1.2; }
         .stats-grid .stat-item .num.gold { color: #fdd835; }
-        .stats-grid .stat-item .lbl {
-            font-size: 9px;
-            color: #4a7a4a;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-top: 2px;
-        }
-        .stats-grid .stat-item .icon {
-            font-size: 18px;
-            display: block;
-            margin-bottom: 2px;
-        }
+        .stats-grid .stat-item .lbl { font-size: 8px; color: #4a7a4a; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; }
+        .stats-grid .stat-item .icon { font-size: 16px; display: block; margin-bottom: 2px; }
 
-        .review-item {
-            background: rgba(0, 30, 0, 0.2);
-            border-radius: 14px;
-            padding: 12px 14px;
-            border: 1px solid rgba(76, 175, 80, 0.04);
-            backdrop-filter: blur(10px);
-        }
-        .review-item .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 4px;
-        }
-        .review-item .review-name {
-            font-weight: 700;
-            color: #a5d6a7;
-            font-size: 14px;
-        }
-        .review-item .review-stars {
-            color: #fdd835;
-            font-size: 14px;
-            letter-spacing: 2px;
-        }
-        .review-item .review-text {
-            color: #8aaa8a;
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        .online-ribbon {
+        /* ===== ГОРИЗОНТАЛЬНЫЕ ОТЗЫВЫ ===== */
+        .reviews-scroll {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding: 6px 0 10px;
+            padding: 4px 0 8px;
             -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
         }
-        .online-ribbon::-webkit-scrollbar { height: 2px; }
-        .online-ribbon::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
-        .online-user {
+        .reviews-scroll::-webkit-scrollbar { height: 2px; }
+        .reviews-scroll::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+        .review-mini {
+            min-width: 140px;
+            background: rgba(0, 30, 0, 0.2);
+            border-radius: 14px;
+            padding: 10px 12px;
+            border: 1px solid rgba(76, 175, 80, 0.04);
+            backdrop-filter: blur(10px);
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            transition: 0.3s;
+        }
+        .review-mini:hover {
+            border-color: rgba(76, 175, 80, 0.12);
+            transform: translateY(-2px);
+        }
+        .review-mini .review-top {
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(0, 30, 0, 0.2);
-            padding: 4px 12px 4px 6px;
-            border-radius: 30px;
-            border: 1px solid rgba(76, 175, 80, 0.06);
-            font-size: 12px;
-            color: #a5d6a7;
-            white-space: nowrap;
-            flex-shrink: 0;
+            margin-bottom: 3px;
         }
-        .online-user .dot-online {
-            width: 6px; height: 6px;
-            background: #00e676;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #00e676;
-            animation: blink 1.4s infinite;
-        }
-        .online-user .avatar-mini {
+        .review-mini .review-top .r-avatar {
             width: 24px; height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 700;
             color: #fff;
+            flex-shrink: 0;
+        }
+        .review-mini .review-top .r-name {
+            font-weight: 600;
+            color: #a5d6a7;
+            font-size: 12px;
+            flex: 1;
+        }
+        .review-mini .review-top .r-stars {
+            color: #fdd835;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+        .review-mini .review-text {
+            color: #8aaa8a;
+            font-size: 11px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        /* ===== КОНКУРСЫ ===== */
+        .online-ribbon {
+            display: flex; gap: 8px; overflow-x: auto; padding: 6px 0 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .online-ribbon::-webkit-scrollbar { height: 2px; }
+        .online-ribbon::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+        .online-user {
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(0, 30, 0, 0.2); padding: 4px 12px 4px 6px; border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.06); font-size: 12px; color: #a5d6a7;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .online-user .dot-online {
+            width: 6px; height: 6px; background: #00e676; border-radius: 50%;
+            box-shadow: 0 0 10px #00e676; animation: blink 1.4s infinite;
+        }
+        .online-user .avatar-mini {
+            width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: #fff;
+        }
+
+        /* ===== КОНКУРС iPhone ===== */
         .contest-card {
-            background: rgba(0, 30, 0, 0.2);
+            background: rgba(0, 30, 0, 0.25);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(76, 175, 80, 0.06);
+            border: 2px solid rgba(156, 39, 176, 0.2);
             border-radius: 20px;
             padding: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             position: relative;
             overflow: hidden;
             transition: 0.3s;
         }
         .contest-card:hover {
-            border-color: rgba(76, 175, 80, 0.15);
+            border-color: rgba(156, 39, 176, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 8px 40px rgba(0,200,80,0.03);
+            box-shadow: 0 8px 40px rgba(156, 39, 176, 0.1);
         }
         .contest-card .prize-badge {
             position: absolute;
             top: 16px;
             right: 16px;
-            background: linear-gradient(135deg, #fdd835, #f9a825);
-            color: #000;
+            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+            color: #fff;
             padding: 4px 14px;
             border-radius: 30px;
             font-weight: 800;
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 30px rgba(253, 216, 53, 0.15);
+            box-shadow: 0 0 30px rgba(156, 39, 176, 0.3);
             z-index: 1;
         }
-        .contest-card .prize-badge.purple {
-            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
-            color: #fff;
-            box-shadow: 0 0 30px rgba(156, 39, 176, 0.3);
-        }
-        .contest-card img {
+        .contest-card .product-image {
             width: 100%;
             border-radius: 16px;
             margin-bottom: 12px;
-            background: rgba(10, 26, 10, 0.3);
-            border: 1px solid rgba(76, 175, 80, 0.06);
-            min-height: 140px;
+            background: linear-gradient(135deg, rgba(10, 26, 10, 0.5), rgba(20, 40, 20, 0.3));
+            border: 1px solid rgba(156, 39, 176, 0.2);
+            min-height: 160px;
+            max-height: 220px;
             object-fit: cover;
             transition: 0.3s;
         }
-        .contest-card img:hover { transform: scale(1.01); }
+        .contest-card .product-image:hover {
+            transform: scale(1.01);
+            border-color: rgba(156, 39, 176, 0.4);
+        }
         .contest-card h4 {
-            color: #69f0ae;
+            color: #ce93d8;
             font-size: 18px;
             margin-bottom: 4px;
             font-weight: 700;
@@ -805,12 +527,24 @@
             color: #6a8a6a;
             font-size: 13px;
         }
-        .progress-wrap {
+
+        /* ===== ШКАЛА ДЛЯ iPhone ===== */
+        .goal-text {
+            font-size: 13px;
+            color: #8aaa8a;
             margin: 10px 0 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .goal-text strong {
+            color: #ce93d8;
+        }
+        .progress-wrap {
+            margin: 8px 0 6px;
             background: rgba(10, 26, 10, 0.5);
             border-radius: 30px;
-            height: 10px;
-            border: 1px solid rgba(76, 175, 80, 0.06);
+            height: 12px;
+            border: 1px solid rgba(156, 39, 176, 0.2);
             overflow: hidden;
             position: relative;
         }
@@ -821,7 +555,7 @@
             transform: translate(-50%, -50%);
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(156, 39, 176, 0.15), transparent);
+            background: radial-gradient(circle, rgba(156, 39, 176, 0.2), transparent);
             opacity: 0;
             transition: opacity 0.5s;
             border-radius: 50%;
@@ -834,16 +568,10 @@
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #1b5e20, #69f0ae);
+            background: linear-gradient(90deg, #7b1fa2, #9c27b0, #ce93d8);
             border-radius: 30px;
             transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
             position: relative;
-        }
-        .progress-bar.purple {
-            background: linear-gradient(90deg, #7b1fa2, #9c27b0, #ce93d8);
-        }
-        .progress-bar.cash {
-            background: linear-gradient(90deg, #fdd835, #f9a825);
         }
         .progress-bar::after {
             content: '';
@@ -862,182 +590,95 @@
             color: #6a8a6a;
         }
         .progress-label .label-complete {
-            color: #9c27b0;
+            color: #ce93d8;
             font-weight: 700;
             animation: statusPulse 1s ease infinite;
-        }
-        .progress-label .label-complete.cash {
-            color: #fdd835;
         }
         @keyframes statusPulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(0.95); }
         }
+        .status-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #6a8a6a;
+            margin-top: 4px;
+        }
+        .status-text .status-done {
+            color: #ce93d8;
+            font-weight: 700;
+        }
 
         .chart-container {
-            background: rgba(0, 30, 0, 0.15);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 16px;
+            background: rgba(0, 30, 0, 0.15); backdrop-filter: blur(20px);
+            border-radius: 20px; padding: 16px;
             border: 1px solid rgba(76, 175, 80, 0.06);
         }
         .chart-container .chart-title {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            color: #6a8a6a;
-            font-size: 12px;
+            display: flex; justify-content: space-between; margin-bottom: 12px;
+            color: #6a8a6a; font-size: 12px;
         }
         .chart-container .chart-title span { color: #69f0ae; font-weight: 700; }
         .chart-bar-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 3px 0;
-            padding: 4px 6px;
-            border-radius: 10px;
-            transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+            margin: 3px 0; padding: 4px 6px; border-radius: 10px; transition: 0.3s;
         }
         .chart-bar-wrap:hover { background: rgba(0, 255, 100, 0.03); }
-        .chart-bar-wrap .rank {
-            font-weight: 900;
-            color: #fdd835;
-            font-size: 13px;
-            min-width: 28px;
-            text-align: center;
-        }
-        .chart-bar-wrap .cname {
-            font-weight: 600;
-            color: #a5d6a7;
-            font-size: 13px;
-            min-width: 80px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .chart-bar-wrap .rank { font-weight: 900; color: #fdd835; font-size: 13px; min-width: 28px; text-align: center; }
+        .chart-bar-wrap .cname { font-weight: 600; color: #a5d6a7; font-size: 13px; min-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .chart-bar-wrap .bar-track {
-            flex: 1;
-            height: 6px;
-            background: rgba(10, 26, 10, 0.5);
-            border-radius: 10px;
-            overflow: hidden;
+            flex: 1; height: 6px; background: rgba(10, 26, 10, 0.5); border-radius: 10px; overflow: hidden;
         }
         .chart-bar-wrap .bar-fill {
-            height: 100%;
-            border-radius: 10px;
+            height: 100%; border-radius: 10px;
             transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1);
             width: 0%;
         }
-        .chart-bar-wrap .cvalue {
-            font-weight: 700;
-            color: #69f0ae;
-            font-size: 12px;
-            min-width: 50px;
-            text-align: right;
-        }
-        .chart-bar-wrap.user-row {
-            background: rgba(0, 255, 100, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(76, 175, 80, 0.1);
-        }
+        .chart-bar-wrap .cvalue { font-weight: 700; color: #69f0ae; font-size: 12px; min-width: 50px; text-align: right; }
+        .chart-bar-wrap.user-row { background: rgba(0, 255, 100, 0.05); border-radius: 10px; border: 1px solid rgba(76, 175, 80, 0.1); }
 
         .referral-card {
             background: linear-gradient(135deg, rgba(0, 30, 0, 0.3), rgba(0, 50, 0, 0.1));
-            border-radius: 24px;
-            padding: 24px 20px;
-            text-align: center;
-            border: 1px solid rgba(76, 175, 80, 0.06);
-            backdrop-filter: blur(10px);
+            border-radius: 24px; padding: 24px 20px; text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
         }
         .referral-card .ref-icon { font-size: 48px; margin-bottom: 8px; }
-        .referral-card h3 {
-            color: #69f0ae;
-            font-size: 20px;
-            font-weight: 700;
-        }
-        .referral-card p {
-            color: #6a8a6a;
-            font-size: 13px;
-            margin: 6px 0 16px;
-        }
+        .referral-card h3 { color: #69f0ae; font-size: 20px; font-weight: 700; }
+        .referral-card p { color: #6a8a6a; font-size: 13px; margin: 6px 0 16px; }
         .referral-card .ref-link-box {
-            background: rgba(0, 10, 0, 0.5);
-            border-radius: 16px;
-            padding: 12px 16px;
-            border: 1px solid rgba(76, 175, 80, 0.08);
-            color: #a5d6a7;
-            font-size: 13px;
-            word-break: break-all;
-            font-weight: 300;
-            letter-spacing: 0.3px;
-            margin-bottom: 14px;
-            position: relative;
+            background: rgba(0, 10, 0, 0.5); border-radius: 16px; padding: 12px 16px;
+            border: 1px solid rgba(76, 175, 80, 0.08); color: #a5d6a7; font-size: 13px;
+            word-break: break-all; font-weight: 300; letter-spacing: 0.3px; margin-bottom: 14px; position: relative;
         }
         .referral-card .ref-link-box .copy-btn {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(76, 175, 80, 0.12);
-            border: none;
-            color: #69f0ae;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 11px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            background: rgba(76, 175, 80, 0.12); border: none; color: #69f0ae;
+            padding: 4px 12px; border-radius: 30px; font-size: 11px; cursor: pointer; font-weight: 600; transition: 0.3s;
         }
-        .referral-card .ref-link-box .copy-btn:hover {
-            background: rgba(76, 175, 80, 0.2);
-        }
-        .referral-card .ref-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        .referral-card .ref-link-box .copy-btn:hover { background: rgba(76, 175, 80, 0.2); }
+        .referral-card .ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .referral-card .ref-stats .stat {
-            background: rgba(0, 30, 0, 0.2);
-            border-radius: 14px;
-            padding: 10px;
+            background: rgba(0, 30, 0, 0.2); border-radius: 14px; padding: 10px;
             border: 1px solid rgba(76, 175, 80, 0.04);
         }
-        .referral-card .ref-stats .stat .num {
-            font-size: 22px;
-            font-weight: 900;
-            color: #69f0ae;
-        }
-        .referral-card .ref-stats .stat .lbl {
-            font-size: 11px;
-            color: #6a8a6a;
-        }
+        .referral-card .ref-stats .stat .num { font-size: 22px; font-weight: 900; color: #69f0ae; }
+        .referral-card .ref-stats .stat .lbl { font-size: 11px; color: #6a8a6a; }
 
         .wallet-card {
-            background: rgba(0, 30, 0, 0.15);
-            border-radius: 20px;
-            padding: 16px;
-            border: 1px solid rgba(76, 175, 80, 0.06);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 30, 0, 0.15); border-radius: 20px; padding: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
         }
         .wallet-card .w-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(26, 58, 26, 0.08);
-            font-size: 13px;
+            display: flex; justify-content: space-between; padding: 8px 0;
+            border-bottom: 1px solid rgba(26, 58, 26, 0.08); font-size: 13px;
         }
         .wallet-card .w-row .label { color: #6a8a6a; }
         .wallet-card .w-row .value { color: #69f0ae; font-weight: 700; }
         .history-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 14px;
-            background: rgba(0, 30, 0, 0.1);
-            border-radius: 14px;
-            font-size: 13px;
-            border-left: 3px solid rgba(76, 175, 80, 0.2);
-            transition: 0.3s;
+            display: flex; justify-content: space-between; padding: 10px 14px;
+            background: rgba(0, 30, 0, 0.1); border-radius: 14px; font-size: 13px;
+            border-left: 3px solid rgba(76, 175, 80, 0.2); transition: 0.3s;
         }
         .history-item:hover { background: rgba(0, 30, 0, 0.2); }
         .history-item .h-method { font-weight: 600; color: #a5d6a7; font-size: 13px; }
@@ -1047,128 +688,64 @@
         .history-item .h-status.pending { color: #fdd835; }
         .history-item .h-status.done { color: #69f0ae; }
 
+        /* ===== ПРОФИЛЬ С ОТЗЫВАМИ ===== */
         .profile-card {
-            background: rgba(0, 30, 0, 0.15);
-            border-radius: 24px;
-            padding: 24px 20px;
-            border: 1px solid rgba(76, 175, 80, 0.06);
-            text-align: center;
-            backdrop-filter: blur(10px);
+            background: rgba(0, 30, 0, 0.15); border-radius: 24px; padding: 24px 20px;
+            border: 1px solid rgba(76, 175, 80, 0.06); text-align: center; backdrop-filter: blur(10px);
         }
         .profile-card .avatar {
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            font-weight: 700;
-            color: #fff;
-            margin: 0 auto 12px;
-            border: 2px solid rgba(76, 175, 80, 0.15);
-            box-shadow: 0 0 40px rgba(0,200,80,0.05);
-            transition: 0.3s;
+            width: 80px; height: 80px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px; font-weight: 700; color: #fff;
+            margin: 0 auto 12px; border: 2px solid rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 40px rgba(0,200,80,0.05); transition: 0.3s;
         }
         .profile-card .avatar:hover { transform: scale(1.05); }
-        .profile-card .nick {
-            color: #69f0ae;
-            font-size: 24px;
-            font-weight: 800;
-        }
-        .profile-card .info {
-            color: #6a8a6a;
-            font-size: 13px;
-            margin: 4px 0;
-        }
+        .profile-card .nick { color: #69f0ae; font-size: 24px; font-weight: 800; }
+        .profile-card .info { color: #6a8a6a; font-size: 13px; margin: 4px 0; }
         .profile-card .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 16px 0;
+            display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin: 16px 0;
         }
         .profile-card .stat-grid .item {
-            background: rgba(0, 30, 0, 0.15);
-            border-radius: 14px;
-            padding: 12px;
+            background: rgba(0, 30, 0, 0.15); border-radius: 12px; padding: 10px 4px;
             border: 1px solid rgba(76, 175, 80, 0.04);
         }
-        .profile-card .stat-grid .item .num {
-            font-size: 22px;
-            font-weight: 900;
-            color: #69f0ae;
-        }
-        .profile-card .stat-grid .item .lbl {
-            font-size: 11px;
-            color: #6a8a6a;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
+        .profile-card .stat-grid .item .num { font-size: 18px; font-weight: 900; color: #69f0ae; }
+        .profile-card .stat-grid .item .lbl { font-size: 9px; color: #6a8a6a; text-transform: uppercase; letter-spacing: 0.3px; }
         .profile-card .invite-btn {
-            width: 100%;
-            padding: 14px;
+            width: 100%; padding: 14px;
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
-            border: 1px solid rgba(76, 175, 80, 0.15);
-            border-radius: 40px;
-            font-weight: 700;
-            color: #e0f0e0;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 15px;
+            border: 1px solid rgba(76, 175, 80, 0.15); border-radius: 40px;
+            font-weight: 700; color: #e0f0e0; cursor: pointer; transition: 0.3s; font-size: 15px;
             box-shadow: 0 4px 30px rgba(0,200,80,0.05);
         }
         .profile-card .invite-btn:active { transform: scale(0.97); }
 
         .help-section {
-            background: rgba(0, 30, 0, 0.1);
-            border-radius: 18px;
-            padding: 16px;
-            border: 1px solid rgba(76, 175, 80, 0.04);
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            background: rgba(0, 30, 0, 0.1); border-radius: 18px; padding: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.04); backdrop-filter: blur(10px); transition: 0.3s;
         }
         .help-section:hover { border-color: rgba(76, 175, 80, 0.1); }
-        .help-section h4 {
-            color: #69f0ae;
-            font-size: 15px;
-            margin-bottom: 6px;
-        }
-        .help-section p, .help-section li {
-            color: #8aaa8a;
-            font-size: 13px;
-            line-height: 1.7;
-        }
+        .help-section h4 { color: #69f0ae; font-size: 15px; margin-bottom: 6px; }
+        .help-section p, .help-section li { color: #8aaa8a; font-size: 13px; line-height: 1.7; }
         .help-section ul { padding-left: 20px; margin: 4px 0; }
         .help-section li { margin-bottom: 2px; }
 
         .info-note {
-            font-size: 11px;
-            color: #4a6a4a;
-            text-align: center;
-            margin-top: 12px;
-            border-top: 1px solid rgba(26, 42, 26, 0.2);
-            padding-top: 10px;
-            font-weight: 300;
-            letter-spacing: 0.3px;
+            font-size: 11px; color: #4a6a4a; text-align: center; margin-top: 12px;
+            border-top: 1px solid rgba(26, 42, 26, 0.2); padding-top: 10px;
+            font-weight: 300; letter-spacing: 0.3px;
         }
 
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px); align-items: center; justify-content: center; z-index: 999;
         }
         .modal-overlay.active { display: flex; }
         .modal {
             background: linear-gradient(160deg, #0d1a0d, #0a120a);
-            padding: 32px 24px;
-            border-radius: 36px;
-            max-width: 360px;
-            width: 100%;
+            padding: 32px 24px; border-radius: 36px; max-width: 360px; width: 100%;
             border: 1px solid rgba(76, 175, 80, 0.15);
             box-shadow: 0 0 80px rgba(0,200,80,0.03);
             animation: modalIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -1178,53 +755,24 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
         .modal h3 { color: #69f0ae; margin-bottom: 18px; text-align: center; font-size: 22px; }
-        .modal label {
-            display: block;
-            font-size: 12px;
-            color: #6a8a6a;
-            margin: 14px 0 4px;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
+        .modal label { display: block; font-size: 12px; color: #6a8a6a; margin: 14px 0 4px; letter-spacing: 0.5px; font-weight: 600; }
         .modal input, .modal select {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 16px;
-            border: 1px solid rgba(26, 58, 26, 0.2);
-            background: rgba(6, 18, 6, 0.8);
-            color: #c0e0c0;
-            font-size: 15px;
-            outline: none;
-            transition: 0.3s;
+            width: 100%; padding: 14px 16px; border-radius: 16px;
+            border: 1px solid rgba(26, 58, 26, 0.2); background: rgba(6, 18, 6, 0.8);
+            color: #c0e0c0; font-size: 15px; outline: none; transition: 0.3s;
         }
-        .modal input:focus, .modal select:focus {
-            border-color: #4caf50;
-            box-shadow: 0 0 30px rgba(0,200,80,0.03);
-        }
-        .modal .row-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 22px;
-        }
+        .modal input:focus, .modal select:focus { border-color: #4caf50; box-shadow: 0 0 30px rgba(0,200,80,0.03); }
+        .modal .row-buttons { display: flex; gap: 12px; margin-top: 22px; }
         .modal .btn-submit {
-            flex: 1;
-            padding: 16px;
+            flex: 1; padding: 16px;
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
-            border: none;
-            border-radius: 40px;
-            font-weight: 700;
-            color: #e0f0e0;
-            border: 1px solid rgba(76, 175, 80, 0.15);
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 15px;
-            position: relative;
-            overflow: hidden;
+            border: none; border-radius: 40px; font-weight: 700; color: #e0f0e0;
+            border: 1px solid rgba(76, 175, 80, 0.15); cursor: pointer; transition: 0.3s; font-size: 15px;
+            position: relative; overflow: hidden;
         }
         .modal .btn-submit::before {
             content: '';
-            position: absolute;
-            top: 0; left: -100%;
+            position: absolute; top: 0; left: -100%;
             width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
             transition: 0.5s;
@@ -1241,17 +789,10 @@
             75% { transform: translateX(10px); }
         }
         .modal .btn-cancel {
-            flex: 1;
-            padding: 16px;
-            background: rgba(26, 42, 26, 0.4);
-            border: none;
-            border-radius: 40px;
-            font-weight: 700;
-            color: #6a8a6a;
-            border: 1px solid rgba(42, 74, 42, 0.15);
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 15px;
+            flex: 1; padding: 16px;
+            background: rgba(26, 42, 26, 0.4); border: none; border-radius: 40px;
+            font-weight: 700; color: #6a8a6a;
+            border: 1px solid rgba(42, 74, 42, 0.15); cursor: pointer; transition: 0.3s; font-size: 15px;
         }
         .modal .btn-cancel:active { transform: scale(0.96); }
 
@@ -1261,7 +802,10 @@
             .tab-btn { font-size: 9px; padding: 8px 1px; }
             .feed-card { min-width: 120px; }
             .stats-grid .stat-item .num { font-size: 13px; }
-            .earn-card .earn-header .amount-big { font-size: 28px; }
+            .earn-card .earn-header .amount-big { font-size: 24px; }
+            .contest-card .product-image { min-height: 120px; max-height: 180px; }
+            .review-mini { min-width: 120px; }
+            .profile-card .stat-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -1271,7 +815,6 @@
     <div class="bg-grid"></div>
     <div class="bg-glow g1"></div>
     <div class="bg-glow g2"></div>
-    <div class="bg-glow g3"></div>
     <div class="particles" id="particles"></div>
 
     <!-- СЛАЙД 1 -->
@@ -1303,7 +846,6 @@
 
     <!-- ОСНОВНОЙ ЭКРАН -->
     <div class="main-screen" id="mainScreen">
-        <!-- Шапка -->
         <div class="header">
             <div class="promo-badge">⚡ Акция</div>
             <div class="online-count">
@@ -1312,7 +854,6 @@
             <div class="timer-block" id="promoTimer">--:--:--</div>
         </div>
 
-        <!-- Баннер баланса -->
         <div class="balance-banner">
             <div class="row">
                 <span class="label">💰 Баланс</span>
@@ -1324,11 +865,9 @@
             </div>
         </div>
 
-        <!-- Кнопка вывода -->
         <button class="withdraw-btn disabled" id="withdrawBtn">💸 Вывести деньги</button>
         <div class="withdraw-hint" id="withdrawHint">Накопите 3000 ₽ для вывода</div>
 
-        <!-- Вкладки -->
         <div class="tabs">
             <button class="tab-btn active" data-tab="tabFeed">🏠</button>
             <button class="tab-btn" data-tab="tabContests">🎁</button>
@@ -1347,14 +886,14 @@
                 <div class="feed-scroll" id="feedScroll"></div>
             </div>
 
-            <!-- ===== БЛОК ЗАРАБОТАЙ ДЕНЬГИ ===== -->
+            <!-- ===== УМЕНЬШЕННАЯ ЯЧЕЙКА +300 ₽ ===== -->
             <div class="earn-card">
                 <div class="earn-header">
-                    <h4>👥 Пригласи друга</h4>
+                    <div class="earn-left">
+                        <span class="icon">👥</span>
+                        <h4>Пригласи друга</h4>
+                    </div>
                     <span class="amount-big">+300 ₽</span>
-                </div>
-                <div class="earn-sub">
-                    <strong>Green Market</strong> — зарабатывай с нами!
                 </div>
                 <div class="ref-link-mini" id="refLinkMini">
                     <span id="refLinkMiniText">https://t.me/GreenMarketBot?start=...</span>
@@ -1363,16 +902,16 @@
                 <button class="earn-btn" id="earnInviteBtn">🚀 Пригласить друга</button>
             </div>
 
-            <!-- ===== СТАТИСТИКА ===== -->
+            <!-- Статистика -->
             <div class="stats-grid">
                 <div class="stat-item">
                     <span class="icon">💵</span>
-                    <div class="num gold">3 000 000+</div>
-                    <div class="lbl">Выплачено ₽</div>
+                    <div class="num gold">3M+</div>
+                    <div class="lbl">Выплачено</div>
                 </div>
                 <div class="stat-item">
                     <span class="icon">⭐</span>
-                    <div class="num">1000+</div>
+                    <div class="num">1K+</div>
                     <div class="lbl">Отзывов</div>
                 </div>
                 <div class="stat-item">
@@ -1382,108 +921,35 @@
                 </div>
             </div>
 
-            <!-- ===== ОТЗЫВЫ (ТОЛЬКО 3 ШТУКИ) ===== -->
-            <div style="font-size:12px;color:#6a8a6a;margin:6px 0 4px;">⭐ Отзывы пользователей</div>
-            <div id="reviewsBlock">
-                <div class="review-item">
-                    <div class="review-header">
-                        <span class="review-name">SkyWolfWalker</span>
-                        <span class="review-stars">★★★★★</span>
-                    </div>
-                    <div class="review-text">Всё отлично! Деньги пришли быстро, рекомендую!</div>
-                </div>
-                <div class="review-item">
-                    <div class="review-header">
-                        <span class="review-name">Zayka_3</span>
-                        <span class="review-stars">★★★★☆</span>
-                    </div>
-                    <div class="review-text">Хороший сервис, единственное долго выводили, но пришли.</div>
-                </div>
-                <div class="review-item">
-                    <div class="review-header">
-                        <span class="review-name">MC Грегор</span>
-                        <span class="review-stars">★★★★★</span>
-                    </div>
-                    <div class="review-text">Лучшая подработка! Уже 3 раз вывожу, всё честно!</div>
-                </div>
-            </div>
-
             <!-- Онлайн-лента -->
-            <div style="font-size:12px;color:#6a8a6a;margin:6px 0 4px;display:flex;justify-content:space-between;">
+            <div style="font-size:12px;color:#6a8a6a;margin:4px 0 2px;display:flex;justify-content:space-between;">
                 <span>🟢 Сейчас в сети</span>
                 <span style="color:#69f0ae;" id="onlineCounter">0</span>
             </div>
             <div class="online-ribbon" id="onlineRibbon"></div>
         </div>
 
-        <!-- ===== КОНКУРСЫ ===== -->
+        <!-- ===== КОНКУРСЫ (iPhone с новым фото) ===== -->
         <div class="tab-content" id="tabContests">
-            <!-- iPhone 17 Pro Max -->
             <div class="contest-card" id="iphoneCard">
-                <span class="prize-badge purple">🏆 ГЛАВНЫЙ</span>
-                <img src="https://cdn.dummyimage.com/400x240/1a3a1a/9c27b0&text=iPhone+17+Pro+Max+White" alt="iPhone 17 Pro Max">
+                <span class="prize-badge">🏆 ГЛАВНЫЙ ПРИЗ</span>
+                <img class="product-image" src="https://imgfy.ru/ib/3o6DMaB9r3n3slA_1781952994.webp" alt="iPhone 17 Pro Max" id="iphoneImg">
                 <h4>📱 iPhone 17 Pro Max</h4>
                 <p>Белый · 256GB · Розыгрыш</p>
-                <div style="font-size:12px;color:#6a8a6a;margin:8px 0 4px;">
-                    🎯 Пригласите <strong style="color:#9c27b0;">15 человек</strong> чтобы участвовать
+                <div class="goal-text">
+                    🎯 Пригласите <strong>15 человек</strong> чтобы участвовать
                 </div>
                 <div class="progress-wrap">
                     <div class="progress-glow" id="iphoneGlow"></div>
-                    <div class="progress-bar purple" id="iphoneProgress" style="width:0%"></div>
+                    <div class="progress-bar" id="iphoneProgress" style="width:0%"></div>
                 </div>
                 <div class="progress-label">
                     <span>Приглашено: <span id="iphoneInvites">0</span>/15</span>
                     <span id="iphoneLabel" style="color:#6a8a6a;">0%</span>
                 </div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#6a8a6a;margin-top:4px;">
+                <div class="status-text">
                     <span>Статус:</span>
                     <span id="iphoneStatus" style="color:#6a8a6a;">❌ Не участвуете</span>
-                </div>
-            </div>
-
-            <!-- MacBook Air M2 -->
-            <div class="contest-card" id="macbookCard">
-                <span class="prize-badge purple">💻 ВТОРОЙ</span>
-                <img src="https://cdn.dummyimage.com/400x240/1a3a1a/9c27b0&text=MacBook+Air+M2+White" alt="MacBook Air M2">
-                <h4>💻 MacBook Air M2</h4>
-                <p>Белый · 256GB</p>
-                <div style="font-size:12px;color:#6a8a6a;margin:8px 0 4px;">
-                    🎯 Пригласите <strong style="color:#9c27b0;">15 человек</strong> чтобы участвовать
-                </div>
-                <div class="progress-wrap">
-                    <div class="progress-glow" id="macbookGlow"></div>
-                    <div class="progress-bar purple" id="macbookProgress" style="width:0%"></div>
-                </div>
-                <div class="progress-label">
-                    <span>Приглашено: <span id="macbookInvites">0</span>/15</span>
-                    <span id="macbookLabel" style="color:#6a8a6a;">0%</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#6a8a6a;margin-top:4px;">
-                    <span>Статус:</span>
-                    <span id="macbookStatus" style="color:#6a8a6a;">❌ Не участвуете</span>
-                </div>
-            </div>
-
-            <!-- 10 000 ₽ -->
-            <div class="contest-card" id="cashCard" style="border-color:rgba(255,215,0,0.1);">
-                <span class="prize-badge">🥉 ТРЕТИЙ</span>
-                <div style="text-align:center;padding:20px 0;font-size:56px;">💵</div>
-                <h4 style="color:#fdd835;">10 000 ₽</h4>
-                <p>Денежный приз</p>
-                <div style="font-size:12px;color:#6a8a6a;margin:8px 0 4px;">
-                    🎯 Пригласите <strong style="color:#fdd835;">10 человек</strong> чтобы участвовать
-                </div>
-                <div class="progress-wrap">
-                    <div class="progress-glow" id="cashGlow"></div>
-                    <div class="progress-bar cash" id="cashProgress" style="width:0%;background:linear-gradient(90deg,#fdd835,#f9a825);"></div>
-                </div>
-                <div class="progress-label">
-                    <span>Приглашено: <span id="cashInvites">0</span>/10</span>
-                    <span id="cashLabel" style="color:#6a8a6a;">0%</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#6a8a6a;margin-top:4px;">
-                    <span>Статус:</span>
-                    <span id="cashStatus" style="color:#6a8a6a;">❌ Не участвуете</span>
                 </div>
             </div>
         </div>
@@ -1499,7 +965,7 @@
             </div>
         </div>
 
-        <!-- ===== РЕФЕРАЛЬНАЯ ССЫЛКА ===== -->
+        <!-- ===== РЕФЕРАЛКА ===== -->
         <div class="tab-content" id="tabReferral">
             <div class="referral-card">
                 <div class="ref-icon">🔗</div>
@@ -1542,12 +1008,13 @@
             <div id="walletHistory"></div>
         </div>
 
-        <!-- ===== ПРОФИЛЬ ===== -->
+        <!-- ===== ПРОФИЛЬ С ОТЗЫВАМИ ===== -->
         <div class="tab-content" id="tabProfile">
             <div class="profile-card">
                 <div class="avatar" id="profileAvatar">👤</div>
                 <div class="nick" id="profileNick">Гость</div>
                 <div class="info">🆔 <span id="profileId">#GM0000</span></div>
+                
                 <div class="stat-grid">
                     <div class="item">
                         <div class="num" id="pInvites">0</div>
@@ -1557,8 +1024,28 @@
                         <div class="num" id="pTickets">0</div>
                         <div class="lbl">Тикеты</div>
                     </div>
+                    <div class="item">
+                        <div class="num" id="pBalance">0</div>
+                        <div class="lbl">Баланс ₽</div>
+                    </div>
+                    <div class="item">
+                        <div class="num" id="pPlace">#--</div>
+                        <div class="lbl">Место в топе</div>
+                    </div>
                 </div>
+                
                 <button class="invite-btn" id="profileInviteBtn">👥 Пригласить друга</button>
+                
+                <!-- ===== ОТЗЫВЫ В ПРОФИЛЕ ===== -->
+                <div style="margin-top:16px;border-top:1px solid rgba(76,175,80,0.06);padding-top:12px;">
+                    <div style="font-size:12px;color:#6a8a6a;margin-bottom:8px;display:flex;justify-content:space-between;">
+                        <span>⭐ Отзывы пользователей</span>
+                        <span style="color:#fdd835;">★★★★★ 4.8</span>
+                    </div>
+                    <div class="reviews-scroll" id="reviewsScroll">
+                        <!-- Отзывы будут добавлены через JavaScript -->
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1710,6 +1197,38 @@
         const withdrawBtn = document.getElementById('withdrawBtn');
         const hintEl = document.getElementById('withdrawHint');
 
+        // === ОТЗЫВЫ ===
+        const reviewData = [
+            { name: 'SkyWolfWalker', stars: 5, text: 'Всё отлично! Деньги пришли быстро!' },
+            { name: 'Zayka_3', stars: 4, text: 'Хороший сервис, долго выводили, но пришли.' },
+            { name: 'MC Грегор', stars: 5, text: 'Лучшая подработка! Уже 3 раз вывожу!' },
+            { name: 'FrostByte', stars: 4, text: 'Неплохо, интерфейс можно улучшить.' },
+            { name: 'K1A', stars: 5, text: '🔥 За 2 недели вывел 15000 ₽!' }
+        ];
+
+        const avatarColors = ['#4caf50', '#e91e63', '#fdd835', '#2196f3', '#ff5722'];
+
+        function renderReviews() {
+            const container = document.getElementById('reviewsScroll');
+            container.innerHTML = '';
+            reviewData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'review-mini';
+                const stars = '★'.repeat(item.stars) + '☆'.repeat(5 - item.stars);
+                const color = avatarColors[index % avatarColors.length];
+                div.innerHTML = `
+                    <div class="review-top">
+                        <span class="r-avatar" style="background:${color};">${item.name.charAt(0)}</span>
+                        <span class="r-name">${item.name}</span>
+                        <span class="r-stars">${stars}</span>
+                    </div>
+                    <div class="review-text">${item.text}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        renderReviews();
+
         function updateUI() {
             balanceEl.textContent = balance;
             ticketDisplay.textContent = tickets;
@@ -1719,9 +1238,14 @@
             walletInvites.textContent = invites;
             document.getElementById('pTickets').textContent = tickets;
             document.getElementById('pInvites').textContent = invites;
+            document.getElementById('pBalance').textContent = balance;
             document.getElementById('refInvites').textContent = invites;
             document.getElementById('refEarned').textContent = (invites * 300).toLocaleString();
             document.getElementById('leaderTickets').textContent = tickets;
+
+            // Место в топе
+            const place = getPlace();
+            document.getElementById('pPlace').textContent = place;
 
             if (balance >= WITHDRAW_THRESHOLD) {
                 withdrawBtn.classList.remove('disabled');
@@ -1736,65 +1260,38 @@
             checkContestProgress();
         }
 
-        // ===== КОНКУРСЫ =====
-        let iphoneCompleted = false, macbookCompleted = false, cashCompleted = false;
+        // ===== КОНКУРС (iPhone) =====
+        let iphoneCompleted = false;
 
         function checkContestProgress() {
             const iphoneInvites = Math.min(invites, 15);
-            const macbookInvites = Math.min(invites, 15);
-            const cashInvites = Math.min(invites, 10);
-
             document.getElementById('iphoneInvites').textContent = iphoneInvites;
-            document.getElementById('macbookInvites').textContent = macbookInvites;
-            document.getElementById('cashInvites').textContent = cashInvites;
 
             const iphonePercent = (iphoneInvites / 15 * 100);
-            const macbookPercent = (macbookInvites / 15 * 100);
-            const cashPercent = (cashInvites / 10 * 100);
-
             document.getElementById('iphoneProgress').style.width = iphonePercent + '%';
-            document.getElementById('macbookProgress').style.width = macbookPercent + '%';
-            document.getElementById('cashProgress').style.width = cashPercent + '%';
-
             document.getElementById('iphoneLabel').textContent = Math.round(iphonePercent) + '%';
-            document.getElementById('macbookLabel').textContent = Math.round(macbookPercent) + '%';
-            document.getElementById('cashLabel').textContent = Math.round(cashPercent) + '%';
 
             if (iphoneInvites >= 15 && !iphoneCompleted) {
                 iphoneCompleted = true;
                 document.getElementById('iphoneStatus').textContent = '✅ УЧАСТВУЕТЕ!';
-                document.getElementById('iphoneStatus').style.color = '#9c27b0';
+                document.getElementById('iphoneStatus').style.color = '#ce93d8';
+                document.getElementById('iphoneStatus').className = 'status-done';
                 document.getElementById('iphoneLabel').textContent = '🎉 ГОТОВО!';
-                document.getElementById('iphoneLabel').style.color = '#9c27b0';
+                document.getElementById('iphoneLabel').style.color = '#ce93d8';
                 document.getElementById('iphoneLabel').className = 'label-complete';
                 document.getElementById('iphoneGlow').classList.add('active');
                 createConfetti(['confetti-purple', 'confetti-pink', 'confetti-gold'], 120);
                 setTimeout(() => { document.getElementById('iphoneGlow').classList.remove('active'); }, 2000);
             }
+        }
 
-            if (macbookInvites >= 15 && !macbookCompleted) {
-                macbookCompleted = true;
-                document.getElementById('macbookStatus').textContent = '✅ УЧАСТВУЕТЕ!';
-                document.getElementById('macbookStatus').style.color = '#9c27b0';
-                document.getElementById('macbookLabel').textContent = '🎉 ГОТОВО!';
-                document.getElementById('macbookLabel').style.color = '#9c27b0';
-                document.getElementById('macbookLabel').className = 'label-complete';
-                document.getElementById('macbookGlow').classList.add('active');
-                createConfetti(['confetti-purple', 'confetti-pink', 'confetti-gold'], 120);
-                setTimeout(() => { document.getElementById('macbookGlow').classList.remove('active'); }, 2000);
-            }
-
-            if (cashInvites >= 10 && !cashCompleted) {
-                cashCompleted = true;
-                document.getElementById('cashStatus').textContent = '✅ УЧАСТВУЕТЕ!';
-                document.getElementById('cashStatus').style.color = '#fdd835';
-                document.getElementById('cashLabel').textContent = '🎉 ГОТОВО!';
-                document.getElementById('cashLabel').style.color = '#fdd835';
-                document.getElementById('cashLabel').className = 'label-complete cash';
-                document.getElementById('cashGlow').classList.add('active');
-                createConfetti(['confetti-gold', 'confetti-purple', 'confetti-pink'], 120);
-                setTimeout(() => { document.getElementById('cashGlow').classList.remove('active'); }, 2000);
-            }
+        // ===== МЕСТО В ТОПЕ =====
+        function getPlace() {
+            const allData = [...leaderData];
+            if (tickets > 0) allData.push({ name: profileNick, tickets: tickets });
+            allData.sort((a, b) => b.tickets - a.tickets);
+            const index = allData.findIndex(item => item.name === profileNick && item.tickets === tickets);
+            return index >= 0 ? '#' + (index + 1) : '#--';
         }
 
         // ===== ЛЕНТА ВЫВОДОВ =====
@@ -1832,7 +1329,7 @@
 
         // ===== ОНЛАЙН =====
         const onlineUsers = ['Екатерина', 'FrostByte', 'ShadowStrike', 'Zayka_3', 'NightHawk', 'StormBreaker', 'K1A', 'VenomX', 'RageQuit', 'MC Грегор', 'MoonBoy', 'CyberPunk', 'Ghost_FPS', 'Boss_420', 'DiamondHands'];
-        const avatarColors = ['#1b5e20','#2e7d32','#388e3c','#43a047','#4caf50','#66bb6a','#81c784','#a5d6a7'];
+        const onlineColors = ['#1b5e20','#2e7d32','#388e3c','#43a047','#4caf50','#66bb6a','#81c784','#a5d6a7'];
 
         function renderOnline() {
             const ribbon = document.getElementById('onlineRibbon');
@@ -1845,7 +1342,7 @@
             shuffled.slice(0, count).forEach(name => {
                 const div = document.createElement('div');
                 div.className = 'online-user';
-                const color = randomItem(avatarColors);
+                const color = randomItem(onlineColors);
                 div.innerHTML = `
                     <span class="dot-online"></span>
                     <span class="avatar-mini" style="background:${color};">${name.charAt(0).toUpperCase()}</span>
@@ -1938,7 +1435,7 @@
         document.getElementById('profileNick').textContent = profileNick;
         document.getElementById('profileId').textContent = 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
         const avatarEl = document.getElementById('profileAvatar');
-        avatarEl.style.background = `linear-gradient(135deg, ${randomItem(avatarColors)}, ${randomItem(avatarColors)})`;
+        avatarEl.style.background = `linear-gradient(135deg, ${randomItem(onlineColors)}, ${randomItem(onlineColors)})`;
         avatarEl.textContent = profileNick.charAt(0).toUpperCase();
 
         // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
@@ -2121,6 +1618,8 @@
         console.log('💰 Баланс:', balance, '₽');
         console.log('📱 Реферальная ссылка:', refLink);
         console.log('💡 Для теста вызовите addRealInvite() в консоли');
+        console.log('📱 iPhone с новым фото!');
+        console.log('⭐ Отзывы перенесены в профиль!');
     }
 </script>
 </body>
