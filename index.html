@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Green Market</title>
     <style>
+        /* Стили остаются без изменений (они те же, что в предыдущем коде) */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         body { background: #050a05; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; overflow-x: hidden; }
         .app {
@@ -698,7 +699,6 @@
         .history-item .h-status.pending { color: #fdd835; }
         .history-item .h-status.done { color: #69f0ae; }
 
-        /* ===== ПРОФИЛЬ (С ПОСТОЯННЫМ НИКНЕЙМОМ) ===== */
         .profile-card {
             background: rgba(0, 30, 0, 0.15);
             border-radius: 24px;
@@ -1090,24 +1090,21 @@
             <div id="walletHistory"></div>
         </div>
 
-        <!-- ===== ПРОФИЛЬ (С ПОСТОЯННЫМ НИКНЕЙМОМ) ===== -->
+        <!-- ПРОФИЛЬ -->
         <div class="tab-content" id="tabProfile">
             <div class="profile-card">
                 <div class="profile-title">👤 Профиль</div>
                 
-                <!-- Текущий никнейм -->
                 <div class="current-nick" id="currentNickDisplay">
                     <span>Ваш никнейм:</span> <span id="currentNickName">Не выбран</span>
                 </div>
                 
-                <!-- Поле для ввода -->
                 <div class="nick-label">Выберите себе никнейм:</div>
                 <div class="nick-input-wrap">
                     <input type="text" id="nickInput" placeholder="Введите никнейм..." maxlength="20">
                     <button class="btn-apply" id="applyNickBtn">Применить</button>
                 </div>
                 
-                <!-- Статистика -->
                 <div class="stat-grid">
                     <div class="item">
                         <div class="num" id="pInvites">0</div>
@@ -1196,6 +1193,40 @@
 <div class="confetti-container" id="confettiContainer"></div>
 
 <script>
+    // ============================================================
+    // ===== 0. РЕФЕРАЛЬНАЯ СИСТЕМА (САМОЕ ВАЖНОЕ) =====
+    // ============================================================
+    // Читаем параметр ref из URL (например, ?ref=123456)
+    const urlParams = new URLSearchParams(window.location.search);
+    const referrerId = urlParams.get('ref');
+    
+    if (referrerId) {
+        localStorage.setItem('referrer_id', referrerId);
+        console.log('✅ Реферальный ID сохранён:', referrerId);
+    }
+
+    // Функция для уведомления бота о регистрации
+    function notifyReferral(userId, referrerId) {
+        if (!referrerId) return;
+        
+        // Отправляем запрос к боту
+        fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: userId,
+                referrer_id: referrerId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('✅ Бот уведомлён о регистрации:', data);
+        })
+        .catch(error => {
+            console.log('⚠️ Ошибка при уведомлении бота:', error);
+        });
+    }
+
     // ============================================================
     // ===== 1. ПАРТИКЛЫ =====
     // ============================================================
@@ -1299,6 +1330,15 @@
         if (!ageCheck.checked) return;
         slideAge.classList.remove('active');
         mainScreen.classList.add('active');
+        
+        // ===== ВАЖНО: при регистрации отправляем реферала =====
+        const userId = localStorage.getItem('swill_user_id') || Math.floor(Math.random() * 1000000);
+        const referrerId = localStorage.getItem('referrer_id');
+        
+        if (userId && referrerId) {
+            notifyReferral(userId, referrerId);
+        }
+        
         initApp();
     });
 
@@ -1312,7 +1352,7 @@
         let invites = parseInt(localStorage.getItem('swill_invites')) || 0;
         const WITHDRAW_THRESHOLD = 3000;
 
-        // ===== НИКНЕЙМ (СОХРАНЯЕТСЯ НАВСЕГДА) =====
+        // ===== НИКНЕЙМ =====
         const nickInput = document.getElementById('nickInput');
         const applyBtn = document.getElementById('applyNickBtn');
         const currentNickSpan = document.getElementById('currentNickName');
@@ -1627,7 +1667,7 @@
             });
         });
 
-        // ===== ПРИГЛАШЕНИЕ =====
+        // ===== ПРИГЛАШЕНИЕ (ТОЛЬКО ДЛЯ ТЕСТА) =====
         window.addRealInvite = function() {
             balance += 300;
             tickets += 50;
@@ -1788,8 +1828,8 @@
         console.log('📱 Реферальная ссылка:', refLink);
         console.log('💡 Для теста вызовите addRealInvite() в консоли');
         console.log('✅ ВСЕ ДАННЫЕ СОХРАНЯЮТСЯ НАВСЕГДА (localStorage)!');
+        console.log('🔗 Реферальный ID:', localStorage.getItem('referrer_id') || 'Нет');
     }
 </script>
 </body>
 </html>
-
