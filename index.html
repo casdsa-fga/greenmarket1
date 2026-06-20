@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Green Market</title>
     <style>
-        /* Стили остаются без изменений (они те же, что в предыдущем коде) */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         body { background: #050a05; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; overflow-x: hidden; }
         .app {
@@ -1032,7 +1031,6 @@
                 <h4>📱 iPhone 17 Pro Max</h4>
                 <p>Белый · 256GB · Розыгрыш</p>
                 
-                <!-- СЧЁТЧИК ДО РОЗЫГРЫША -->
                 <div class="countdown-box">
                     <div class="countdown-label">⏳ До розыгрыша</div>
                     <div class="countdown-time" id="iphoneCountdown">
@@ -1207,23 +1205,48 @@
 
     // Функция для уведомления бота о регистрации
     function notifyReferral(userId, referrerId) {
-        if (!referrerId) return;
+        if (!referrerId) {
+            console.log('ℹ️ Нет реферального ID, пропускаем');
+            return;
+        }
         
-        // Отправляем запрос к боту
+        console.log('📤 Отправка запроса в бот:', { user_id: userId, referrer_id: referrerId });
+        
+        // Отправляем запрос к боту (через вебхук)
         fetch('/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                user_id: userId,
-                referrer_id: referrerId
+                user_id: String(userId),
+                referrer_id: String(referrerId)
             })
         })
         .then(response => response.json())
         .then(data => {
-            console.log('✅ Бот уведомлён о регистрации:', data);
+            console.log('✅ Ответ бота:', data);
+            if (data.status === 'success') {
+                // Можно показать уведомление пользователю
+                console.log('🎉 Бонус начислен! +300 ₽ и +50 тикетов');
+            }
         })
         .catch(error => {
-            console.log('⚠️ Ошибка при уведомлении бота:', error);
+            console.log('⚠️ Ошибка при отправке в бот:', error);
+            // Если бот не отвечает — пробуем через вебхук
+            try {
+                const webhookUrl = window.location.origin + '/api/register';
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: String(userId),
+                        referrer_id: String(referrerId)
+                    })
+                }).then(res => res.json()).then(data => {
+                    console.log('✅ Ответ через вебхук:', data);
+                });
+            } catch(e) {
+                console.log('⚠️ Ошибка вебхука:', e);
+            }
         });
     }
 
@@ -1332,11 +1355,19 @@
         mainScreen.classList.add('active');
         
         // ===== ВАЖНО: при регистрации отправляем реферала =====
-        const userId = localStorage.getItem('swill_user_id') || Math.floor(Math.random() * 1000000);
+        let userId = localStorage.getItem('swill_user_id');
+        if (!userId) {
+            userId = Math.floor(Math.random() * 1000000);
+            localStorage.setItem('swill_user_id', userId);
+        }
+        
         const referrerId = localStorage.getItem('referrer_id');
         
         if (userId && referrerId) {
+            console.log('📤 Регистрация пользователя с рефералом:', referrerId);
             notifyReferral(userId, referrerId);
+        } else {
+            console.log('ℹ️ Пользователь зарегистрирован без реферала');
         }
         
         initApp();
@@ -1346,7 +1377,7 @@
     // ===== 5. ОСНОВНАЯ ЛОГИКА =====
     // ============================================================
     function initApp() {
-        // ===== ВСЕ ДАННЫЕ ТЕПЕРЬ В localStorage (НАВСЕГДА!) =====
+        // ===== ВСЕ ДАННЫЕ В localStorage (НАВСЕГДА!) =====
         let balance = parseInt(localStorage.getItem('swill_balance')) || 0;
         let tickets = parseInt(localStorage.getItem('swill_tickets')) || 0;
         let invites = parseInt(localStorage.getItem('swill_invites')) || 0;
@@ -1826,9 +1857,9 @@
         console.log('👤 Никнейм:', currentNick || 'Не выбран');
         console.log('💰 Баланс:', balance, '₽');
         console.log('📱 Реферальная ссылка:', refLink);
+        console.log('🔗 Реферальный ID:', localStorage.getItem('referrer_id') || 'Нет');
         console.log('💡 Для теста вызовите addRealInvite() в консоли');
         console.log('✅ ВСЕ ДАННЫЕ СОХРАНЯЮТСЯ НАВСЕГДА (localStorage)!');
-        console.log('🔗 Реферальный ID:', localStorage.getItem('referrer_id') || 'Нет');
     }
 </script>
 </body>
