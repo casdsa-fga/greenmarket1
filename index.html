@@ -480,7 +480,6 @@
             font-size: 12px; font-weight: 700; color: #fff;
         }
 
-        /* ===== КОНКУРС iPhone ===== */
         .contest-card {
             background: rgba(0, 30, 0, 0.25);
             backdrop-filter: blur(20px);
@@ -512,7 +511,6 @@
             box-shadow: 0 0 30px rgba(156, 39, 176, 0.3);
             z-index: 1;
         }
-
         .contest-card .product-image {
             width: 100%;
             border-radius: 16px;
@@ -570,7 +568,6 @@
             letter-spacing: 1px;
         }
 
-        /* ===== ШКАЛА ПРОГРЕССА ===== */
         .goal-text {
             font-size: 13px;
             color: #8aaa8a;
@@ -701,6 +698,7 @@
         .history-item .h-status.pending { color: #fdd835; }
         .history-item .h-status.done { color: #69f0ae; }
 
+        /* ===== ПРОФИЛЬ (С ПОСТОЯННЫМ НИКНЕЙМОМ) ===== */
         .profile-card {
             background: rgba(0, 30, 0, 0.15);
             border-radius: 24px;
@@ -1026,7 +1024,7 @@
             <div class="online-ribbon" id="onlineRibbon"></div>
         </div>
 
-        <!-- ===== КОНКУРСЫ (СО СЧЁТЧИКОМ) ===== -->
+        <!-- КОНКУРСЫ -->
         <div class="tab-content" id="tabContests">
             <div class="contest-card" id="iphoneCard">
                 <span class="prize-badge">🏆 ГЛАВНЫЙ ПРИЗ</span>
@@ -1034,7 +1032,7 @@
                 <h4>📱 iPhone 17 Pro Max</h4>
                 <p>Белый · 256GB · Розыгрыш</p>
                 
-                <!-- ===== СЧЁТЧИК ДО РОЗЫГРЫША ===== -->
+                <!-- СЧЁТЧИК ДО РОЗЫГРЫША -->
                 <div class="countdown-box">
                     <div class="countdown-label">⏳ До розыгрыша</div>
                     <div class="countdown-time" id="iphoneCountdown">
@@ -1092,18 +1090,24 @@
             <div id="walletHistory"></div>
         </div>
 
-        <!-- ПРОФИЛЬ -->
+        <!-- ===== ПРОФИЛЬ (С ПОСТОЯННЫМ НИКНЕЙМОМ) ===== -->
         <div class="tab-content" id="tabProfile">
             <div class="profile-card">
                 <div class="profile-title">👤 Профиль</div>
+                
+                <!-- Текущий никнейм -->
                 <div class="current-nick" id="currentNickDisplay">
                     <span>Ваш никнейм:</span> <span id="currentNickName">Не выбран</span>
                 </div>
+                
+                <!-- Поле для ввода -->
                 <div class="nick-label">Выберите себе никнейм:</div>
                 <div class="nick-input-wrap">
                     <input type="text" id="nickInput" placeholder="Введите никнейм..." maxlength="20">
                     <button class="btn-apply" id="applyNickBtn">Применить</button>
                 </div>
+                
+                <!-- Статистика -->
                 <div class="stat-grid">
                     <div class="item">
                         <div class="num" id="pInvites">0</div>
@@ -1122,7 +1126,9 @@
                         <div class="lbl">Место в топе</div>
                     </div>
                 </div>
+                
                 <button class="invite-btn" id="profileInviteBtn">👥 Пригласить друга</button>
+                
                 <div style="margin-top:16px;border-top:1px solid rgba(76,175,80,0.06);padding-top:12px;">
                     <div style="font-size:12px;color:#6a8a6a;margin-bottom:8px;display:flex;justify-content:space-between;">
                         <span>⭐ Отзывы пользователей</span>
@@ -1233,7 +1239,6 @@
     let countdownStartTime = Date.now();
 
     if (!countdownEnd) {
-        // Первый запуск — 5 дней
         countdownEnd = Date.now() + 5 * 24 * 60 * 60 * 1000;
         localStorage.setItem('iphone_countdown_end', countdownEnd);
     }
@@ -1242,12 +1247,10 @@
         const now = Date.now();
         let diff = parseInt(countdownEnd) - now;
 
-        // Если время вышло — перезапускаем на 5 дней
         if (diff <= 0) {
             countdownEnd = Date.now() + 5 * 24 * 60 * 60 * 1000;
             localStorage.setItem('iphone_countdown_end', countdownEnd);
             diff = 5 * 24 * 60 * 60 * 1000;
-            // Эффект при перезапуске
             createConfetti(['confetti-gold', 'confetti-purple'], 40);
         }
 
@@ -1262,7 +1265,6 @@
         document.getElementById('cdSeconds').textContent = String(seconds).padStart(2, '0');
     }
 
-    // Обновляем счётчик каждую секунду
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
@@ -1304,18 +1306,19 @@
     // ===== 5. ОСНОВНАЯ ЛОГИКА =====
     // ============================================================
     function initApp() {
-        let balance = parseInt(sessionStorage.getItem('swill_balance')) || 0;
-        let tickets = parseInt(sessionStorage.getItem('swill_tickets')) || 0;
-        let invites = parseInt(sessionStorage.getItem('swill_invites')) || 0;
+        // ===== ВСЕ ДАННЫЕ ТЕПЕРЬ В localStorage (НАВСЕГДА!) =====
+        let balance = parseInt(localStorage.getItem('swill_balance')) || 0;
+        let tickets = parseInt(localStorage.getItem('swill_tickets')) || 0;
+        let invites = parseInt(localStorage.getItem('swill_invites')) || 0;
         const WITHDRAW_THRESHOLD = 3000;
 
-        // ===== НИКНЕЙМ =====
+        // ===== НИКНЕЙМ (СОХРАНЯЕТСЯ НАВСЕГДА) =====
         const nickInput = document.getElementById('nickInput');
         const applyBtn = document.getElementById('applyNickBtn');
         const currentNickSpan = document.getElementById('currentNickName');
         
-        let currentNick = sessionStorage.getItem('swill_nick') || '';
-        let isNickLocked = sessionStorage.getItem('swill_nick_locked') === 'true';
+        let currentNick = localStorage.getItem('swill_nick') || '';
+        let isNickLocked = localStorage.getItem('swill_nick_locked') === 'true';
 
         function updateNickUI() {
             if (currentNick) {
@@ -1350,8 +1353,8 @@
             }
 
             currentNick = newNick;
-            sessionStorage.setItem('swill_nick', currentNick);
-            sessionStorage.setItem('swill_nick_locked', 'true');
+            localStorage.setItem('swill_nick', currentNick);
+            localStorage.setItem('swill_nick_locked', 'true');
             isNickLocked = true;
             updateNickUI();
             createConfetti(['confetti-gold', 'confetti-green'], 50);
@@ -1421,9 +1424,9 @@
                 withdrawBtn.classList.add('disabled');
                 hintEl.textContent = `❌ Нужно ещё ${WITHDRAW_THRESHOLD - balance} ₽`;
             }
-            sessionStorage.setItem('swill_balance', balance);
-            sessionStorage.setItem('swill_tickets', tickets);
-            sessionStorage.setItem('swill_invites', invites);
+            localStorage.setItem('swill_balance', balance);
+            localStorage.setItem('swill_tickets', tickets);
+            localStorage.setItem('swill_invites', invites);
             checkContestProgress();
         }
 
@@ -1573,7 +1576,7 @@
         renderLeaders();
 
         // ===== ИСТОРИЯ =====
-        let historyData = JSON.parse(sessionStorage.getItem('swill_history')) || [];
+        let historyData = JSON.parse(localStorage.getItem('swill_history')) || [];
 
         function renderWalletHistory() {
             const container = document.getElementById('walletHistory');
@@ -1601,9 +1604,10 @@
         renderWalletHistory();
 
         // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
-        const userId = sessionStorage.getItem('swill_user_id') || Math.floor(Math.random() * 1000000);
-        if (!sessionStorage.getItem('swill_user_id')) {
-            sessionStorage.setItem('swill_user_id', userId);
+        let userId = localStorage.getItem('swill_user_id');
+        if (!userId) {
+            userId = Math.floor(Math.random() * 1000000);
+            localStorage.setItem('swill_user_id', userId);
         }
         const refLink = 'https://t.me/Green_marketBot?start=' + userId;
         document.getElementById('refLinkMiniText').textContent = refLink;
@@ -1636,7 +1640,7 @@
             };
             historyData.unshift(newHist);
             if (historyData.length > 20) historyData.pop();
-            sessionStorage.setItem('swill_history', JSON.stringify(historyData));
+            localStorage.setItem('swill_history', JSON.stringify(historyData));
             updateUI();
             renderLeaders();
             renderWalletHistory();
@@ -1752,7 +1756,7 @@
             };
             historyData.unshift(newHist);
             if (historyData.length > 20) historyData.pop();
-            sessionStorage.setItem('swill_history', JSON.stringify(historyData));
+            localStorage.setItem('swill_history', JSON.stringify(historyData));
 
             balance -= amount;
             updateUI();
@@ -1783,8 +1787,9 @@
         console.log('💰 Баланс:', balance, '₽');
         console.log('📱 Реферальная ссылка:', refLink);
         console.log('💡 Для теста вызовите addRealInvite() в консоли');
-        console.log('⏳ Счётчик до розыгрыша: 5 дней (обновляется автоматически)');
+        console.log('✅ ВСЕ ДАННЫЕ СОХРАНЯЮТСЯ НАВСЕГДА (localStorage)!');
     }
 </script>
 </body>
 </html>
+
