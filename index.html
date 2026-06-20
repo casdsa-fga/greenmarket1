@@ -1,0 +1,2127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Green Market</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background: #050a05;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+        .app {
+            max-width: 420px;
+            width: 100%;
+            background: linear-gradient(170deg, #071207, #030803);
+            border-radius: 40px;
+            padding: 18px 14px 24px;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 100px rgba(0, 255, 100, 0.03), inset 0 0 100px rgba(0, 255, 100, 0.01);
+            position: relative;
+            overflow: hidden;
+            min-height: 700px;
+        }
+
+        .bg-grid {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(76, 175, 80, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(76, 175, 80, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-glow.g1 { width: 400px; height: 400px; background: rgba(0, 200, 80, 0.04); top: -200px; right: -100px; animation: glowPulse 6s ease-in-out infinite; }
+        .bg-glow.g2 { width: 300px; height: 300px; background: rgba(255, 215, 0, 0.03); bottom: -100px; left: -100px; animation: glowPulse 8s ease-in-out infinite reverse; }
+        .bg-glow.g3 { width: 200px; height: 200px; background: rgba(156, 39, 176, 0.03); top: 40%; left: 20%; animation: glowPulse 10s ease-in-out infinite; }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .particles {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #4caf50, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle 10s infinite;
+        }
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(100%) scale(0); }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { opacity: 0; transform: translateY(-100vh) scale(1); }
+        }
+
+        .confetti-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            animation: confettiFall 2.5s ease-out forwards;
+        }
+        @keyframes confettiFall {
+            0% { opacity: 1; transform: translateY(-20px) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.3); }
+        }
+        .confetti-purple { background: #9c27b0; box-shadow: 0 0 15px #9c27b0; }
+        .confetti-red { background: #f44336; box-shadow: 0 0 15px #f44336; }
+        .confetti-pink { background: #e91e63; box-shadow: 0 0 15px #e91e63; }
+        .confetti-gold { background: #fdd835; box-shadow: 0 0 15px #fdd835; }
+        .confetti-green { background: #4caf50; box-shadow: 0 0 15px #4caf50; }
+
+        .slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 650px;
+            padding: 20px 10px;
+            animation: fadeSlide 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            z-index: 1;
+        }
+        .slide.active { display: flex; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .slide-welcome { text-align: center; }
+        .slide-welcome .logo {
+            font-size: 52px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #69f0ae, #00c853, #69f0ae);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 4s ease infinite;
+            filter: drop-shadow(0 0 40px rgba(0, 200, 80, 0.2));
+        }
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .slide-welcome .sub {
+            color: #4caf50;
+            font-size: 14px;
+            letter-spacing: 6px;
+            font-weight: 300;
+            margin: 6px 0 30px;
+            opacity: 0.7;
+        }
+        .slide-welcome .features {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0 35px;
+        }
+        .slide-welcome .features span {
+            background: rgba(0, 255, 100, 0.05);
+            padding: 10px 22px;
+            border-radius: 50px;
+            border: 1px solid rgba(76, 175, 80, 0.12);
+            font-size: 13px;
+            font-weight: 600;
+            color: #a5d6a7;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .slide-welcome .features span:hover {
+            background: rgba(0, 255, 100, 0.1);
+            border-color: rgba(76, 175, 80, 0.3);
+            transform: translateY(-2px);
+        }
+        .slide-welcome .btn-start {
+            background: linear-gradient(135deg, #fdd835, #f9a825);
+            color: #000;
+            padding: 18px 70px;
+            border-radius: 60px;
+            font-weight: 900;
+            font-size: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 60px rgba(253, 216, 53, 0.25);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .slide-welcome .btn-start::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        .slide-welcome .btn-start:active { transform: scale(0.95); }
+        .slide-welcome .footer-text {
+            font-size: 11px;
+            color: #3a5a3a;
+            margin-top: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-age { text-align: center; position: relative; }
+        .slide-age .age-icon { font-size: 80px; margin-bottom: 15px; filter: drop-shadow(0 0 40px rgba(0,200,80,0.15)); }
+        .slide-age h2 { color: #69f0ae; font-size: 24px; margin-bottom: 8px; font-weight: 700; }
+        .slide-age p { color: #6a8a6a; font-size: 14px; margin-bottom: 30px; }
+        .slide-age .checkbox-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(0, 30, 0, 0.3);
+            padding: 16px 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 300px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .slide-age .checkbox-wrap:hover { border-color: rgba(76, 175, 80, 0.3); transform: scale(1.02); }
+        .slide-age .checkbox-wrap input[type="checkbox"] {
+            width: 22px; height: 22px;
+            accent-color: #4caf50;
+            cursor: pointer;
+        }
+        .slide-age .checkbox-wrap label {
+            color: #b0d0b0;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .slide-age .btn-continue {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: #e0f0e0;
+            padding: 18px 70px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 18px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.3;
+            pointer-events: none;
+            box-shadow: 0 0 40px rgba(0,200,80,0);
+        }
+        .slide-age .btn-continue.active {
+            opacity: 1;
+            pointer-events: auto;
+            box-shadow: 0 0 60px rgba(0,200,80,0.15);
+        }
+        .slide-age .btn-continue:active { transform: scale(0.95); }
+        .slide-age .deco-bg {
+            position: absolute;
+            font-size: 180px;
+            opacity: 0.03;
+            pointer-events: none;
+            animation: floatDeco 10s ease-in-out infinite;
+        }
+        @keyframes floatDeco {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        .slide-age .deco-bg.d1 { bottom: -20px; right: -30px; }
+        .slide-age .deco-bg.d2 { top: -20px; left: -30px; }
+
+        .main-screen {
+            display: none;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+        .main-screen.active { display: flex; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .promo-badge {
+            background: linear-gradient(135deg, #00c853, #00e676);
+            color: #000;
+            padding: 5px 16px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 11px;
+            box-shadow: 0 0 40px rgba(0,200,80,0.2);
+            animation: pulseBadge 2s infinite;
+        }
+        @keyframes pulseBadge {
+            0%, 100% { box-shadow: 0 0 30px rgba(0,200,80,0.2); }
+            50% { box-shadow: 0 0 60px rgba(0,200,80,0.4); }
+        }
+        .timer-block {
+            background: rgba(15, 26, 15, 0.7);
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.12);
+            font-size: 14px;
+            font-weight: 700;
+            color: #8bc34a;
+            backdrop-filter: blur(10px);
+            font-variant-numeric: tabular-nums;
+        }
+        .online-count {
+            background: rgba(15, 26, 15, 0.7);
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.12);
+            font-size: 13px;
+            font-weight: 700;
+            color: #69f0ae;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+        }
+        .online-count .dot {
+            width: 7px; height: 7px;
+            background: #00e676;
+            border-radius: 50%;
+            animation: blink 1.4s infinite;
+            box-shadow: 0 0 15px #00e676;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+
+        .balance-banner {
+            background: linear-gradient(135deg, rgba(0, 30, 0, 0.4), rgba(0, 50, 0, 0.2));
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            margin-bottom: 14px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .balance-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -50%;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(0,255,100,0.03), transparent);
+            border-radius: 50%;
+        }
+        .balance-banner .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .balance-banner .label {
+            color: #6a8a6a;
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        .balance-banner .amount {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #69f0ae, #00c853);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(0,200,80,0.15));
+        }
+        .balance-banner .sub-info {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #4a7a4a;
+        }
+        .balance-banner .sub-info span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .withdraw-btn {
+            width: 100%;
+            padding: 16px;
+            margin: 8px 0 4px;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 17px;
+            color: #e0f0e0;
+            box-shadow: 0 4px 40px rgba(0,200,80,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        .withdraw-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+        .withdraw-btn:hover::before { left: 100%; }
+        .withdraw-btn:active { transform: scale(0.97); }
+        .withdraw-btn.disabled {
+            opacity: 0.3;
+            filter: grayscale(0.8);
+            pointer-events: none;
+        }
+        .withdraw-hint {
+            color: #a5d6a7;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 6px;
+            opacity: 0.6;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 2px;
+            margin: 14px 0 12px;
+            border-bottom: 1px solid rgba(26, 58, 26, 0.3);
+            padding-bottom: 8px;
+        }
+        .tab-btn {
+            flex: 1;
+            min-width: 32px;
+            padding: 10px 2px;
+            background: transparent;
+            border: none;
+            color: #4a7a4a;
+            font-weight: 700;
+            font-size: 10px;
+            cursor: pointer;
+            border-radius: 14px 14px 0 0;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            position: relative;
+        }
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20%;
+            width: 60%;
+            height: 2px;
+            background: transparent;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            color: #69f0ae;
+            background: rgba(0, 255, 100, 0.04);
+        }
+        .tab-btn.active::after {
+            background: linear-gradient(90deg, transparent, #4caf50, transparent);
+        }
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 430px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+        .tab-content.active { display: flex; }
+        .tab-content::-webkit-scrollbar { width: 3px; }
+        .tab-content::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+
+        .feed-banner {
+            background: linear-gradient(135deg, rgba(0, 30, 0, 0.2), rgba(0, 50, 0, 0.1));
+            border-radius: 18px;
+            padding: 14px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            backdrop-filter: blur(10px);
+        }
+        .feed-banner .title {
+            color: #6a8a6a;
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .feed-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 4px 2px 8px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .feed-scroll::-webkit-scrollbar { height: 2px; }
+        .feed-scroll::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+        .feed-card {
+            min-width: 140px;
+            background: rgba(0, 30, 0, 0.3);
+            border-radius: 16px;
+            padding: 12px 14px;
+            border: 1px solid rgba(76, 175, 80, 0.08);
+            scroll-snap-align: start;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+        .feed-card:hover {
+            border-color: rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+        }
+        .feed-card .f-name {
+            font-weight: 700;
+            color: #a5d6a7;
+            font-size: 14px;
+        }
+        .feed-card .f-amount {
+            font-weight: 900;
+            font-size: 18px;
+            background: linear-gradient(135deg, #69f0ae, #00c853);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 4px 0 2px;
+        }
+        .feed-card .f-time {
+            color: #4a7a4a;
+            font-size: 11px;
+        }
+
+        /* ===== БЛОК ЗАРАБОТАЙ ДЕНЬГИ ===== */
+        .earn-card {
+            background: linear-gradient(135deg, rgba(0, 30, 0, 0.4), rgba(0, 50, 0, 0.2));
+            border-radius: 20px;
+            padding: 18px 16px;
+            border: 2px solid rgba(253, 216, 53, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(253, 216, 53, 0.05);
+        }
+        .earn-card::before {
+            content: '💰';
+            position: absolute;
+            font-size: 150px;
+            opacity: 0.04;
+            right: -30px;
+            bottom: -40px;
+            transform: rotate(15deg);
+        }
+        .earn-card .earn-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .earn-card .earn-header h4 {
+            color: #a5d6a7;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .earn-card .earn-header .amount-big {
+            font-size: 38px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fdd835, #f9a825);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulseAmount 2s infinite;
+        }
+        @keyframes pulseAmount {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .earn-card .earn-sub {
+            color: #6a8a6a;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .earn-card .earn-sub strong {
+            color: #69f0ae;
+        }
+        .earn-card .ref-link-mini {
+            background: rgba(0, 10, 0, 0.5);
+            border-radius: 12px;
+            padding: 10px 14px;
+            border: 1px solid rgba(76, 175, 80, 0.08);
+            font-size: 12px;
+            color: #8aaa8a;
+            word-break: break-all;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .earn-card .ref-link-mini .copy-mini {
+            background: rgba(76, 175, 80, 0.15);
+            border: none;
+            color: #69f0ae;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .earn-card .ref-link-mini .copy-mini:hover {
+            background: rgba(76, 175, 80, 0.25);
+        }
+        .earn-card .earn-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            background: linear-gradient(135deg, #fdd835, #f9a825);
+            border: none;
+            border-radius: 40px;
+            font-weight: 800;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+            box-shadow: 0 4px 40px rgba(253, 216, 53, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .earn-card .earn-btn:active { transform: scale(0.97); }
+
+        /* ===== СТАТИСТИКА ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .stats-grid .stat-item {
+            background: rgba(0, 30, 0, 0.2);
+            border-radius: 14px;
+            padding: 12px 6px;
+            text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.04);
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .stats-grid .stat-item:hover {
+            border-color: rgba(76, 175, 80, 0.1);
+            transform: translateY(-2px);
+        }
+        .stats-grid .stat-item .num {
+            font-size: 16px;
+            font-weight: 900;
+            color: #69f0ae;
+            line-height: 1.2;
+        }
+        .stats-grid .stat-item .num.gold { color: #fdd835; }
+        .stats-grid .stat-item .lbl {
+            font-size: 9px;
+            color: #4a7a4a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+        .stats-grid .stat-item .icon {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .review-item {
+            background: rgba(0, 30, 0, 0.2);
+            border-radius: 14px;
+            padding: 12px 14px;
+            border: 1px solid rgba(76, 175, 80, 0.04);
+            backdrop-filter: blur(10px);
+        }
+        .review-item .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .review-item .review-name {
+            font-weight: 700;
+            color: #a5d6a7;
+            font-size: 14px;
+        }
+        .review-item .review-stars {
+            color: #fdd835;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+        .review-item .review-text {
+            color: #8aaa8a;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .online-ribbon {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 6px 0 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .online-ribbon::-webkit-scrollbar { height: 2px; }
+        .online-ribbon::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+        .online-user {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 30, 0, 0.2);
+            padding: 4px 12px 4px 6px;
+            border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            font-size: 12px;
+            color: #a5d6a7;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .online-user .dot-online {
+            width: 6px; height: 6px;
+            background: #00e676;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00e676;
+            animation: blink 1.4s infinite;
+        }
+        .online-user .avatar-mini {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* ===== КОНКУРСЫ ===== */
+        .contest-card {
+            background: rgba(0, 30, 0, 0.2);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .contest-card:hover {
+            border-color: rgba(76, 175, 80, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(0,200,80,0.03);
+        }
+        .contest-card .prize-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, #fdd835, #f9a825);
+            color: #000;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 30px rgba(253, 216, 53, 0.15);
+            z-index: 1;
+        }
+        .contest-card .prize-badge.purple {
+            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(156, 39, 176, 0.3);
+        }
+        .contest-card img {
+            width: 100%;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            background: rgba(10, 26, 10, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            min-height: 140px;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+        .contest-card img:hover { transform: scale(1.01); }
+        .contest-card h4 {
+            color: #69f0ae;
+            font-size: 18px;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .contest-card p {
+            color: #6a8a6a;
+            font-size: 13px;
+        }
+        .progress-wrap {
+            margin: 10px 0 6px;
+            background: rgba(10, 26, 10, 0.5);
+            border-radius: 30px;
+            height: 10px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-wrap .progress-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(156, 39, 176, 0.15), transparent);
+            opacity: 0;
+            transition: opacity 0.5s;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .progress-wrap .progress-glow.active {
+            opacity: 1;
+            animation: glowPulse 0.5s ease 3;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #1b5e20, #69f0ae);
+            border-radius: 30px;
+            transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+        .progress-bar.purple {
+            background: linear-gradient(90deg, #7b1fa2, #9c27b0, #ce93d8);
+        }
+        .progress-bar.cash {
+            background: linear-gradient(90deg, #fdd835, #f9a825);
+        }
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2));
+            border-radius: 30px;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #6a8a6a;
+        }
+        .progress-label .label-complete {
+            color: #9c27b0;
+            font-weight: 700;
+            animation: statusPulse 1s ease infinite;
+        }
+        .progress-label .label-complete.cash {
+            color: #fdd835;
+        }
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.95); }
+        }
+
+        .chart-container {
+            background: rgba(0, 30, 0, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+        }
+        .chart-container .chart-title {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: #6a8a6a;
+            font-size: 12px;
+        }
+        .chart-container .chart-title span { color: #69f0ae; font-weight: 700; }
+        .chart-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 3px 0;
+            padding: 4px 6px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .chart-bar-wrap:hover { background: rgba(0, 255, 100, 0.03); }
+        .chart-bar-wrap .rank {
+            font-weight: 900;
+            color: #fdd835;
+            font-size: 13px;
+            min-width: 28px;
+            text-align: center;
+        }
+        .chart-bar-wrap .cname {
+            font-weight: 600;
+            color: #a5d6a7;
+            font-size: 13px;
+            min-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chart-bar-wrap .bar-track {
+            flex: 1;
+            height: 6px;
+            background: rgba(10, 26, 10, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .chart-bar-wrap .bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+            width: 0%;
+        }
+        .chart-bar-wrap .cvalue {
+            font-weight: 700;
+            color: #69f0ae;
+            font-size: 12px;
+            min-width: 50px;
+            text-align: right;
+        }
+        .chart-bar-wrap.user-row {
+            background: rgba(0, 255, 100, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .referral-card {
+            background: linear-gradient(135deg, rgba(0, 30, 0, 0.3), rgba(0, 50, 0, 0.1));
+            border-radius: 24px;
+            padding: 24px 20px;
+            text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            backdrop-filter: blur(10px);
+        }
+        .referral-card .ref-icon { font-size: 48px; margin-bottom: 8px; }
+        .referral-card h3 {
+            color: #69f0ae;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .referral-card p {
+            color: #6a8a6a;
+            font-size: 13px;
+            margin: 6px 0 16px;
+        }
+        .referral-card .ref-link-box {
+            background: rgba(0, 10, 0, 0.5);
+            border-radius: 16px;
+            padding: 12px 16px;
+            border: 1px solid rgba(76, 175, 80, 0.08);
+            color: #a5d6a7;
+            font-size: 13px;
+            word-break: break-all;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        .referral-card .ref-link-box .copy-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(76, 175, 80, 0.12);
+            border: none;
+            color: #69f0ae;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .referral-card .ref-link-box .copy-btn:hover {
+            background: rgba(76, 175, 80, 0.2);
+        }
+        .referral-card .ref-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .referral-card .ref-stats .stat {
+            background: rgba(0, 30, 0, 0.2);
+            border-radius: 14px;
+            padding: 10px;
+            border: 1px solid rgba(76, 175, 80, 0.04);
+        }
+        .referral-card .ref-stats .stat .num {
+            font-size: 22px;
+            font-weight: 900;
+            color: #69f0ae;
+        }
+        .referral-card .ref-stats .stat .lbl {
+            font-size: 11px;
+            color: #6a8a6a;
+        }
+
+        .wallet-card {
+            background: rgba(0, 30, 0, 0.15);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            backdrop-filter: blur(10px);
+        }
+        .wallet-card .w-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(26, 58, 26, 0.08);
+            font-size: 13px;
+        }
+        .wallet-card .w-row .label { color: #6a8a6a; }
+        .wallet-card .w-row .value { color: #69f0ae; font-weight: 700; }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(0, 30, 0, 0.1);
+            border-radius: 14px;
+            font-size: 13px;
+            border-left: 3px solid rgba(76, 175, 80, 0.2);
+            transition: 0.3s;
+        }
+        .history-item:hover { background: rgba(0, 30, 0, 0.2); }
+        .history-item .h-method { font-weight: 600; color: #a5d6a7; font-size: 13px; }
+        .history-item .h-date { color: #4a7a4a; font-size: 11px; }
+        .history-item .h-amount { font-weight: 800; color: #69f0ae; font-size: 15px; }
+        .history-item .h-status { font-size: 11px; }
+        .history-item .h-status.pending { color: #fdd835; }
+        .history-item .h-status.done { color: #69f0ae; }
+
+        .profile-card {
+            background: rgba(0, 30, 0, 0.15);
+            border-radius: 24px;
+            padding: 24px 20px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .profile-card .avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 auto 12px;
+            border: 2px solid rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 40px rgba(0,200,80,0.05);
+            transition: 0.3s;
+        }
+        .profile-card .avatar:hover { transform: scale(1.05); }
+        .profile-card .nick {
+            color: #69f0ae;
+            font-size: 24px;
+            font-weight: 800;
+        }
+        .profile-card .info {
+            color: #6a8a6a;
+            font-size: 13px;
+            margin: 4px 0;
+        }
+        .profile-card .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .profile-card .stat-grid .item {
+            background: rgba(0, 30, 0, 0.15);
+            border-radius: 14px;
+            padding: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.04);
+        }
+        .profile-card .stat-grid .item .num {
+            font-size: 22px;
+            font-weight: 900;
+            color: #69f0ae;
+        }
+        .profile-card .stat-grid .item .lbl {
+            font-size: 11px;
+            color: #6a8a6a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .profile-card .invite-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            border-radius: 40px;
+            font-weight: 700;
+            color: #e0f0e0;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
+            box-shadow: 0 4px 30px rgba(0,200,80,0.05);
+        }
+        .profile-card .invite-btn:active { transform: scale(0.97); }
+
+        .help-section {
+            background: rgba(0, 30, 0, 0.1);
+            border-radius: 18px;
+            padding: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.04);
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .help-section:hover { border-color: rgba(76, 175, 80, 0.1); }
+        .help-section h4 {
+            color: #69f0ae;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+        .help-section p, .help-section li {
+            color: #8aaa8a;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+        .help-section ul { padding-left: 20px; margin: 4px 0; }
+        .help-section li { margin-bottom: 2px; }
+
+        .info-note {
+            font-size: 11px;
+            color: #4a6a4a;
+            text-align: center;
+            margin-top: 12px;
+            border-top: 1px solid rgba(26, 42, 26, 0.2);
+            padding-top: 10px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: linear-gradient(160deg, #0d1a0d, #0a120a);
+            padding: 32px 24px;
+            border-radius: 36px;
+            max-width: 360px;
+            width: 100%;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 80px rgba(0,200,80,0.03);
+            animation: modalIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal h3 { color: #69f0ae; margin-bottom: 18px; text-align: center; font-size: 22px; }
+        .modal label {
+            display: block;
+            font-size: 12px;
+            color: #6a8a6a;
+            margin: 14px 0 4px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .modal input, .modal select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(26, 58, 26, 0.2);
+            background: rgba(6, 18, 6, 0.8);
+            color: #c0e0c0;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .modal input:focus, .modal select:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 30px rgba(0,200,80,0.03);
+        }
+        .modal .row-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
+        }
+        .modal .btn-submit {
+            flex: 1;
+            padding: 16px;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            color: #e0f0e0;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        .modal .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+        .modal .btn-submit:hover::before { left: 100%; }
+        .modal .btn-submit:active { transform: scale(0.96); }
+        .modal .btn-submit.error {
+            background: linear-gradient(135deg, #c62828, #f44336);
+            animation: shake 0.5s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .modal .btn-cancel {
+            flex: 1;
+            padding: 16px;
+            background: rgba(26, 42, 26, 0.4);
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            color: #6a8a6a;
+            border: 1px solid rgba(42, 74, 42, 0.15);
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        .modal .btn-cancel:active { transform: scale(0.96); }
+
+        @media (max-width: 400px) {
+            .app { padding: 12px 10px 18px; }
+            .balance-banner .amount { font-size: 28px; }
+            .tab-btn { font-size: 9px; padding: 8px 1px; }
+            .feed-card { min-width: 120px; }
+            .stats-grid .stat-item .num { font-size: 13px; }
+            .earn-card .earn-header .amount-big { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app" id="app">
+    <div class="bg-grid"></div>
+    <div class="bg-glow g1"></div>
+    <div class="bg-glow g2"></div>
+    <div class="bg-glow g3"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- СЛАЙД 1 -->
+    <div class="slide slide-welcome active" id="slideWelcome">
+        <div class="logo">🌿 GREEN MARKET</div>
+        <div class="sub">Premium Подработка</div>
+        <div class="features">
+            <span>🔒 Безопасно</span>
+            <span>⚡ Мгновенно</span>
+            <span>👥 Приглашай</span>
+        </div>
+        <button class="btn-start" id="btnWelcomeStart">Начать</button>
+        <div class="footer-text">© 2026 Все права защищены</div>
+    </div>
+
+    <!-- СЛАЙД 2 -->
+    <div class="slide slide-age" id="slideAge">
+        <div class="deco-bg d1">🎮</div>
+        <div class="deco-bg d2">🪙</div>
+        <div class="age-icon">🔞</div>
+        <h2>Подтверждение возраста</h2>
+        <p>Для участия необходимо быть старше 18 лет</p>
+        <div class="checkbox-wrap" id="ageCheckWrap">
+            <input type="checkbox" id="ageCheck">
+            <label for="ageCheck">Мне есть 18 лет</label>
+        </div>
+        <button class="btn-continue" id="btnAgeContinue">Продолжить</button>
+    </div>
+
+    <!-- ОСНОВНОЙ ЭКРАН -->
+    <div class="main-screen" id="mainScreen">
+        <!-- Шапка -->
+        <div class="header">
+            <div class="promo-badge">⚡ Акция</div>
+            <div class="online-count">
+                <span class="dot"></span> <span id="onlineCount">128</span>
+            </div>
+            <div class="timer-block" id="promoTimer">--:--:--</div>
+        </div>
+
+        <!-- Баннер баланса -->
+        <div class="balance-banner">
+            <div class="row">
+                <span class="label">💰 Баланс</span>
+                <span class="amount" id="balanceDisplay">0</span>
+            </div>
+            <div class="sub-info">
+                <span>🎯 Тикеты: <strong id="ticketDisplay" style="color:#69f0ae;">0</strong></span>
+                <span>👥 Приглашено: <strong id="inviteDisplay" style="color:#69f0ae;">0</strong></span>
+            </div>
+        </div>
+
+        <!-- Кнопка вывода -->
+        <button class="withdraw-btn disabled" id="withdrawBtn">💸 Вывести деньги</button>
+        <div class="withdraw-hint" id="withdrawHint">Накопите 3000 ₽ для вывода</div>
+
+        <!-- Вкладки -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tabFeed">🏠</button>
+            <button class="tab-btn" data-tab="tabContests">🎁</button>
+            <button class="tab-btn" data-tab="tabLeaders">🏆</button>
+            <button class="tab-btn" data-tab="tabReferral">🔗</button>
+            <button class="tab-btn" data-tab="tabWallet">💰</button>
+            <button class="tab-btn" data-tab="tabProfile">👤</button>
+            <button class="tab-btn" data-tab="tabHelp">📖</button>
+        </div>
+
+        <!-- ===== ГЛАВНАЯ ===== -->
+        <div class="tab-content active" id="tabFeed">
+            <!-- Лента выводов -->
+            <div class="feed-banner">
+                <div class="title">📊 Последние выплаты</div>
+                <div class="feed-scroll" id="feedScroll"></div>
+            </div>
+
+            <!-- ===== БЛОК ЗАРАБОТАЙ ДЕНЬГИ ===== -->
+            <div class="earn-card">
+                <div class="earn-header">
+                    <h4>👥 Пригласи друга</h4>
+                    <span class="amount-big">+300 ₽</span>
+                </div>
+                <div class="earn-sub">
+                    <strong>Green Market</strong> — зарабатывай с нами!
+                </div>
+                <div class="ref-link-mini" id="refLinkMini">
+                    <span id="refLinkMiniText">https://t.me/GreenMarketBot?start=...</span>
+                    <button class="copy-mini" id="copyRefLinkMini">Копировать</button>
+                </div>
+                <button class="earn-btn" id="earnInviteBtn">🚀 Пригласить друга</button>
+            </div>
+
+            <!-- ===== СТАТИСТИКА ===== -->
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="icon">💵</span>
+                    <div class="num gold">3 000 000+</div>
+                    <div class="lbl">Выплачено ₽</div>
+                </div>
+                <div class="stat-item">
+                    <span class="icon">⭐</span>
+                    <div class="num">1000+</div>
+                    <div class="lbl">Отзывов</div>
+                </div>
+                <div class="stat-item">
+                    <span class="icon">📅</span>
+                    <div class="num">3+</div>
+                    <div class="lbl">Лет на рынке</div>
+                </div>
+            </div>
+
+            <!-- ===== ОТЗЫВЫ (ТОЛЬКО 3 ШТУКИ) ===== -->
+            <div style="font-size:12px;color:#6a8a6a;margin:6px 0 4px;">⭐ Отзывы пользователей</div>
+            <div id="reviewsBlock">
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-name">SkyWolfWalker</span>
+                        <span class="review-stars">★★★★★</span>
+                    </div>
+                    <div class="review-text">Всё отлично! Деньги пришли быстро, рекомендую!</div>
+                </div>
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-name">Zayka_3</span>
+                        <span class="review-stars">★★★★☆</span>
+                    </div>
+                    <div class="review-text">Хороший сервис, единственное долго выводили, но пришли.</div>
+                </div>
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-name">MC Грегор</span>
+                        <span class="review-stars">★★★★★</span>
+                    </div>
+                    <div class="review-text">Лучшая подработка! Уже 3 раз вывожу, всё честно!</div>
+                </div>
+            </div>
+
+            <!-- Онлайн-лента -->
+            <div style="font-size:12px;color:#6a8a6a;margin:6px 0 4px;display:flex;justify-content:space-between;">
+                <span>🟢 Сейчас в сети</span>
+                <span style="color:#69f0ae;" id="onlineCounter">0</span>
+            </div>
+            <div class="online-ribbon" id="onlineRibbon"></div>
+        </div>
+
+        <!-- ===== КОНКУРСЫ ===== -->
+        <div class="tab-content" id="tabContests">
+            <!-- iPhone 17 Pro Max -->
+            <div class="contest-card" id="iphoneCard">
+                <span class="prize-badge purple">🏆 ГЛАВНЫЙ</span>
+                <img src="https://cdn.dummyimage.com/400x240/1a3a1a/9c27b0&text=iPhone+17+Pro+Max+White" alt="iPhone 17 Pro Max">
+                <h4>📱 iPhone 17 Pro Max</h4>
+                <p>Белый · 256GB · Розыгрыш</p>
+                <div style="font-size:12px;color:#6a8a6a;margin:8px 0 4px;">
+                    🎯 Пригласите <strong style="color:#9c27b0;">15 человек</strong> чтобы участвовать
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-glow" id="iphoneGlow"></div>
+                    <div class="progress-bar purple" id="iphoneProgress" style="width:0%"></div>
+                </div>
+                <div class="progress-label">
+                    <span>Приглашено: <span id="iphoneInvites">0</span>/15</span>
+                    <span id="iphoneLabel" style="color:#6a8a6a;">0%</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:#6a8a6a;margin-top:4px;">
+                    <span>Статус:</span>
+                    <span id="iphoneStatus" style="color:#6a8a6a;">❌ Не участвуете</span>
+                </div>
+            </div>
+
+            <!-- MacBook Air M2 -->
+            <div class="contest-card" id="macbookCard">
+                <span class="prize-badge purple">💻 ВТОРОЙ</span>
+                <img src="https://cdn.dummyimage.com/400x240/1a3a1a/9c27b0&text=MacBook+Air+M2+White" alt="MacBook Air M2">
+                <h4>💻 MacBook Air M2</h4>
+                <p>Белый · 256GB</p>
+                <div style="font-size:12px;color:#6a8a6a;margin:8px 0 4px;">
+                    🎯 Пригласите <strong style="color:#9c27b0;">15 человек</strong> чтобы участвовать
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-glow" id="macbookGlow"></div>
+                    <div class="progress-bar purple" id="macbookProgress" style="width:0%"></div>
+                </div>
+                <div class="progress-label">
+                    <span>Приглашено: <span id="macbookInvites">0</span>/15</span>
+                    <span id="macbookLabel" style="color:#6a8a6a;">0%</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:#6a8a6a;margin-top:4px;">
+                    <span>Статус:</span>
+                    <span id="macbookStatus" style="color:#6a8a6a;">❌ Не участвуете</span>
+                </div>
+            </div>
+
+            <!-- 10 000 ₽ -->
+            <div class="contest-card" id="cashCard" style="border-color:rgba(255,215,0,0.1);">
+                <span class="prize-badge">🥉 ТРЕТИЙ</span>
+                <div style="text-align:center;padding:20px 0;font-size:56px;">💵</div>
+                <h4 style="color:#fdd835;">10 000 ₽</h4>
+                <p>Денежный приз</p>
+                <div style="font-size:12px;color:#6a8a6a;margin:8px 0 4px;">
+                    🎯 Пригласите <strong style="color:#fdd835;">10 человек</strong> чтобы участвовать
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-glow" id="cashGlow"></div>
+                    <div class="progress-bar cash" id="cashProgress" style="width:0%;background:linear-gradient(90deg,#fdd835,#f9a825);"></div>
+                </div>
+                <div class="progress-label">
+                    <span>Приглашено: <span id="cashInvites">0</span>/10</span>
+                    <span id="cashLabel" style="color:#6a8a6a;">0%</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:#6a8a6a;margin-top:4px;">
+                    <span>Статус:</span>
+                    <span id="cashStatus" style="color:#6a8a6a;">❌ Не участвуете</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ТОП ===== -->
+        <div class="tab-content" id="tabLeaders">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <span>🏆 Топ участников</span>
+                    <span>Тикеты: <span id="leaderTickets">0</span></span>
+                </div>
+                <div id="leadersChart"></div>
+            </div>
+        </div>
+
+        <!-- ===== РЕФЕРАЛЬНАЯ ССЫЛКА ===== -->
+        <div class="tab-content" id="tabReferral">
+            <div class="referral-card">
+                <div class="ref-icon">🔗</div>
+                <h3>Реферальная ссылка</h3>
+                <p>Приглашайте друзей и получайте <strong style="color:#fdd835;">300 ₽</strong> за каждого!</p>
+                <div class="ref-link-box" id="refLinkBox">
+                    <span id="refLinkText">https://t.me/GreenMarketBot?start=...</span>
+                    <button class="copy-btn" id="copyRefLink">Копировать</button>
+                </div>
+                <div class="ref-stats">
+                    <div class="stat">
+                        <div class="num" id="refInvites">0</div>
+                        <div class="lbl">Приглашено</div>
+                    </div>
+                    <div class="stat">
+                        <div class="num" id="refEarned">0</div>
+                        <div class="lbl">Заработано ₽</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== КОШЕЛЁК ===== -->
+        <div class="tab-content" id="tabWallet">
+            <div class="wallet-card">
+                <div class="w-row">
+                    <span class="label">💰 Баланс</span>
+                    <span class="value" id="walletBalance">0 ₽</span>
+                </div>
+                <div class="w-row">
+                    <span class="label">🎯 Тикеты</span>
+                    <span class="value" id="walletTickets">0</span>
+                </div>
+                <div class="w-row" style="border-bottom:none;">
+                    <span class="label">👥 Приглашено</span>
+                    <span class="value" id="walletInvites">0</span>
+                </div>
+            </div>
+            <div style="font-size:12px;color:#6a8a6a;padding:4px 0;">📜 История операций</div>
+            <div id="walletHistory"></div>
+        </div>
+
+        <!-- ===== ПРОФИЛЬ ===== -->
+        <div class="tab-content" id="tabProfile">
+            <div class="profile-card">
+                <div class="avatar" id="profileAvatar">👤</div>
+                <div class="nick" id="profileNick">Гость</div>
+                <div class="info">🆔 <span id="profileId">#GM0000</span></div>
+                <div class="stat-grid">
+                    <div class="item">
+                        <div class="num" id="pInvites">0</div>
+                        <div class="lbl">Приглашено</div>
+                    </div>
+                    <div class="item">
+                        <div class="num" id="pTickets">0</div>
+                        <div class="lbl">Тикеты</div>
+                    </div>
+                </div>
+                <button class="invite-btn" id="profileInviteBtn">👥 Пригласить друга</button>
+            </div>
+        </div>
+
+        <!-- ===== ПОМОЩЬ ===== -->
+        <div class="tab-content" id="tabHelp">
+            <div class="help-section">
+                <h4>📋 Общие положения</h4>
+                <p>Сервис предоставляется в Mini App Telegram. Использование = согласие с условиями.</p>
+            </div>
+            <div class="help-section">
+                <h4>💰 Реферальная программа</h4>
+                <p><strong style="color:#fdd835;">+300 ₽</strong> за каждого приглашённого друга. Начисление сразу после запуска бота. Также <strong style="color:#69f0ae;">+50 тикетов</strong> в топ за каждого друга.</p>
+            </div>
+            <div class="help-section">
+                <h4>💳 Выплаты</h4>
+                <p>Заявка обрабатывается <strong style="color:#69f0ae;">24 часа</strong>. СБП или карта — без комиссии.</p>
+            </div>
+            <div class="help-section">
+                <h4>🔒 Защита данных</h4>
+                <p>Данные <strong style="color:#69f0ae;">НЕ передаются</strong> третьим лицам.</p>
+            </div>
+            <div class="help-section">
+                <h4>🚫 Запрещено</h4>
+                <ul>
+                    <li>Мультиаккаунтинг</li>
+                    <li>Боты как рефералы</li>
+                    <li>Автоматизированные скрипты</li>
+                </ul>
+                <p style="color:#fdd835;font-weight:600;">Нарушение → блокировка</p>
+            </div>
+        </div>
+
+        <div class="info-note">⏳ Выплаты в течение 24 часов</div>
+    </div>
+</div>
+
+<!-- Модалка -->
+<div class="modal-overlay" id="withdrawModal">
+    <div class="modal">
+        <h3>💸 Вывод денег</h3>
+        <label>Сумма (от 3000 ₽)</label>
+        <input type="number" id="withdrawAmount" value="3000" min="3000" step="100">
+        <label>Способ</label>
+        <select id="withdrawMethod">
+            <option value="sbp">СБП (телефон)</option>
+            <option value="card">Карта</option>
+        </select>
+        <label id="methodLabel">Номер телефона</label>
+        <input type="text" id="methodValue" placeholder="+7 900 123 45 67">
+        <div class="row-buttons">
+            <button class="btn-cancel" id="modalCancel">Отмена</button>
+            <button class="btn-submit" id="modalSubmit">Запросить</button>
+        </div>
+        <div style="font-size:11px;color:#4a6a4a;text-align:center;margin-top:12px;">⏳ 24 часа на обработку</div>
+    </div>
+</div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+    // ===== ПАРТИКЛЫ =====
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 35; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 10 + 's';
+        p.style.animationDuration = (6 + Math.random() * 8) + 's';
+        p.style.width = (2 + Math.random() * 5) + 'px';
+        p.style.height = p.style.width;
+        particlesContainer.appendChild(p);
+    }
+
+    // ===== КОНФЕТТИ =====
+    function createConfetti(colors, count = 80) {
+        const container = document.getElementById('confettiContainer');
+        const shapes = ['■', '●', '▲', '★', '♦', '◆', '⬟'];
+        for (let i = 0; i < count; i++) {
+            const el = document.createElement('div');
+            el.className = 'confetti ' + colors[Math.floor(Math.random() * colors.length)];
+            el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.top = '-10%';
+            el.style.fontSize = (8 + Math.random() * 16) + 'px';
+            el.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
+            el.style.animationDelay = (Math.random() * 0.8) + 's';
+            el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            container.appendChild(el);
+        }
+        setTimeout(() => { container.innerHTML = ''; }, 4500);
+    }
+
+    // ===== СЛАЙДЫ =====
+    const slideWelcome = document.getElementById('slideWelcome');
+    const slideAge = document.getElementById('slideAge');
+    const mainScreen = document.getElementById('mainScreen');
+    const btnWelcomeStart = document.getElementById('btnWelcomeStart');
+    const btnAgeContinue = document.getElementById('btnAgeContinue');
+    const ageCheck = document.getElementById('ageCheck');
+    const ageCheckWrap = document.getElementById('ageCheckWrap');
+
+    btnWelcomeStart.addEventListener('click', () => {
+        slideWelcome.classList.remove('active');
+        slideAge.classList.add('active');
+    });
+
+    ageCheck.addEventListener('change', () => {
+        btnAgeContinue.classList.toggle('active', ageCheck.checked);
+    });
+    ageCheckWrap.addEventListener('click', () => {
+        ageCheck.checked = !ageCheck.checked;
+        btnAgeContinue.classList.toggle('active', ageCheck.checked);
+    });
+
+    btnAgeContinue.addEventListener('click', () => {
+        if (!ageCheck.checked) return;
+        slideAge.classList.remove('active');
+        mainScreen.classList.add('active');
+        initApp();
+    });
+
+    // ===== ОСНОВНАЯ ЛОГИКА =====
+    function initApp() {
+        let balance = parseInt(sessionStorage.getItem('swill_balance')) || 0;
+        let tickets = parseInt(sessionStorage.getItem('swill_tickets')) || 0;
+        let invites = parseInt(sessionStorage.getItem('swill_invites')) || 0;
+        const WITHDRAW_THRESHOLD = 3000;
+
+        const nicks = [
+            'MC Грегор', 'NektoS', 'SkyWolfWalker', 'K1A', 'Zayka_3', 'CryptoKing',
+            'Ghost_FPS', 'Lil_Pump', 'Boss_420', 'DiamondHands', 'MoonBoy',
+            'CyberPunk', 'FrostByte', 'ShadowStrike', 'NightHawk', 'StormBreaker'
+        ];
+
+        function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        let profileNick = sessionStorage.getItem('swill_nick');
+        if (!profileNick) {
+            profileNick = randomItem(nicks);
+            sessionStorage.setItem('swill_nick', profileNick);
+        }
+
+        const balanceEl = document.getElementById('balanceDisplay');
+        const ticketDisplay = document.getElementById('ticketDisplay');
+        const inviteDisplay = document.getElementById('inviteDisplay');
+        const walletBalance = document.getElementById('walletBalance');
+        const walletTickets = document.getElementById('walletTickets');
+        const walletInvites = document.getElementById('walletInvites');
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const hintEl = document.getElementById('withdrawHint');
+
+        function updateUI() {
+            balanceEl.textContent = balance;
+            ticketDisplay.textContent = tickets;
+            inviteDisplay.textContent = invites;
+            walletBalance.textContent = balance + ' ₽';
+            walletTickets.textContent = tickets;
+            walletInvites.textContent = invites;
+            document.getElementById('pTickets').textContent = tickets;
+            document.getElementById('pInvites').textContent = invites;
+            document.getElementById('refInvites').textContent = invites;
+            document.getElementById('refEarned').textContent = (invites * 300).toLocaleString();
+            document.getElementById('leaderTickets').textContent = tickets;
+
+            if (balance >= WITHDRAW_THRESHOLD) {
+                withdrawBtn.classList.remove('disabled');
+                hintEl.textContent = '✅ Доступен вывод';
+            } else {
+                withdrawBtn.classList.add('disabled');
+                hintEl.textContent = `❌ Нужно ещё ${WITHDRAW_THRESHOLD - balance} ₽`;
+            }
+            sessionStorage.setItem('swill_balance', balance);
+            sessionStorage.setItem('swill_tickets', tickets);
+            sessionStorage.setItem('swill_invites', invites);
+            checkContestProgress();
+        }
+
+        // ===== КОНКУРСЫ =====
+        let iphoneCompleted = false, macbookCompleted = false, cashCompleted = false;
+
+        function checkContestProgress() {
+            const iphoneInvites = Math.min(invites, 15);
+            const macbookInvites = Math.min(invites, 15);
+            const cashInvites = Math.min(invites, 10);
+
+            document.getElementById('iphoneInvites').textContent = iphoneInvites;
+            document.getElementById('macbookInvites').textContent = macbookInvites;
+            document.getElementById('cashInvites').textContent = cashInvites;
+
+            const iphonePercent = (iphoneInvites / 15 * 100);
+            const macbookPercent = (macbookInvites / 15 * 100);
+            const cashPercent = (cashInvites / 10 * 100);
+
+            document.getElementById('iphoneProgress').style.width = iphonePercent + '%';
+            document.getElementById('macbookProgress').style.width = macbookPercent + '%';
+            document.getElementById('cashProgress').style.width = cashPercent + '%';
+
+            document.getElementById('iphoneLabel').textContent = Math.round(iphonePercent) + '%';
+            document.getElementById('macbookLabel').textContent = Math.round(macbookPercent) + '%';
+            document.getElementById('cashLabel').textContent = Math.round(cashPercent) + '%';
+
+            if (iphoneInvites >= 15 && !iphoneCompleted) {
+                iphoneCompleted = true;
+                document.getElementById('iphoneStatus').textContent = '✅ УЧАСТВУЕТЕ!';
+                document.getElementById('iphoneStatus').style.color = '#9c27b0';
+                document.getElementById('iphoneLabel').textContent = '🎉 ГОТОВО!';
+                document.getElementById('iphoneLabel').style.color = '#9c27b0';
+                document.getElementById('iphoneLabel').className = 'label-complete';
+                document.getElementById('iphoneGlow').classList.add('active');
+                createConfetti(['confetti-purple', 'confetti-pink', 'confetti-gold'], 120);
+                setTimeout(() => { document.getElementById('iphoneGlow').classList.remove('active'); }, 2000);
+            }
+
+            if (macbookInvites >= 15 && !macbookCompleted) {
+                macbookCompleted = true;
+                document.getElementById('macbookStatus').textContent = '✅ УЧАСТВУЕТЕ!';
+                document.getElementById('macbookStatus').style.color = '#9c27b0';
+                document.getElementById('macbookLabel').textContent = '🎉 ГОТОВО!';
+                document.getElementById('macbookLabel').style.color = '#9c27b0';
+                document.getElementById('macbookLabel').className = 'label-complete';
+                document.getElementById('macbookGlow').classList.add('active');
+                createConfetti(['confetti-purple', 'confetti-pink', 'confetti-gold'], 120);
+                setTimeout(() => { document.getElementById('macbookGlow').classList.remove('active'); }, 2000);
+            }
+
+            if (cashInvites >= 10 && !cashCompleted) {
+                cashCompleted = true;
+                document.getElementById('cashStatus').textContent = '✅ УЧАСТВУЕТЕ!';
+                document.getElementById('cashStatus').style.color = '#fdd835';
+                document.getElementById('cashLabel').textContent = '🎉 ГОТОВО!';
+                document.getElementById('cashLabel').style.color = '#fdd835';
+                document.getElementById('cashLabel').className = 'label-complete cash';
+                document.getElementById('cashGlow').classList.add('active');
+                createConfetti(['confetti-gold', 'confetti-purple', 'confetti-pink'], 120);
+                setTimeout(() => { document.getElementById('cashGlow').classList.remove('active'); }, 2000);
+            }
+        }
+
+        // ===== ЛЕНТА ВЫВОДОВ =====
+        const timeOptions = ['только что', '1 мин', '2 мин', '5 мин', '10 мин', '15 мин', '20 мин', '30 мин', '45 мин', '1 ч', '2 ч', '3 ч', '5 ч', '8 ч', '12 ч', 'вчера'];
+        const amountOptions = [3200,4500,5100,6800,7300,8200,9400,10100,12500,13800,15200,16700,18400,20300,22600,25400,28900,31200,34700,38900,41200,45600,50200,57800];
+
+        function genFeedCard() {
+            return { name: randomItem(nicks), amount: randomItem(amountOptions), time: randomItem(timeOptions) };
+        }
+
+        const feedScroll = document.getElementById('feedScroll');
+        let feedItems = [];
+        for (let i = 0; i < 10; i++) feedItems.push(genFeedCard());
+
+        function renderFeed() {
+            feedScroll.innerHTML = '';
+            feedItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'feed-card';
+                card.innerHTML = `
+                    <div class="f-name">${item.name}</div>
+                    <div class="f-amount">${item.amount.toLocaleString()} ₽</div>
+                    <div class="f-time">${item.time}</div>
+                `;
+                feedScroll.appendChild(card);
+            });
+        }
+        renderFeed();
+
+        setInterval(() => {
+            feedItems.unshift(genFeedCard());
+            if (feedItems.length > 20) feedItems.pop();
+            renderFeed();
+        }, 8000 + Math.random() * 7000);
+
+        // ===== ОНЛАЙН =====
+        const onlineUsers = ['Екатерина', 'FrostByte', 'ShadowStrike', 'Zayka_3', 'NightHawk', 'StormBreaker', 'K1A', 'VenomX', 'RageQuit', 'MC Грегор', 'MoonBoy', 'CyberPunk', 'Ghost_FPS', 'Boss_420', 'DiamondHands'];
+        const avatarColors = ['#1b5e20','#2e7d32','#388e3c','#43a047','#4caf50','#66bb6a','#81c784','#a5d6a7'];
+
+        function renderOnline() {
+            const ribbon = document.getElementById('onlineRibbon');
+            ribbon.innerHTML = '';
+            const count = Math.floor(Math.random() * 8) + 6;
+            const totalOnline = Math.floor(Math.random() * 150) + 80;
+            document.getElementById('onlineCounter').textContent = totalOnline + ' в сети';
+            document.getElementById('onlineCount').textContent = totalOnline;
+            const shuffled = [...onlineUsers].sort(() => Math.random() - 0.5);
+            shuffled.slice(0, count).forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'online-user';
+                const color = randomItem(avatarColors);
+                div.innerHTML = `
+                    <span class="dot-online"></span>
+                    <span class="avatar-mini" style="background:${color};">${name.charAt(0).toUpperCase()}</span>
+                    ${name}
+                `;
+                ribbon.appendChild(div);
+            });
+        }
+        renderOnline();
+        setInterval(renderOnline, 10000);
+
+        // ===== ТОП =====
+        const leaderData = [
+            { name: 'SkyWolfWalker', tickets: 28400 },
+            { name: 'K1A', tickets: 23100 },
+            { name: 'Zayka_3', tickets: 19700 },
+            { name: 'MC Грегор', tickets: 16500 },
+            { name: 'NektoS', tickets: 14200 },
+            { name: 'CryptoKing', tickets: 11800 },
+            { name: 'Ghost_FPS', tickets: 9400 },
+            { name: 'Lil_Pump', tickets: 7600 },
+            { name: 'Boss_420', tickets: 5800 },
+            { name: 'ShadowStrike', tickets: 4200 }
+        ];
+
+        function getUserRank() {
+            const allData = [...leaderData];
+            if (tickets > 0) allData.push({ name: profileNick, tickets: tickets, isUser: true });
+            allData.sort((a, b) => b.tickets - a.tickets);
+            return allData;
+        }
+
+        function renderLeaders() {
+            const container = document.getElementById('leadersChart');
+            container.innerHTML = '';
+            const sorted = getUserRank();
+            const maxTickets = sorted.length > 0 ? sorted[0].tickets : 1;
+            sorted.slice(0, 15).forEach((item, idx) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'chart-bar-wrap' + (item.isUser ? ' user-row' : '');
+                const percent = maxTickets > 0 ? (item.tickets / maxTickets * 100) : 0;
+                const colors = ['#fdd835', '#c0c0c0', '#cd7f32', '#4caf50', '#4caf50', '#4caf50', '#4caf50', '#4caf50', '#4caf50', '#4caf50'];
+                const color = idx < 3 ? colors[idx] : colors[3];
+                wrap.innerHTML = `
+                    <div class="rank">${idx < 3 ? ['🥇','🥈','🥉'][idx] : '#'+(idx+1)}</div>
+                    <div class="cname">${item.name} ${item.isUser ? '👈' : ''}</div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="background:${color};"></div>
+                    </div>
+                    <div class="cvalue">${item.tickets}</div>
+                `;
+                container.appendChild(wrap);
+                setTimeout(() => {
+                    const fill = wrap.querySelector('.bar-fill');
+                    if (fill) fill.style.width = percent + '%';
+                }, 100 + idx * 40);
+            });
+        }
+        renderLeaders();
+
+        // ===== ИСТОРИЯ =====
+        let historyData = JSON.parse(sessionStorage.getItem('swill_history')) || [];
+
+        function renderWalletHistory() {
+            const container = document.getElementById('walletHistory');
+            container.innerHTML = '';
+            if (historyData.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:#4a6a4a;padding:16px;font-size:13px;">Нет операций</div>';
+                return;
+            }
+            historyData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div>
+                        <div class="h-method">${item.method}</div>
+                        <div class="h-date">${item.date}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="h-amount">${item.amount > 0 ? '+' : ''}${item.amount.toLocaleString()} ₽</div>
+                        <div class="h-status ${item.status === 'В обработке' ? 'pending' : 'done'}">${item.status}</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        renderWalletHistory();
+
+        // ===== ПРОФИЛЬ =====
+        document.getElementById('profileNick').textContent = profileNick;
+        document.getElementById('profileId').textContent = 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
+        const avatarEl = document.getElementById('profileAvatar');
+        avatarEl.style.background = `linear-gradient(135deg, ${randomItem(avatarColors)}, ${randomItem(avatarColors)})`;
+        avatarEl.textContent = profileNick.charAt(0).toUpperCase();
+
+        // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
+        const refLink = 'https://t.me/GreenMarketBot?start=' + Math.random().toString(36).substring(7);
+        document.getElementById('refLinkText').textContent = refLink;
+        document.getElementById('refLinkMiniText').textContent = refLink;
+
+        document.getElementById('copyRefLinkMini').addEventListener('click', function() {
+            navigator.clipboard.writeText(refLink).then(() => {
+                this.textContent = '✅ Скопировано';
+                setTimeout(() => this.textContent = 'Копировать', 2000);
+                createConfetti(['confetti-green', 'confetti-gold'], 30);
+            });
+        });
+
+        document.getElementById('copyRefLink').addEventListener('click', function() {
+            navigator.clipboard.writeText(refLink).then(() => {
+                this.textContent = '✅ Скопировано';
+                setTimeout(() => this.textContent = 'Копировать', 2000);
+                createConfetti(['confetti-green', 'confetti-gold'], 30);
+            });
+        });
+
+        // ===== ПРИГЛАШЕНИЕ =====
+        window.addRealInvite = function() {
+            balance += 300;
+            tickets += 50;
+            invites += 1;
+            const newHist = {
+                method: '📥 Приглашение друга',
+                date: new Date().toLocaleDateString('ru-RU') + ' ' + new Date().toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}),
+                amount: 300,
+                status: '✅ Зачислено'
+            };
+            historyData.unshift(newHist);
+            if (historyData.length > 20) historyData.pop();
+            sessionStorage.setItem('swill_history', JSON.stringify(historyData));
+            updateUI();
+            renderLeaders();
+            renderWalletHistory();
+            createConfetti(['confetti-green', 'confetti-gold', 'confetti-purple'], 60);
+        };
+
+        document.getElementById('earnInviteBtn').addEventListener('click', function() {
+            alert(`🔗 Ваша реферальная ссылка:\n${refLink}\n\nПоделитесь с друзьями!\n\n💰 +300 ₽ за каждого\n🎯 +50 тикетов в топ\n\n⚠️ Деньги зачислятся только когда друг перейдет по ссылке и запустит бота!`);
+        });
+
+        document.getElementById('profileInviteBtn').addEventListener('click', function() {
+            alert(`🔗 Ваша реферальная ссылка:\n${refLink}\n\nПоделитесь с друзьями!\n\n💰 +300 ₽ за каждого\n🎯 +50 тикетов в топ\n\n⚠️ Деньги зачислятся только когда друг перейдет по ссылке и запустит бота!`);
+        });
+
+        // ===== ТАЙМЕР =====
+        function updateTimer() {
+            const now = new Date();
+            let target = new Date(now);
+            target.setHours(15, 0, 0, 0);
+            if (now > target) target.setDate(target.getDate() + 1);
+            const diff = Math.max(0, target - now);
+            document.getElementById('promoTimer').textContent = 
+                String(Math.floor(diff / 3600000)).padStart(2,'0') + ':' +
+                String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0') + ':' +
+                String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // ===== ВКЛАДКИ =====
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById(this.dataset.tab).classList.add('active');
+                if (this.dataset.tab === 'tabLeaders') renderLeaders();
+                if (this.dataset.tab === 'tabWallet') renderWalletHistory();
+            });
+        });
+
+        // ===== МОДАЛКА ВЫВОДА =====
+        const modal = document.getElementById('withdrawModal');
+        const modalSubmit = document.getElementById('modalSubmit');
+        const withdrawAmount = document.getElementById('withdrawAmount');
+
+        withdrawBtn.addEventListener('click', () => {
+            if (balance < WITHDRAW_THRESHOLD) return;
+            modal.classList.add('active');
+        });
+
+        document.getElementById('modalCancel').addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+        withdrawAmount.addEventListener('input', function() {
+            const val = parseInt(this.value);
+            if (val < 3000 || isNaN(val)) {
+                modalSubmit.classList.add('error');
+                modalSubmit.textContent = '❌ Минимум 3000 ₽';
+            } else if (val > balance) {
+                modalSubmit.classList.add('error');
+                modalSubmit.textContent = '❌ Недостаточно средств';
+            } else {
+                modalSubmit.classList.remove('error');
+                modalSubmit.textContent = '✅ Запросить';
+            }
+        });
+
+        modalSubmit.addEventListener('click', function() {
+            const amount = parseInt(withdrawAmount.value);
+            const method = document.getElementById('withdrawMethod').value;
+            const value = document.getElementById('methodValue').value.trim();
+
+            if (amount < 3000 || isNaN(amount)) {
+                this.classList.add('error');
+                this.textContent = '❌ Минимум 3000 ₽';
+                createConfetti(['confetti-red', 'confetti-red', 'confetti-red'], 70);
+                setTimeout(() => {
+                    this.classList.remove('error');
+                    this.textContent = '✅ Запросить';
+                }, 2000);
+                return;
+            }
+            if (amount > balance) {
+                this.classList.add('error');
+                this.textContent = '❌ Недостаточно средств';
+                createConfetti(['confetti-red', 'confetti-red'], 60);
+                setTimeout(() => {
+                    this.classList.remove('error');
+                    this.textContent = '✅ Запросить';
+                }, 2000);
+                return;
+            }
+            if (!value) {
+                this.classList.add('error');
+                this.textContent = '❌ Заполните реквизиты';
+                createConfetti(['confetti-red', 'confetti-red'], 50);
+                setTimeout(() => {
+                    this.classList.remove('error');
+                    this.textContent = '✅ Запросить';
+                }, 2000);
+                return;
+            }
+
+            const methodLabel = method === 'sbp' ? 'СБП ' + value.slice(0, 10) + '****' : 'Карта ****' + value.slice(-4);
+            alert(`✅ Заявка на ${amount.toLocaleString()} ₽ принята!\nСпособ: ${method === 'sbp' ? 'СБП' : 'Карта'}\n⏳ Ожидайте 24 часа.`);
+
+            const newHist = {
+                method: methodLabel,
+                date: new Date().toLocaleDateString('ru-RU') + ' ' + new Date().toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}),
+                amount: -amount,
+                status: '⏳ В обработке'
+            };
+            historyData.unshift(newHist);
+            if (historyData.length > 20) historyData.pop();
+            sessionStorage.setItem('swill_history', JSON.stringify(historyData));
+
+            balance -= amount;
+            updateUI();
+            renderLeaders();
+            renderWalletHistory();
+            modal.classList.remove('active');
+            createConfetti(['confetti-green', 'confetti-gold', 'confetti-purple'], 50);
+        });
+
+        document.getElementById('withdrawMethod').addEventListener('change', function() {
+            const label = document.getElementById('methodLabel');
+            const input = document.getElementById('methodValue');
+            if (this.value === 'sbp') {
+                label.textContent = 'Номер телефона (СБП)';
+                input.placeholder = '+7 900 123 45 67';
+            } else {
+                label.textContent = 'Номер карты';
+                input.placeholder = '1234 5678 9012 3456';
+            }
+        });
+
+        updateUI();
+        checkContestProgress();
+
+        console.log('🔥 GREEN MARKET ЗАПУЩЕН');
+        console.log('👤 Пользователь:', profileNick);
+        console.log('💰 Баланс:', balance, '₽');
+        console.log('📱 Реферальная ссылка:', refLink);
+        console.log('💡 Для теста вызовите addRealInvite() в консоли');
+    }
+</script>
+</body>
+</html>
