@@ -283,7 +283,6 @@
         }
         .feed-card .f-time { color: #4a7a4a; font-size: 11px; }
 
-        /* ===== УМЕНЬШЕННАЯ ЯЧЕЙКА +300 ₽ ===== */
         .earn-card {
             background: linear-gradient(135deg, rgba(0, 30, 0, 0.35), rgba(0, 50, 0, 0.15));
             border-radius: 16px;
@@ -384,7 +383,6 @@
         .stats-grid .stat-item .lbl { font-size: 8px; color: #4a7a4a; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; }
         .stats-grid .stat-item .icon { font-size: 16px; display: block; margin-bottom: 2px; }
 
-        /* ===== ГОРИЗОНТАЛЬНЫЕ ОТЗЫВЫ ===== */
         .reviews-scroll {
             display: flex;
             gap: 8px;
@@ -470,7 +468,6 @@
             font-size: 12px; font-weight: 700; color: #fff;
         }
 
-        /* ===== КОНКУРС iPhone ===== */
         .contest-card {
             background: rgba(0, 30, 0, 0.25);
             backdrop-filter: blur(20px);
@@ -528,7 +525,6 @@
             font-size: 13px;
         }
 
-        /* ===== ШКАЛА ДЛЯ iPhone ===== */
         .goal-text {
             font-size: 13px;
             color: #8aaa8a;
@@ -688,7 +684,6 @@
         .history-item .h-status.pending { color: #fdd835; }
         .history-item .h-status.done { color: #69f0ae; }
 
-        /* ===== ПРОФИЛЬ С ОТЗЫВАМИ ===== */
         .profile-card {
             background: rgba(0, 30, 0, 0.15); border-radius: 24px; padding: 24px 20px;
             border: 1px solid rgba(76, 175, 80, 0.06); text-align: center; backdrop-filter: blur(10px);
@@ -878,15 +873,13 @@
             <button class="tab-btn" data-tab="tabHelp">📖</button>
         </div>
 
-        <!-- ===== ГЛАВНАЯ ===== -->
+        <!-- ГЛАВНАЯ -->
         <div class="tab-content active" id="tabFeed">
-            <!-- Лента выводов -->
             <div class="feed-banner">
                 <div class="title">📊 Последние выплаты</div>
                 <div class="feed-scroll" id="feedScroll"></div>
             </div>
 
-            <!-- ===== УМЕНЬШЕННАЯ ЯЧЕЙКА +300 ₽ ===== -->
             <div class="earn-card">
                 <div class="earn-header">
                     <div class="earn-left">
@@ -896,13 +889,12 @@
                     <span class="amount-big">+300 ₽</span>
                 </div>
                 <div class="ref-link-mini" id="refLinkMini">
-                    <span id="refLinkMiniText">https://t.me/GreenMarketBot?start=...</span>
+                    <span id="refLinkMiniText">https://t.me/Green_marketBot?start=...</span>
                     <button class="copy-mini" id="copyRefLinkMini">Копировать</button>
                 </div>
                 <button class="earn-btn" id="earnInviteBtn">🚀 Пригласить друга</button>
             </div>
 
-            <!-- Статистика -->
             <div class="stats-grid">
                 <div class="stat-item">
                     <span class="icon">💵</span>
@@ -921,7 +913,6 @@
                 </div>
             </div>
 
-            <!-- Онлайн-лента -->
             <div style="font-size:12px;color:#6a8a6a;margin:4px 0 2px;display:flex;justify-content:space-between;">
                 <span>🟢 Сейчас в сети</span>
                 <span style="color:#69f0ae;" id="onlineCounter">0</span>
@@ -929,7 +920,7 @@
             <div class="online-ribbon" id="onlineRibbon"></div>
         </div>
 
-        <!-- ===== КОНКУРСЫ (iPhone с новым фото) ===== -->
+        <!-- КОНКУРСЫ (iPhone) -->
         <div class="tab-content" id="tabContests">
             <div class="contest-card" id="iphoneCard">
                 <span class="prize-badge">🏆 ГЛАВНЫЙ ПРИЗ</span>
@@ -954,7 +945,7 @@
             </div>
         </div>
 
-        <!-- ===== ТОП ===== -->
+        <!-- ТОП -->
         <div class="tab-content" id="tabLeaders">
             <div class="chart-container">
                 <div class="chart-title">
@@ -965,14 +956,14 @@
             </div>
         </div>
 
-        <!-- ===== РЕФЕРАЛКА ===== -->
+        <!-- РЕФЕРАЛКА -->
         <div class="tab-content" id="tabReferral">
             <div class="referral-card">
                 <div class="ref-icon">🔗</div>
                 <h3>Реферальная ссылка</h3>
                 <p>Приглашайте друзей и получайте <strong style="color:#fdd835;">300 ₽</strong> за каждого!</p>
                 <div class="ref-link-box" id="refLinkBox">
-                    <span id="refLinkText">https://t.me/GreenMarketBot?start=...</span>
+                    <span id="refLinkText">https://t.me/Green_marketBot?start=...</span>
                     <button class="copy-btn" id="copyRefLink">Копировать</button>
                 </div>
                 <div class="ref-stats">
@@ -988,7 +979,7 @@
             </div>
         </div>
 
-        <!-- ===== КОШЕЛЁК ===== -->
+        <!-- КОШЕЛЁК -->
         <div class="tab-content" id="tabWallet">
             <div class="wallet-card">
                 <div class="w-row">
@@ -1008,7 +999,7 @@
             <div id="walletHistory"></div>
         </div>
 
-        <!-- ===== ПРОФИЛЬ С ОТЗЫВАМИ ===== -->
+        <!-- ПРОФИЛЬ С ОТЗЫВАМИ -->
         <div class="tab-content" id="tabProfile">
             <div class="profile-card">
                 <div class="avatar" id="profileAvatar">👤</div>
@@ -1036,20 +1027,17 @@
                 
                 <button class="invite-btn" id="profileInviteBtn">👥 Пригласить друга</button>
                 
-                <!-- ===== ОТЗЫВЫ В ПРОФИЛЕ ===== -->
                 <div style="margin-top:16px;border-top:1px solid rgba(76,175,80,0.06);padding-top:12px;">
                     <div style="font-size:12px;color:#6a8a6a;margin-bottom:8px;display:flex;justify-content:space-between;">
                         <span>⭐ Отзывы пользователей</span>
                         <span style="color:#fdd835;">★★★★★ 4.8</span>
                     </div>
-                    <div class="reviews-scroll" id="reviewsScroll">
-                        <!-- Отзывы будут добавлены через JavaScript -->
-                    </div>
+                    <div class="reviews-scroll" id="reviewsScroll"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== ПОМОЩЬ ===== -->
+        <!-- ПОМОЩЬ -->
         <div class="tab-content" id="tabHelp">
             <div class="help-section">
                 <h4>📋 Общие положения</h4>
@@ -1197,7 +1185,7 @@
         const withdrawBtn = document.getElementById('withdrawBtn');
         const hintEl = document.getElementById('withdrawHint');
 
-        // === ОТЗЫВЫ ===
+        // ===== ОТЗЫВЫ =====
         const reviewData = [
             { name: 'SkyWolfWalker', stars: 5, text: 'Всё отлично! Деньги пришли быстро!' },
             { name: 'Zayka_3', stars: 4, text: 'Хороший сервис, долго выводили, но пришли.' },
@@ -1243,7 +1231,6 @@
             document.getElementById('refEarned').textContent = (invites * 300).toLocaleString();
             document.getElementById('leaderTickets').textContent = tickets;
 
-            // Место в топе
             const place = getPlace();
             document.getElementById('pPlace').textContent = place;
 
@@ -1439,7 +1426,7 @@
         avatarEl.textContent = profileNick.charAt(0).toUpperCase();
 
         // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
-        const refLink = 'https://t.me/GreenMarketBot?start=' + Math.random().toString(36).substring(7);
+        const refLink = 'https://t.me/Green_marketBot?start=' + Math.random().toString(36).substring(7);
         document.getElementById('refLinkText').textContent = refLink;
         document.getElementById('refLinkMiniText').textContent = refLink;
 
@@ -1618,8 +1605,7 @@
         console.log('💰 Баланс:', balance, '₽');
         console.log('📱 Реферальная ссылка:', refLink);
         console.log('💡 Для теста вызовите addRealInvite() в консоли');
-        console.log('📱 iPhone с новым фото!');
-        console.log('⭐ Отзывы перенесены в профиль!');
+        console.log('📱 Бот: @Green_marketBot');
     }
 </script>
 </body>
