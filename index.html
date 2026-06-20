@@ -325,7 +325,6 @@
             white-space: nowrap;
         }
 
-        /* ===== ИСПРАВЛЕНА КНОПКА КОПИРОВАТЬ ===== */
         .earn-card .ref-link-mini {
             background: rgba(0, 10, 0, 0.4);
             border-radius: 10px;
@@ -482,7 +481,6 @@
             font-size: 12px; font-weight: 700; color: #fff;
         }
 
-        /* ===== КОНКУРС iPhone ===== */
         .contest-card {
             background: rgba(0, 30, 0, 0.25);
             backdrop-filter: blur(20px);
@@ -514,8 +512,6 @@
             box-shadow: 0 0 30px rgba(156, 39, 176, 0.3);
             z-index: 1;
         }
-
-        /* ===== ВАШЕ ФОТО iPhone ===== */
         .contest-card .product-image {
             width: 100%;
             border-radius: 16px;
@@ -531,7 +527,6 @@
             transform: scale(1.01);
             border-color: rgba(156, 39, 176, 0.4);
         }
-
         .contest-card h4 {
             color: #ce93d8;
             font-size: 18px;
@@ -543,7 +538,6 @@
             font-size: 13px;
         }
 
-        /* ===== ШКАЛА ПРОГРЕССА ===== */
         .goal-text {
             font-size: 13px;
             color: #8aaa8a;
@@ -551,9 +545,7 @@
             text-align: center;
             font-weight: 500;
         }
-        .goal-text strong {
-            color: #ce93d8;
-        }
+        .goal-text strong { color: #ce93d8; }
         .progress-wrap {
             margin: 8px 0 6px;
             background: rgba(10, 26, 10, 0.5);
@@ -653,33 +645,6 @@
         .chart-bar-wrap .cvalue { font-weight: 700; color: #69f0ae; font-size: 12px; min-width: 50px; text-align: right; }
         .chart-bar-wrap.user-row { background: rgba(0, 255, 100, 0.05); border-radius: 10px; border: 1px solid rgba(76, 175, 80, 0.1); }
 
-        .referral-card {
-            background: linear-gradient(135deg, rgba(0, 30, 0, 0.3), rgba(0, 50, 0, 0.1));
-            border-radius: 24px; padding: 24px 20px; text-align: center;
-            border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
-        }
-        .referral-card .ref-icon { font-size: 48px; margin-bottom: 8px; }
-        .referral-card h3 { color: #69f0ae; font-size: 20px; font-weight: 700; }
-        .referral-card p { color: #6a8a6a; font-size: 13px; margin: 6px 0 16px; }
-        .referral-card .ref-link-box {
-            background: rgba(0, 10, 0, 0.5); border-radius: 16px; padding: 12px 16px;
-            border: 1px solid rgba(76, 175, 80, 0.08); color: #a5d6a7; font-size: 13px;
-            word-break: break-all; font-weight: 300; letter-spacing: 0.3px; margin-bottom: 14px; position: relative;
-        }
-        .referral-card .ref-link-box .copy-btn {
-            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-            background: rgba(76, 175, 80, 0.12); border: none; color: #69f0ae;
-            padding: 4px 12px; border-radius: 30px; font-size: 11px; cursor: pointer; font-weight: 600; transition: 0.3s;
-        }
-        .referral-card .ref-link-box .copy-btn:hover { background: rgba(76, 175, 80, 0.2); }
-        .referral-card .ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .referral-card .ref-stats .stat {
-            background: rgba(0, 30, 0, 0.2); border-radius: 14px; padding: 10px;
-            border: 1px solid rgba(76, 175, 80, 0.04);
-        }
-        .referral-card .ref-stats .stat .num { font-size: 22px; font-weight: 900; color: #69f0ae; }
-        .referral-card .ref-stats .stat .lbl { font-size: 11px; color: #6a8a6a; }
-
         .wallet-card {
             background: rgba(0, 30, 0, 0.15); border-radius: 20px; padding: 16px;
             border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
@@ -703,6 +668,7 @@
         .history-item .h-status.pending { color: #fdd835; }
         .history-item .h-status.done { color: #69f0ae; }
 
+        /* ===== НОВЫЙ ПРОФИЛЬ (БЕЗ АВАТАРКИ И TELEGRAM) ===== */
         .profile-card {
             background: rgba(0, 30, 0, 0.15);
             border-radius: 24px;
@@ -711,40 +677,112 @@
             text-align: center;
             backdrop-filter: blur(10px);
         }
-        .profile-card .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
+        .profile-card .profile-title {
+            color: #a5d6a7;
+            font-size: 18px;
             font-weight: 700;
-            color: #fff;
-            margin: 0 auto 12px;
-            border: 2px solid rgba(76, 175, 80, 0.15);
-            box-shadow: 0 0 40px rgba(0,200,80,0.05);
-            transition: 0.3s;
-            background-size: cover;
-            background-position: center;
+            margin-bottom: 16px;
         }
-        .profile-card .avatar:hover { transform: scale(1.05); }
-        .profile-card .nick { color: #69f0ae; font-size: 24px; font-weight: 800; }
-        .profile-card .info { color: #6a8a6a; font-size: 13px; margin: 4px 0; }
+        .profile-card .nick-label {
+            color: #6a8a6a;
+            font-size: 13px;
+            text-align: left;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .profile-card .nick-input-wrap {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .profile-card .nick-input-wrap input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            background: rgba(6, 18, 6, 0.8);
+            color: #c0e0c0;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .profile-card .nick-input-wrap input:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 30px rgba(0,200,80,0.05);
+        }
+        .profile-card .nick-input-wrap input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .profile-card .btn-apply {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #fdd835, #f9a825);
+            border: none;
+            border-radius: 16px;
+            font-weight: 800;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+            box-shadow: 0 4px 30px rgba(253, 216, 53, 0.15);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .profile-card .btn-apply:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 40px rgba(253, 216, 53, 0.25);
+        }
+        .profile-card .btn-apply:active {
+            transform: scale(0.95);
+        }
+        .profile-card .btn-apply:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .profile-card .current-nick {
+            color: #69f0ae;
+            font-size: 20px;
+            font-weight: 800;
+            padding: 12px;
+            background: rgba(0, 30, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            margin-bottom: 16px;
+        }
+        .profile-card .current-nick span {
+            color: #6a8a6a;
+            font-weight: 400;
+            font-size: 14px;
+        }
         .profile-card .stat-grid {
-            display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin: 16px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 16px;
         }
         .profile-card .stat-grid .item {
-            background: rgba(0, 30, 0, 0.15); border-radius: 12px; padding: 10px 4px;
+            background: rgba(0, 30, 0, 0.15);
+            border-radius: 12px;
+            padding: 10px 4px;
             border: 1px solid rgba(76, 175, 80, 0.04);
         }
         .profile-card .stat-grid .item .num { font-size: 18px; font-weight: 900; color: #69f0ae; }
         .profile-card .stat-grid .item .lbl { font-size: 9px; color: #6a8a6a; text-transform: uppercase; letter-spacing: 0.3px; }
         .profile-card .invite-btn {
-            width: 100%; padding: 14px;
+            width: 100%;
+            padding: 14px;
+            margin-top: 16px;
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
-            border: 1px solid rgba(76, 175, 80, 0.15); border-radius: 40px;
-            font-weight: 700; color: #e0f0e0; cursor: pointer; transition: 0.3s; font-size: 15px;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            border-radius: 40px;
+            font-weight: 700;
+            color: #e0f0e0;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
             box-shadow: 0 4px 30px rgba(0,200,80,0.05);
         }
         .profile-card .invite-btn:active { transform: scale(0.97); }
@@ -834,6 +872,8 @@
             .contest-card .product-image { min-height: 120px; max-height: 180px; }
             .review-mini { min-width: 120px; }
             .profile-card .stat-grid { grid-template-columns: 1fr 1fr; }
+            .profile-card .nick-input-wrap { flex-direction: column; }
+            .profile-card .btn-apply { width: 100%; }
         }
     </style>
 </head>
@@ -896,11 +936,11 @@
         <button class="withdraw-btn disabled" id="withdrawBtn">💸 Вывести деньги</button>
         <div class="withdraw-hint" id="withdrawHint">Накопите 3000 ₽ для вывода</div>
 
+        <!-- ВКЛАДКИ -->
         <div class="tabs">
             <button class="tab-btn active" data-tab="tabFeed">🏠</button>
             <button class="tab-btn" data-tab="tabContests">🎁</button>
             <button class="tab-btn" data-tab="tabLeaders">🏆</button>
-            <button class="tab-btn" data-tab="tabReferral">🔗</button>
             <button class="tab-btn" data-tab="tabWallet">💰</button>
             <button class="tab-btn" data-tab="tabProfile">👤</button>
             <button class="tab-btn" data-tab="tabHelp">📖</button>
@@ -922,7 +962,7 @@
                     <span class="amount-big">+300 ₽</span>
                 </div>
                 <div class="ref-link-mini" id="refLinkMini">
-                    <span class="ref-text" id="refLinkMiniText">https://t.me/Green_marketBot?start=GM3900</span>
+                    <span class="ref-text" id="refLinkMiniText">https://t.me/Green_marketBot?start=...</span>
                     <button class="copy-mini" id="copyRefLinkMini">📋 Копировать</button>
                 </div>
                 <button class="earn-btn" id="earnInviteBtn">🚀 Пригласить друга</button>
@@ -953,7 +993,7 @@
             <div class="online-ribbon" id="onlineRibbon"></div>
         </div>
 
-        <!-- ===== КОНКУРСЫ (ВАШЕ ФОТО iPhone) ===== -->
+        <!-- КОНКУРСЫ -->
         <div class="tab-content" id="tabContests">
             <div class="contest-card" id="iphoneCard">
                 <span class="prize-badge">🏆 ГЛАВНЫЙ ПРИЗ</span>
@@ -989,29 +1029,6 @@
             </div>
         </div>
 
-        <!-- РЕФЕРАЛКА -->
-        <div class="tab-content" id="tabReferral">
-            <div class="referral-card">
-                <div class="ref-icon">🔗</div>
-                <h3>Реферальная ссылка</h3>
-                <p>Приглашайте друзей и получайте <strong style="color:#fdd835;">300 ₽</strong> за каждого!</p>
-                <div class="ref-link-box" id="refLinkBox">
-                    <span id="refLinkText">https://t.me/Green_marketBot?start=...</span>
-                    <button class="copy-btn" id="copyRefLink">Копировать</button>
-                </div>
-                <div class="ref-stats">
-                    <div class="stat">
-                        <div class="num" id="refInvites">0</div>
-                        <div class="lbl">Приглашено</div>
-                    </div>
-                    <div class="stat">
-                        <div class="num" id="refEarned">0</div>
-                        <div class="lbl">Заработано ₽</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- КОШЕЛЁК -->
         <div class="tab-content" id="tabWallet">
             <div class="wallet-card">
@@ -1032,14 +1049,24 @@
             <div id="walletHistory"></div>
         </div>
 
-        <!-- ПРОФИЛЬ -->
+        <!-- ===== НОВЫЙ ПРОФИЛЬ (БЕЗ АВАТАРКИ И TELEGRAM) ===== -->
         <div class="tab-content" id="tabProfile">
             <div class="profile-card">
-                <div class="avatar" id="profileAvatar">👤</div>
-                <div class="nick" id="profileNick">Гость</div>
-                <div class="info">🆔 <span id="profileId">#GM0000</span></div>
-                <div class="info">📱 Telegram: <span id="profileTelegram">@username</span></div>
+                <div class="profile-title">👤 Профиль</div>
                 
+                <!-- Текущий никнейм -->
+                <div class="current-nick" id="currentNickDisplay">
+                    <span>Ваш никнейм:</span> <span id="currentNickName">Не выбран</span>
+                </div>
+                
+                <!-- Поле для ввода -->
+                <div class="nick-label">Выберите себе никнейм:</div>
+                <div class="nick-input-wrap">
+                    <input type="text" id="nickInput" placeholder="Введите никнейм..." maxlength="20">
+                    <button class="btn-apply" id="applyNickBtn">Применить</button>
+                </div>
+                
+                <!-- Статистика -->
                 <div class="stat-grid">
                     <div class="item">
                         <div class="num" id="pInvites">0</div>
@@ -1128,7 +1155,9 @@
 <div class="confetti-container" id="confettiContainer"></div>
 
 <script>
-    // ===== ПАРТИКЛЫ =====
+    // ============================================================
+    // ===== 1. ПАРТИКЛЫ =====
+    // ============================================================
     const particlesContainer = document.getElementById('particles');
     for (let i = 0; i < 35; i++) {
         const p = document.createElement('div');
@@ -1141,7 +1170,9 @@
         particlesContainer.appendChild(p);
     }
 
-    // ===== КОНФЕТТИ =====
+    // ============================================================
+    // ===== 2. КОНФЕТТИ =====
+    // ============================================================
     function createConfetti(colors, count = 80) {
         const container = document.getElementById('confettiContainer');
         const shapes = ['■', '●', '▲', '★', '♦', '◆', '⬟'];
@@ -1160,7 +1191,9 @@
         setTimeout(() => { container.innerHTML = ''; }, 4500);
     }
 
-    // ===== СЛАЙДЫ =====
+    // ============================================================
+    // ===== 3. СЛАЙДЫ =====
+    // ============================================================
     const slideWelcome = document.getElementById('slideWelcome');
     const slideAge = document.getElementById('slideAge');
     const mainScreen = document.getElementById('mainScreen');
@@ -1192,47 +1225,69 @@
         initApp();
     });
 
-    // ===== ОСНОВНАЯ ЛОГИКА =====
+    // ============================================================
+    // ===== 4. ОСНОВНАЯ ЛОГИКА =====
+    // ============================================================
     function initApp() {
         let balance = parseInt(sessionStorage.getItem('swill_balance')) || 0;
         let tickets = parseInt(sessionStorage.getItem('swill_tickets')) || 0;
         let invites = parseInt(sessionStorage.getItem('swill_invites')) || 0;
         const WITHDRAW_THRESHOLD = 3000;
 
-        // Telegram данные
-        let tgUser = null;
-        let tgUsername = '';
-        let tgFirstName = '';
-        let tgAvatar = '';
-        let tgId = '';
+        // ===== НИКНЕЙМ =====
+        const nickInput = document.getElementById('nickInput');
+        const applyBtn = document.getElementById('applyNickBtn');
+        const currentNickSpan = document.getElementById('currentNickName');
+        
+        let currentNick = sessionStorage.getItem('swill_nick') || '';
+        let isNickLocked = sessionStorage.getItem('swill_nick_locked') === 'true';
 
-        try {
-            const tg = window.Telegram?.WebApp;
-            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                tgUser = tg.initDataUnsafe.user;
-                tgUsername = tgUser.username || '';
-                tgFirstName = tgUser.first_name || '';
-                tgAvatar = tgUser.photo_url || '';
-                tgId = tgUser.id || '';
-                console.log('✅ Telegram user loaded:', tgFirstName);
+        function updateNickUI() {
+            if (currentNick) {
+                currentNickSpan.textContent = currentNick;
+                nickInput.value = currentNick;
+                nickInput.disabled = true;
+                applyBtn.disabled = true;
+                applyBtn.textContent = '✅ Применено';
+            } else {
+                currentNickSpan.textContent = 'Не выбран';
+                nickInput.value = '';
+                nickInput.disabled = false;
+                applyBtn.disabled = false;
+                applyBtn.textContent = 'Применить';
             }
-        } catch (e) {
-            console.log('⚠️ Telegram WebApp not available');
         }
+        updateNickUI();
 
-        if (!tgFirstName) {
-            const nicks = ['MC Грегор', 'NektoS', 'SkyWolfWalker', 'K1A', 'Zayka_3', 'CryptoKing', 'Ghost_FPS', 'Lil_Pump', 'Boss_420', 'DiamondHands', 'MoonBoy', 'CyberPunk', 'FrostByte', 'ShadowStrike', 'NightHawk', 'StormBreaker'];
-            function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-            tgFirstName = sessionStorage.getItem('swill_nick') || randomItem(nicks);
-            tgUsername = tgFirstName.toLowerCase().replace(/\s/g, '');
-            tgId = 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
-        }
+        applyBtn.addEventListener('click', function() {
+            const newNick = nickInput.value.trim();
+            if (!newNick) {
+                alert('❌ Введите никнейм!');
+                return;
+            }
+            if (newNick.length < 2) {
+                alert('❌ Никнейм должен быть минимум 2 символа!');
+                return;
+            }
+            if (newNick.length > 20) {
+                alert('❌ Никнейм не должен превышать 20 символов!');
+                return;
+            }
 
-        const profileNick = tgFirstName;
-        const profileTelegram = tgUsername ? '@' + tgUsername : '@' + profileNick.toLowerCase().replace(/\s/g, '');
-        const profileId = tgId || 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
-        const userAvatar = tgAvatar || null;
+            // Сохраняем никнейм
+            currentNick = newNick;
+            sessionStorage.setItem('swill_nick', currentNick);
+            sessionStorage.setItem('swill_nick_locked', 'true');
+            isNickLocked = true;
+            updateNickUI();
+            createConfetti(['confetti-gold', 'confetti-green'], 50);
+            
+            // Обновляем отображение в других местах
+            document.getElementById('profileNick').textContent = currentNick;
+            console.log('✅ Никнейм сохранён:', currentNick);
+        });
 
+        // ===== ОСТАЛЬНАЯ ЛОГИКА =====
         const balanceEl = document.getElementById('balanceDisplay');
         const ticketDisplay = document.getElementById('ticketDisplay');
         const inviteDisplay = document.getElementById('inviteDisplay');
@@ -1241,35 +1296,6 @@
         const walletInvites = document.getElementById('walletInvites');
         const withdrawBtn = document.getElementById('withdrawBtn');
         const hintEl = document.getElementById('withdrawHint');
-
-        // ===== КНОПКА КОПИРОВАТЬ =====
-        document.getElementById('copyRefLinkMini').addEventListener('click', function(e) {
-            e.stopPropagation();
-            const link = document.getElementById('refLinkMiniText').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                this.textContent = '✅ Скопировано!';
-                setTimeout(() => {
-                    this.textContent = '📋 Копировать';
-                }, 2000);
-                createConfetti(['confetti-green', 'confetti-gold'], 30);
-            }).catch(() => {
-                alert('🔗 Ссылка: ' + link);
-            });
-        });
-
-        document.getElementById('copyRefLink').addEventListener('click', function(e) {
-            e.stopPropagation();
-            const link = document.getElementById('refLinkText').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                this.textContent = '✅ Скопировано!';
-                setTimeout(() => {
-                    this.textContent = 'Копировать';
-                }, 2000);
-                createConfetti(['confetti-green', 'confetti-gold'], 30);
-            }).catch(() => {
-                alert('🔗 Ссылка: ' + link);
-            });
-        });
 
         // ===== ОТЗЫВЫ =====
         const reviewData = [
@@ -1313,8 +1339,6 @@
             document.getElementById('pTickets').textContent = tickets;
             document.getElementById('pInvites').textContent = invites;
             document.getElementById('pBalance').textContent = balance;
-            document.getElementById('refInvites').textContent = invites;
-            document.getElementById('refEarned').textContent = (invites * 300).toLocaleString();
             document.getElementById('leaderTickets').textContent = tickets;
 
             const place = getPlace();
@@ -1359,9 +1383,9 @@
 
         function getPlace() {
             const allData = [...leaderData];
-            if (tickets > 0) allData.push({ name: profileNick, tickets: tickets });
+            if (tickets > 0) allData.push({ name: currentNick || 'Гость', tickets: tickets });
             allData.sort((a, b) => b.tickets - a.tickets);
-            const index = allData.findIndex(item => item.name === profileNick && item.tickets === tickets);
+            const index = allData.findIndex(item => item.name === (currentNick || 'Гость') && item.tickets === tickets);
             return index >= 0 ? '#' + (index + 1) : '#--';
         }
 
@@ -1444,7 +1468,8 @@
 
         function getUserRank() {
             const allData = [...leaderData];
-            if (tickets > 0) allData.push({ name: profileNick, tickets: tickets, isUser: true });
+            const userName = currentNick || 'Гость';
+            if (tickets > 0) allData.push({ name: userName, tickets: tickets, isUser: true });
             allData.sort((a, b) => b.tickets - a.tickets);
             return allData;
         }
@@ -1505,27 +1530,28 @@
         }
         renderWalletHistory();
 
-        // ===== ПРОФИЛЬ =====
-        document.getElementById('profileNick').textContent = profileNick;
-        document.getElementById('profileTelegram').textContent = profileTelegram;
-        document.getElementById('profileId').textContent = typeof tgId === 'string' && tgId.startsWith('GM') ? tgId : 'GM' + String(Math.floor(Math.random() * 9000) + 1000);
-
-        const avatarEl = document.getElementById('profileAvatar');
-        if (userAvatar) {
-            avatarEl.style.backgroundImage = `url(${userAvatar})`;
-            avatarEl.style.backgroundSize = 'cover';
-            avatarEl.textContent = '';
-        } else {
-            const color = randomItem(onlineColors);
-            avatarEl.style.background = `linear-gradient(135deg, ${color}, ${randomItem(onlineColors)})`;
-            avatarEl.textContent = profileNick.charAt(0).toUpperCase();
-        }
-
         // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
-        const userId = tgId || Math.floor(Math.random() * 1000000);
+        const userId = sessionStorage.getItem('swill_user_id') || Math.floor(Math.random() * 1000000);
+        if (!sessionStorage.getItem('swill_user_id')) {
+            sessionStorage.setItem('swill_user_id', userId);
+        }
         const refLink = 'https://t.me/Green_marketBot?start=' + userId;
-        document.getElementById('refLinkText').textContent = refLink;
         document.getElementById('refLinkMiniText').textContent = refLink;
+
+        // ===== КНОПКА КОПИРОВАТЬ =====
+        document.getElementById('copyRefLinkMini').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const link = document.getElementById('refLinkMiniText').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                this.textContent = '✅ Скопировано!';
+                setTimeout(() => {
+                    this.textContent = '📋 Копировать';
+                }, 2000);
+                createConfetti(['confetti-green', 'confetti-gold'], 30);
+            }).catch(() => {
+                alert('🔗 Ссылка: ' + link);
+            });
+        });
 
         // ===== ПРИГЛАШЕНИЕ =====
         window.addRealInvite = function() {
@@ -1678,18 +1704,16 @@
             }
         });
 
+        // ===== ПЕРВОНАЧАЛЬНОЕ ОБНОВЛЕНИЕ =====
         updateUI();
         checkContestProgress();
 
         console.log('🔥 GREEN MARKET ЗАПУЩЕН');
-        console.log('👤 Пользователь:', profileNick);
-        console.log('📱 Telegram:', profileTelegram);
-        console.log('🆔 ID:', profileId);
+        console.log('👤 Никнейм:', currentNick || 'Не выбран');
         console.log('💰 Баланс:', balance, '₽');
         console.log('📱 Реферальная ссылка:', refLink);
         console.log('💡 Для теста вызовите addRealInvite() в консоли');
-        console.log('📸 Фото iPhone: https://imgfy.ru/ib/fkgtDZGfNawRlKL_1781976450.webp');
-        console.log('✅ Кнопка Копировать ИСПРАВЛЕНА!');
+        console.log('✅ Профиль без Telegram, только никнейм!');
     }
 </script>
 </body>
