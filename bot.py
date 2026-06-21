@@ -264,7 +264,7 @@ def get_stats():
 # ===== ЗАПУСК =====
 # ============================================
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8080))
+    port = int(os.environ.get('PORT', 8081))
     logger.info(f"🚀 Запуск бота на порту {port}...")
     logger.info(f"🤖 Бот: @Green_marketBot")
     logger.info(f"📱 Mini App: https://casdsa-fga.github.io/greenmarket1/")
