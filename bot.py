@@ -164,12 +164,17 @@ def webhook():
         conn.commit()
         conn.close()
 
-    keyboard = {
-        "inline_keyboard": [[{
-            "text": "🚀 Открыть приложение",
-            "web_app": {"url": f"{WEBAPP_URL}?ref={chat_id}"},
-        }]]
-    }
+    # сохраняем реального реферера
+webapp_ref = referrer_id if referrer_id else chat_id
+
+keyboard = {
+    "inline_keyboard": [[{
+        "text": "🚀 Открыть приложение",
+        "web_app": {
+            "url": f"{WEBAPP_URL}?ref={webapp_ref}"
+        }
+    }]]
+}
 
     send_message(
         chat_id,
