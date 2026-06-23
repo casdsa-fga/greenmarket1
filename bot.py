@@ -14,7 +14,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-BOT_TOKEN = os.environ.get("8976122112:AAGeOjA9SCOjkd_-yREBUjI55X-lrHBnmME", "")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 WEBAPP_URL = os.environ.get("WEBAPP_URL", "https://casdsa-fga.github.io/greenmarket1/")
 
 if not BOT_TOKEN:
