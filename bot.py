@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import sqlite3
+import time
 
 app = Flask(__name__)
 DB = "db.sqlite3"
@@ -30,8 +31,7 @@ def init():
 
 init()
 
-
-# ---------------- LOGIC ----------------
+# ---------------- CORE ----------------
 def add_user(user_id, ref=None):
     conn = db()
     c = conn.cursor()
@@ -41,7 +41,6 @@ def add_user(user_id, ref=None):
 
     if not user:
         c.execute("INSERT INTO users (id, ref) VALUES (?, ?)", (user_id, ref))
-
     conn.commit()
     conn.close()
 
@@ -50,7 +49,7 @@ def give_bonus(user_id):
     conn = db()
     c = conn.cursor()
 
-    c.execute("SELECT bonus_given FROM users WHERE id=?", (user_id,))
+    c.execute("SELECT * FROM users WHERE id=?", (user_id,))
     user = c.fetchone()
 
     if user and user["bonus_given"] == 0:
@@ -61,54 +60,48 @@ def give_bonus(user_id):
                 bonus_given = 1
             WHERE id=?
         """, (user_id,))
+        conn.commit()
 
-    conn.commit()
     conn.close()
 
 
-def add_invite(ref_id):
+def process_ref(ref_id):
     if not ref_id:
         return
 
     conn = db()
     c = conn.cursor()
 
-    c.execute("UPDATE users SET invites = invites + 1 WHERE id=?", (ref_id,))
+    # увеличиваем инвайты рефереру
+    c.execute("SELECT * FROM users WHERE id=?", (ref_id,))
+    ref_user = c.fetchone()
+
+    if ref_user:
+        c.execute("""
+            UPDATE users
+            SET invites = invites + 1
+            WHERE id=?
+        """, (ref_id,))
 
     conn.commit()
     conn.close()
 
 
-# ---------------- TELEGRAM WEBHOOK ----------------
-@app.route("/", methods=["POST"])
-def webhook():
+# ---------------- TELEGRAM SIMULATION ----------------
+# (сюда ты подключаешь webhook или polling)
+@app.route("/start", methods=["POST"])
+def start():
     data = request.json
-
-    print("[DEBUG] RAW:", data)
-
-    message = data.get("message", {})
-    text = message.get("text", "")
-    user_id = message.get("from", {}).get("id")
-
-    if not user_id:
-        return "ok"
-
-    print("[DEBUG] CHAT =", user_id, "TEXT =", text)
-
-    # /start 12345
-    ref = None
-    if text.startswith("/start"):
-        parts = text.split()
-        if len(parts) > 1:
-            ref = parts[1]
+    user_id = int(data["user_id"])
+    ref = data.get("ref")
 
     add_user(user_id, ref)
 
     if ref:
-        add_invite(ref)
+        process_ref(ref)
         give_bonus(user_id)
 
-    return "ok"
+    return {"ok": True}
 
 
 # ---------------- API FOR HTML ----------------
@@ -116,10 +109,8 @@ def webhook():
 def get_user(user_id):
     conn = db()
     c = conn.cursor()
-
     c.execute("SELECT * FROM users WHERE id=?", (user_id,))
     user = c.fetchone()
-
     conn.close()
 
     if not user:
@@ -131,6 +122,12 @@ def get_user(user_id):
         "tickets": user["tickets"],
         "invites": user["invites"]
     })
+
+
+# ---------------- SIM TEST ----------------
+@app.route("/test")
+def test():
+    return "OK"
 
 
 if __name__ == "__main__":
