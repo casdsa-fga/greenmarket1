@@ -1,62 +1,35 @@
-import os
-import sqlite3
-import json
-import requests
-
 from flask import Flask, request, jsonify
+import requests
+import sqlite3
 
 app = Flask(__name__)
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-WEBAPP_URL = os.getenv("WEBAPP_URL")
+BOT_TOKEN = "YOUR_NEW_TOKEN_HERE"
 
 # ================= DB =================
 
-def get_db():
-    conn = sqlite3.connect("users.db")
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
 def init_db():
-    conn = get_db()
+    conn = sqlite3.connect('users.db')
     c = conn.cursor()
 
-    c.execute("""
+    c.execute('''
     CREATE TABLE IF NOT EXISTS users (
         user_id TEXT PRIMARY KEY,
+        referrer_id TEXT,
         balance INTEGER DEFAULT 0,
         tickets INTEGER DEFAULT 0,
-        invited INTEGER DEFAULT 0,
-        referrer_id TEXT
+        invited INTEGER DEFAULT 0
     )
-    """)
+    ''')
 
     conn.commit()
     conn.close()
 
-
 init_db()
-
-# ================= TELEGRAM =================
-
-def send_message(chat_id, text, reply_markup=None):
-    payload = {
-        "chat_id": chat_id,
-        "text": text
-    }
-
-    if reply_markup:
-        payload["reply_markup"] = json.dumps(reply_markup)
-
-    requests.post(
-        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-        json=payload
-    )
 
 # ================= WEBHOOK =================
 
-@app.route("/webhook", methods=["POST"])
+@app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.get_json()
 
@@ -67,73 +40,69 @@ def webhook():
     chat_id = str(msg["chat"]["id"])
     text = msg.get("text", "")
 
-    conn = get_db()
+    referrer_id = None
+
+    conn = sqlite3.connect('users.db')
     c = conn.cursor()
 
     # ================= /start =================
     if text.startswith("/start"):
 
         parts = text.split(" ")
-        ref = parts[1] if len(parts) > 1 else None
+        if len(parts) > 1:
+            referrer_id = parts[1]
 
-        c.execute("SELECT * FROM users WHERE user_id=?", (chat_id,))
-        user = c.fetchone()
-
-        if not user:
-            c.execute(
-                "INSERT INTO users (user_id, referrer_id) VALUES (?, ?)",
-                (chat_id, ref)
-            )
-
-        conn.commit()
-
-        keyboard = {
-            "inline_keyboard": [[
-                {
-                    "text": "🚀 Открыть маркет",
-                    "web_app": {"url": WEBAPP_URL}
-                }
-            ]]
-        }
-
-        send_message(
-            chat_id,
-            "🌿 Добро пожаловать в GREEN MARKET!\n\nЗарабатывай на приглашениях 👥",
-            keyboard
+        # создаём пользователя
+        c.execute(
+            "INSERT OR IGNORE INTO users (user_id, referrer_id) VALUES (?, ?)",
+            (chat_id, referrer_id)
         )
 
-    conn.close()
+        # ================= реферал =================
+        if referrer_id and referrer_id != chat_id:
+
+            c.execute("SELECT user_id FROM users WHERE user_id=?", (referrer_id,))
+            exists = c.fetchone()
+
+            if exists:
+                c.execute("""
+                    UPDATE users
+                    SET balance = balance + 300,
+                        tickets = tickets + 50,
+                        invited = invited + 1
+                    WHERE user_id = ?
+                """, (referrer_id,))
+
+        conn.commit()
+        conn.close()
+
+        keyboard = {
+            "inline_keyboard": [[{
+                "text": "🚀 Открыть приложение",
+                "web_app": {
+                    "url": "https://casdsa-fga.github.io/greenmarket1/"
+                }
+            }]]
+        }
+
+        requests.post(
+            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            json={
+                "chat_id": chat_id,
+                "text": "🌿 Добро пожаловать в Green Market!\n💰 Зарабатывай с друзьями!",
+                "reply_markup": keyboard
+            }
+        )
+
     return jsonify({"ok": True})
-
-
-# ================= USER API (ВАЖНО ДЛЯ JS) =================
-
-@app.route("/user/<user_id>")
-def user(user_id):
-    conn = get_db()
-    c = conn.cursor()
-
-    c.execute("SELECT * FROM users WHERE user_id=?", (user_id,))
-    row = c.fetchone()
-
-    if not row:
-        return jsonify({"balance": 0, "tickets": 0, "invited": 0})
-
-    return jsonify({
-        "balance": row["balance"],
-        "tickets": row["tickets"],
-        "invited": row["invited"]
-    })
 
 
 # ================= HOME =================
 
-@app.route("/")
+@app.route('/')
 def home():
-    return "OK"
+    return "Бот работает! ✅"
 
-
-# ================= RUN =================
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
+    app.run(host="0.0.0.0", port=8080)
