@@ -21,9 +21,9 @@ WEBAPP_URL = os.environ.get(
 )
 
 if not BOT_TOKEN:
-    raise RuntimeError("BOT_TOKEN is not set in environment / .env")
+    raise RuntimeError("BOT_TOKEN is not set")
 
-# ===== DATABASE =====
+# ===== DB =====
 
 def get_db():
     conn = sqlite3.connect("users.db")
@@ -41,19 +41,15 @@ def init_db():
         referrer_id TEXT,
         balance INTEGER DEFAULT 0,
         tickets INTEGER DEFAULT 0,
-        invited INTEGER DEFAULT 0,
-        registered INTEGER DEFAULT 1,
-        created_at INTEGER DEFAULT (strftime('%s','now'))
+        invited INTEGER DEFAULT 0
     )
     """)
 
     c.execute("""
     CREATE TABLE IF NOT EXISTS referral_earnings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        referrer_id TEXT NOT NULL,
-        referred_user_id TEXT NOT NULL,
-        amount INTEGER DEFAULT 300,
-        earned_at INTEGER DEFAULT (strftime('%s','now')),
+        referrer_id TEXT,
+        referred_user_id TEXT,
         UNIQUE(referrer_id, referred_user_id)
     )
     """)
@@ -64,18 +60,22 @@ def init_db():
 
 init_db()
 
-# ===== TELEGRAM INIT DATA VALIDATION =====
+# ===== DEBUG HELP =====
+
+def debug(msg):
+    print(f"[DEBUG] {msg}", flush=True)
+
+# ===== VALIDATE INIT DATA =====
 
 def validate_init_data(init_data_raw: str):
     try:
         parsed = dict(urllib.parse.parse_qsl(init_data_raw, keep_blank_values=True))
         received_hash = parsed.pop("hash", None)
+
         if not received_hash:
             return None
 
-        check_string = "\n".join(
-            f"{k}={v}" for k, v in sorted(parsed.items())
-        )
+        check_string = "\n".join(f"{k}={v}" for k, v in sorted(parsed.items()))
 
         secret_key = hmac.new(
             b"WebAppData",
@@ -92,30 +92,27 @@ def validate_init_data(init_data_raw: str):
         if not hmac.compare_digest(expected_hash, received_hash):
             return None
 
-        auth_date = int(parsed.get("auth_date", 0))
-        if time.time() - auth_date > 300:
-            return None
-
         return json.loads(parsed.get("user", "{}"))
 
-    except Exception:
+    except Exception as e:
+        debug(f"initData error: {e}")
         return None
 
 
-# ===== TELEGRAM SENDER =====
+# ===== TELEGRAM SEND =====
 
 def send_message(chat_id, text, reply_markup=None):
     payload = {
         "chat_id": chat_id,
         "text": text
     }
+
     if reply_markup:
         payload["reply_markup"] = reply_markup
 
     requests.post(
         f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-        json=payload,
-        timeout=5
+        json=payload
     )
 
 
@@ -124,63 +121,71 @@ def send_message(chat_id, text, reply_markup=None):
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json(silent=True)
+
+    debug(f"RAW DATA: {data}")
+
     if not data or "message" not in data:
-        return jsonify({"status": "ok"})
+        return jsonify({"ok": True})
 
     chat_id = str(data["message"]["chat"]["id"])
     text = data["message"].get("text", "")
 
+    debug(f"CHAT: {chat_id} TEXT: {text}")
+
     referrer_id = None
 
-    # /start реферальная система
+    # ===== /start =====
     if text.startswith("/start"):
         parts = text.split(" ", 1)
-        if len(parts) > 1:
+
+        if len(parts) == 2:
             referrer_id = parts[1].strip()
+
+        debug(f"REFERRER RAW: {referrer_id}")
 
         conn = get_db()
         c = conn.cursor()
 
-        c.execute("SELECT user_id FROM users WHERE user_id = ?", (chat_id,))
+        c.execute("SELECT user_id FROM users WHERE user_id=?", (chat_id,))
         existing = c.fetchone()
 
         if not existing:
-
             if referrer_id == chat_id:
                 referrer_id = None
+
+            debug(f"INSERT USER {chat_id} REF {referrer_id}")
 
             c.execute(
                 "INSERT INTO users (user_id, referrer_id) VALUES (?, ?)",
                 (chat_id, referrer_id),
             )
 
-            # ===== РЕФЕРАЛЬНОЕ НАЧИСЛЕНИЕ =====
+            # ===== REF LOGIC =====
             if referrer_id:
-                c.execute(
-                    "SELECT 1 FROM referral_earnings WHERE referrer_id=? AND referred_user_id=?",
-                    (referrer_id, chat_id)
-                )
+                c.execute("""
+                    SELECT 1 FROM referral_earnings
+                    WHERE referrer_id=? AND referred_user_id=?
+                """, (referrer_id, chat_id))
+
                 already = c.fetchone()
 
+                debug(f"ALREADY EXISTS: {already}")
+
                 if not already:
-                    c.execute(
-                        """
+                    debug("ADDING BONUS")
+
+                    c.execute("""
                         UPDATE users
                         SET balance = balance + 300,
                             tickets = tickets + 50,
                             invited = invited + 1
-                        WHERE user_id = ?
-                        """,
-                        (referrer_id,)
-                    )
+                        WHERE user_id=?
+                    """, (referrer_id,))
 
-                    c.execute(
-                        """
+                    c.execute("""
                         INSERT INTO referral_earnings (referrer_id, referred_user_id)
                         VALUES (?, ?)
-                        """,
-                        (referrer_id, chat_id)
-                    )
+                    """, (referrer_id, chat_id))
 
         conn.commit()
         conn.close()
@@ -189,133 +194,28 @@ def webhook():
 
     keyboard = {
         "inline_keyboard": [[{
-            "text": "🚀 Открыть приложение",
+            "text": "🚀 Open App",
             "web_app": {"url": f"{WEBAPP_URL}?ref={webapp_ref}"}
         }]]
     }
 
     send_message(
         chat_id,
-        "🌿 Добро пожаловать в Green Market!\n💰 Зарабатывай с друзьями!",
-        reply_markup=keyboard,
+        "🌿 Welcome!",
+        reply_markup=keyboard
     )
 
-    return jsonify({"status": "ok"})
-
-
-# ===== REGISTER API =====
-
-@app.route("/api/register", methods=["POST"])
-def register():
-    body = request.get_json(silent=True)
-    if not body:
-        return jsonify({"status": "error"}), 400
-
-    init_data_raw = body.get("init_data", "")
-    referrer_id = str(body.get("referrer_id", "")).strip() or None
-
-    user_data = validate_init_data(init_data_raw)
-    if not user_data:
-        return jsonify({"status": "error", "message": "Invalid initData"}), 403
-
-    user_id = str(user_data.get("id", ""))
-    if not user_id:
-        return jsonify({"status": "error"}), 400
-
-    if referrer_id == user_id:
-        referrer_id = None
-
-    conn = get_db()
-    c = conn.cursor()
-
-    c.execute("SELECT user_id FROM users WHERE user_id=?", (user_id,))
-    if c.fetchone():
-        conn.close()
-        return jsonify({"status": "already_registered"})
-
-    c.execute(
-        "INSERT INTO users (user_id, referrer_id) VALUES (?, ?)",
-        (user_id, referrer_id)
-    )
-
-    bonus_awarded = False
-
-    if referrer_id:
-        c.execute("SELECT user_id FROM users WHERE user_id=?", (referrer_id,))
-        if c.fetchone():
-            c.execute(
-                "SELECT 1 FROM referral_earnings WHERE referrer_id=? AND referred_user_id=?",
-                (referrer_id, user_id)
-            )
-
-            if not c.fetchone():
-                c.execute("""
-                    UPDATE users
-                    SET balance = balance + 300,
-                        tickets = tickets + 50,
-                        invited = invited + 1
-                    WHERE user_id=?
-                """, (referrer_id,))
-
-                c.execute(
-                    "INSERT INTO referral_earnings (referrer_id, referred_user_id) VALUES (?, ?)",
-                    (referrer_id, user_id)
-                )
-
-                bonus_awarded = True
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({
-        "status": "success",
-        "bonus_awarded": bonus_awarded
-    })
-
-
-# ===== STATS =====
-
-@app.route("/api/stats", methods=["POST"])
-def stats():
-    body = request.get_json(silent=True)
-    if not body:
-        return jsonify({"status": "error"}), 400
-
-    user_data = validate_init_data(body.get("init_data", ""))
-    if not user_data:
-        return jsonify({"status": "error"}), 403
-
-    user_id = str(user_data.get("id", ""))
-
-    conn = get_db()
-    c = conn.cursor()
-    c.execute(
-        "SELECT balance, tickets, invited FROM users WHERE user_id=?",
-        (user_id,)
-    )
-    row = c.fetchone()
-    conn.close()
-
-    if not row:
-        return jsonify({"status": "not_found"}), 404
-
-    return jsonify({
-        "status": "ok",
-        "balance": row["balance"],
-        "tickets": row["tickets"],
-        "invited": row["invited"]
-    })
+    return jsonify({"ok": True})
 
 
 # ===== HOME =====
 
 @app.route("/")
 def home():
-    return "Бот работает! ✅"
+    return "Bot is running"
 
 
 # ===== RUN =====
-
 import os
 
 if __name__ == '__main__':
@@ -327,4 +227,3 @@ if __name__ == '__main__':
                 8080
             )
         )
-    )
