@@ -23,7 +23,7 @@ WEBAPP_URL = os.environ.get(
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is not set")
 
-# ===== DB =====
+# ================= DB =================
 
 def get_db():
     conn = sqlite3.connect("users.db")
@@ -60,69 +60,34 @@ def init_db():
 
 init_db()
 
-# ===== DEBUG HELP =====
+# ================= DEBUG =================
 
 def debug(msg):
     print(f"[DEBUG] {msg}", flush=True)
 
-# ===== VALIDATE INIT DATA =====
-
-def validate_init_data(init_data_raw: str):
-    try:
-        parsed = dict(urllib.parse.parse_qsl(init_data_raw, keep_blank_values=True))
-        received_hash = parsed.pop("hash", None)
-
-        if not received_hash:
-            return None
-
-        check_string = "\n".join(f"{k}={v}" for k, v in sorted(parsed.items()))
-
-        secret_key = hmac.new(
-            b"WebAppData",
-            BOT_TOKEN.encode(),
-            hashlib.sha256
-        ).digest()
-
-        expected_hash = hmac.new(
-            secret_key,
-            check_string.encode(),
-            hashlib.sha256
-        ).hexdigest()
-
-        if not hmac.compare_digest(expected_hash, received_hash):
-            return None
-
-        return json.loads(parsed.get("user", "{}"))
-
-    except Exception as e:
-        debug(f"initData error: {e}")
-        return None
-
-
-# ===== TELEGRAM SEND =====
+# ================= TELEGRAM SEND =================
 
 def send_message(chat_id, text, reply_markup=None):
     payload = {
         "chat_id": chat_id,
         "text": text
     }
-
     if reply_markup:
         payload["reply_markup"] = reply_markup
 
     requests.post(
         f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-        json=payload
+        json=payload,
+        timeout=5
     )
 
-
-# ===== WEBHOOK =====
+# ================= /START + REF SYSTEM =================
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json(silent=True)
 
-    debug(f"RAW DATA: {data}")
+    debug(f"RAW: {data}")
 
     if not data or "message" not in data:
         return jsonify({"ok": True})
@@ -130,26 +95,29 @@ def webhook():
     chat_id = str(data["message"]["chat"]["id"])
     text = data["message"].get("text", "")
 
-    debug(f"CHAT: {chat_id} TEXT: {text}")
+    debug(f"CHAT={chat_id} TEXT={text}")
 
     referrer_id = None
 
-    # ===== /start =====
+    # -------- START --------
     if text.startswith("/start"):
         parts = text.split(" ", 1)
 
         if len(parts) == 2:
-            referrer_id = parts[1].strip()
+            referrer_id = str(parts[1].strip())
 
-        debug(f"REFERRER RAW: {referrer_id}")
+        debug(f"REF RAW={referrer_id}")
 
         conn = get_db()
         c = conn.cursor()
 
+        # проверка пользователя
         c.execute("SELECT user_id FROM users WHERE user_id=?", (chat_id,))
         existing = c.fetchone()
 
         if not existing:
+
+            # защита от саморефа
             if referrer_id == chat_id:
                 referrer_id = None
 
@@ -160,32 +128,45 @@ def webhook():
                 (chat_id, referrer_id),
             )
 
-            # ===== REF LOGIC =====
+            # -------- REF BONUS --------
             if referrer_id:
-                c.execute("""
-                    SELECT 1 FROM referral_earnings
-                    WHERE referrer_id=? AND referred_user_id=?
-                """, (referrer_id, chat_id))
 
-                already = c.fetchone()
+                # проверяем что реферер существует
+                c.execute(
+                    "SELECT user_id FROM users WHERE user_id=?",
+                    (referrer_id,)
+                )
+                ref_exists = c.fetchone()
 
-                debug(f"ALREADY EXISTS: {already}")
-
-                if not already:
-                    debug("ADDING BONUS")
+                if ref_exists:
 
                     c.execute("""
-                        UPDATE users
-                        SET balance = balance + 300,
-                            tickets = tickets + 50,
-                            invited = invited + 1
-                        WHERE user_id=?
-                    """, (referrer_id,))
-
-                    c.execute("""
-                        INSERT INTO referral_earnings (referrer_id, referred_user_id)
-                        VALUES (?, ?)
+                        SELECT 1 FROM referral_earnings
+                        WHERE referrer_id=? AND referred_user_id=?
                     """, (referrer_id, chat_id))
+
+                    already = c.fetchone()
+
+                    debug(f"ALREADY={already}")
+
+                    if not already:
+                        debug("ADDING BONUS")
+
+                        c.execute("""
+                            UPDATE users
+                            SET balance = balance + 300,
+                                tickets = tickets + 50,
+                                invited = invited + 1
+                            WHERE user_id=?
+                        """, (referrer_id,))
+
+                        c.execute("""
+                            INSERT INTO referral_earnings (referrer_id, referred_user_id)
+                            VALUES (?, ?)
+                        """, (referrer_id, chat_id))
+
+                else:
+                    debug("REFERRER NOT FOUND IN DB")
 
         conn.commit()
         conn.close()
@@ -195,7 +176,9 @@ def webhook():
     keyboard = {
         "inline_keyboard": [[{
             "text": "🚀 Open App",
-            "web_app": {"url": f"{WEBAPP_URL}?ref={webapp_ref}"}
+            "web_app": {
+                "url": f"{WEBAPP_URL}?ref={webapp_ref}"
+            }
         }]]
     }
 
@@ -208,15 +191,14 @@ def webhook():
     return jsonify({"ok": True})
 
 
-# ===== HOME =====
+# ================= HOME =================
 
 @app.route("/")
 def home():
-    return "Bot is running"
+    return "Bot is running ✅"
 
 
-# ===== RUN =====
-import os
+# ================= RUN =================
 
 if __name__ == "__main__":
     app.run(
