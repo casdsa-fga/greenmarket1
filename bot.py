@@ -176,13 +176,13 @@ keyboard = {
     }]]
 }
 
-    send_message(
-        chat_id,
-        "🌿 Добро пожаловать в Green Market!\n💰 Зарабатывай с друзьями!",
-        reply_markup=keyboard,
-    )
-    return jsonify({"status": "ok"})
+send_message(
+    chat_id,
+    "🌿 Добро пожаловать в Green Market!\n💰 Зарабатывай с друзьями!",
+    reply_markup=keyboard,
+)
 
+return jsonify({"status": "ok"})
 
 # ===== REGISTRATION ENDPOINT (called from Mini App) =====
 
