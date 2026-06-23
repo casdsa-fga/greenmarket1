@@ -1,134 +1,195 @@
-from flask import Flask, request, jsonify
+import os
+import hashlib
+import hmac
+import json
+import urllib.parse
 import sqlite3
-import time
+
+from flask import Flask, request, jsonify
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-DB = "db.sqlite3"
 
-# ---------------- DB ----------------
-def db():
-    conn = sqlite3.connect(DB)
+BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+WEBAPP_URL = os.getenv(
+    "WEBAPP_URL",
+    "https://casdsa-fga.github.io/greenmarket1/"
+)
+
+if not BOT_TOKEN:
+    raise RuntimeError("BOT_TOKEN is not set")
+
+
+# ================= DB =================
+def get_db():
+    conn = sqlite3.connect("users.db")
     conn.row_factory = sqlite3.Row
     return conn
 
-def init():
-    conn = db()
+
+def init_db():
+    conn = get_db()
     c = conn.cursor()
 
     c.execute("""
     CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY,
+        user_id TEXT PRIMARY KEY,
+        referrer_id TEXT,
         balance INTEGER DEFAULT 0,
         tickets INTEGER DEFAULT 0,
-        invites INTEGER DEFAULT 0,
-        ref INTEGER,
-        bonus_given INTEGER DEFAULT 0
+        invited INTEGER DEFAULT 0
+    )
+    """)
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS referral_earnings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        referrer_id TEXT,
+        referred_user_id TEXT,
+        UNIQUE(referrer_id, referred_user_id)
     )
     """)
 
     conn.commit()
     conn.close()
 
-init()
 
-# ---------------- CORE ----------------
-def add_user(user_id, ref=None):
-    conn = db()
-    c = conn.cursor()
-
-    c.execute("SELECT * FROM users WHERE id=?", (user_id,))
-    user = c.fetchone()
-
-    if not user:
-        c.execute("INSERT INTO users (id, ref) VALUES (?, ?)", (user_id, ref))
-    conn.commit()
-    conn.close()
+init_db()
 
 
-def give_bonus(user_id):
-    conn = db()
-    c = conn.cursor()
+# ================= DEBUG =================
+def debug(msg):
+    print(f"[DEBUG] {msg}", flush=True)
 
-    c.execute("SELECT * FROM users WHERE id=?", (user_id,))
-    user = c.fetchone()
 
-    if user and user["bonus_given"] == 0:
-        c.execute("""
-            UPDATE users
-            SET balance = balance + 300,
-                tickets = tickets + 50,
-                bonus_given = 1
-            WHERE id=?
-        """, (user_id,))
+# ================= SEND MESSAGE =================
+def send_message(chat_id, text, reply_markup=None):
+    payload = {"chat_id": chat_id, "text": text}
+    if reply_markup:
+        payload["reply_markup"] = reply_markup
+
+    requests.post(
+        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+        json=payload,
+        timeout=5
+    )
+
+
+# ================= WEBHOOK =================
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    data = request.get_json(silent=True)
+
+    debug(f"RAW: {data}")
+
+    if not data or "message" not in data:
+        return jsonify({"ok": True})
+
+    message = data["message"]
+    chat_id = str(message["chat"]["id"])
+    text = message.get("text", "")
+
+    debug(f"CHAT={chat_id} TEXT={text}")
+
+    referrer_id = None
+
+    # ===== /start =====
+    if text.startswith("/start"):
+        parts = text.split(" ", 1)
+
+        if len(parts) == 2:
+            referrer_id = parts[1].strip()
+
+        conn = get_db()
+        c = conn.cursor()
+
+        c.execute("SELECT user_id FROM users WHERE user_id=?", (chat_id,))
+        existing = c.fetchone()
+
+        if not existing:
+
+            if referrer_id == chat_id:
+                referrer_id = None
+
+            debug(f"INSERT USER {chat_id} REF {referrer_id}")
+
+            c.execute(
+                "INSERT INTO users (user_id, referrer_id) VALUES (?, ?)",
+                (chat_id, referrer_id),
+            )
+
+            # ===== REF BONUS =====
+            if referrer_id:
+                c.execute(
+                    "SELECT user_id FROM users WHERE user_id=?",
+                    (referrer_id,)
+                )
+                ref_exists = c.fetchone()
+
+                if ref_exists:
+                    c.execute("""
+                        SELECT 1 FROM referral_earnings
+                        WHERE referrer_id=? AND referred_user_id=?
+                    """, (referrer_id, chat_id))
+
+                    already = c.fetchone()
+
+                    if not already:
+                        c.execute("""
+                            UPDATE users
+                            SET balance = balance + 300,
+                                tickets = tickets + 50,
+                                invited = invited + 1
+                            WHERE user_id=?
+                        """, (referrer_id,))
+
+                        c.execute("""
+                            INSERT INTO referral_earnings (referrer_id, referred_user_id)
+                            VALUES (?, ?)
+                        """, (referrer_id, chat_id))
+
+                        # уведомление рефереру
+                        send_message(
+                            referrer_id,
+                            "🎉 Новый реферал!\n💰 +300 ₽\n🎯 +50 тикетов"
+                        )
+
         conn.commit()
+        conn.close()
 
-    conn.close()
+        webapp_ref = referrer_id if referrer_id else chat_id
 
+        keyboard = {
+            "inline_keyboard": [[{
+                "text": "🚀 Открыть GREEN MARKET",
+                "web_app": {"url": f"{WEBAPP_URL}?ref={webapp_ref}"}
+            }]]
+        }
 
-def process_ref(ref_id):
-    if not ref_id:
-        return
+        # ===== ВАЖНЫЙ WELCOME ТЕКСТ =====
+        welcome_text = (
+            "🌿 Добро пожаловать в GREEN MARKET!\n\n"
+            "💰 Зарабатывай на приглашениях\n"
+            "👥 +300 ₽ за друга\n"
+            "🎯 +50 тикетов в рейтинг\n"
+            "⚡ Начни прямо сейчас!\n\n"
+            "👇 Открой приложение ниже"
+        )
 
-    conn = db()
-    c = conn.cursor()
+        send_message(chat_id, welcome_text, keyboard)
 
-    # увеличиваем инвайты рефереру
-    c.execute("SELECT * FROM users WHERE id=?", (ref_id,))
-    ref_user = c.fetchone()
-
-    if ref_user:
-        c.execute("""
-            UPDATE users
-            SET invites = invites + 1
-            WHERE id=?
-        """, (ref_id,))
-
-    conn.commit()
-    conn.close()
-
-
-# ---------------- TELEGRAM SIMULATION ----------------
-# (сюда ты подключаешь webhook или polling)
-@app.route("/start", methods=["POST"])
-def start():
-    data = request.json
-    user_id = int(data["user_id"])
-    ref = data.get("ref")
-
-    add_user(user_id, ref)
-
-    if ref:
-        process_ref(ref)
-        give_bonus(user_id)
-
-    return {"ok": True}
+    return jsonify({"ok": True})
 
 
-# ---------------- API FOR HTML ----------------
-@app.route("/user/<int:user_id>")
-def get_user(user_id):
-    conn = db()
-    c = conn.cursor()
-    c.execute("SELECT * FROM users WHERE id=?", (user_id,))
-    user = c.fetchone()
-    conn.close()
-
-    if not user:
-        return jsonify({"error": "not found"})
-
-    return jsonify({
-        "id": user["id"],
-        "balance": user["balance"],
-        "tickets": user["tickets"],
-        "invites": user["invites"]
-    })
-
-
-# ---------------- SIM TEST ----------------
-@app.route("/test")
-def test():
+# ================= HOME =================
+@app.route("/")
+def home():
     return "OK"
 
 
+# ================= RUN =================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
