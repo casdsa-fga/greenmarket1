@@ -4,7 +4,6 @@ import hmac
 import json
 import urllib.parse
 import sqlite3
-
 from flask import Flask, request, jsonify
 import requests
 from dotenv import load_dotenv
@@ -14,16 +13,13 @@ load_dotenv()
 app = Flask(__name__)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
-WEBAPP_URL = os.getenv(
-    "WEBAPP_URL",
-    "https://casdsa-fga.github.io/greenmarket1/"
-)
+WEBAPP_URL = os.getenv("WEBAPP_URL", "https://casdsa-fga.github.io/greenmarket1/")
 
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is not set")
 
-
 # ================= DB =================
+
 def get_db():
     conn = sqlite3.connect("users.db")
     conn.row_factory = sqlite3.Row
@@ -59,15 +55,15 @@ def init_db():
 
 init_db()
 
+# ================= TELEGRAM =================
 
-# ================= DEBUG =================
-def debug(msg):
-    print(f"[DEBUG] {msg}", flush=True)
-
-
-# ================= SEND MESSAGE =================
 def send_message(chat_id, text, reply_markup=None):
-    payload = {"chat_id": chat_id, "text": text}
+    payload = {
+        "chat_id": chat_id,
+        "text": text,
+        "parse_mode": "HTML"
+    }
+
     if reply_markup:
         payload["reply_markup"] = reply_markup
 
@@ -77,56 +73,40 @@ def send_message(chat_id, text, reply_markup=None):
         timeout=5
     )
 
-
 # ================= WEBHOOK =================
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json(silent=True)
 
-    debug(f"RAW: {data}")
-
     if not data or "message" not in data:
         return jsonify({"ok": True})
 
-    message = data["message"]
-    chat_id = str(message["chat"]["id"])
-    text = message.get("text", "")
+    chat_id = str(data["message"]["chat"]["id"])
+    text = data["message"].get("text", "")
 
-    debug(f"CHAT={chat_id} TEXT={text}")
+    conn = get_db()
+    c = conn.cursor()
 
-    referrer_id = None
-
-    # ===== /start =====
+    # ================= START =================
     if text.startswith("/start"):
         parts = text.split(" ", 1)
+        referrer_id = parts[1].strip() if len(parts) == 2 else None
 
-        if len(parts) == 2:
-            referrer_id = parts[1].strip()
-
-        conn = get_db()
-        c = conn.cursor()
+        if referrer_id == chat_id:
+            referrer_id = None
 
         c.execute("SELECT user_id FROM users WHERE user_id=?", (chat_id,))
-        existing = c.fetchone()
+        exists = c.fetchone()
 
-        if not existing:
-
-            if referrer_id == chat_id:
-                referrer_id = None
-
-            debug(f"INSERT USER {chat_id} REF {referrer_id}")
-
+        if not exists:
             c.execute(
                 "INSERT INTO users (user_id, referrer_id) VALUES (?, ?)",
-                (chat_id, referrer_id),
+                (chat_id, referrer_id)
             )
 
-            # ===== REF BONUS =====
             if referrer_id:
-                c.execute(
-                    "SELECT user_id FROM users WHERE user_id=?",
-                    (referrer_id,)
-                )
+                c.execute("SELECT user_id FROM users WHERE user_id=?", (referrer_id,))
                 ref_exists = c.fetchone()
 
                 if ref_exists:
@@ -151,12 +131,6 @@ def webhook():
                             VALUES (?, ?)
                         """, (referrer_id, chat_id))
 
-                        # уведомление рефереру
-                        send_message(
-                            referrer_id,
-                            "🎉 Новый реферал!\n💰 +300 ₽\n🎯 +50 тикетов"
-                        )
-
         conn.commit()
         conn.close()
 
@@ -169,27 +143,47 @@ def webhook():
             }]]
         }
 
-        # ===== ВАЖНЫЙ WELCOME ТЕКСТ =====
-        welcome_text = (
-            "🌿 Добро пожаловать в GREEN MARKET!\n\n"
-            "💰 Зарабатывай на приглашениях\n"
-            "👥 +300 ₽ за друга\n"
-            "🎯 +50 тикетов в рейтинг\n"
-            "⚡ Начни прямо сейчас!\n\n"
-            "👇 Открой приложение ниже"
+        send_message(
+            chat_id,
+            "🌿 <b>Добро пожаловать в GREEN MARKET!</b>\n\n💰 Начни зарабатывать уже сейчас.",
+            keyboard
         )
-
-        send_message(chat_id, welcome_text, keyboard)
 
     return jsonify({"ok": True})
 
 
+# ================= USER API (ВАЖНО ДЛЯ JS) =================
+
+@app.route("/user/<user_id>")
+def get_user(user_id):
+    conn = get_db()
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM users WHERE user_id=?", (user_id,))
+    user = c.fetchone()
+
+    if not user:
+        return jsonify({
+            "balance": 0,
+            "tickets": 0,
+            "invited": 0
+        })
+
+    return jsonify({
+        "balance": user["balance"],
+        "tickets": user["tickets"],
+        "invited": user["invited"]
+    })
+
+
 # ================= HOME =================
+
 @app.route("/")
 def home():
-    return "OK"
+    return "GREEN MARKET OK"
 
 
 # ================= RUN =================
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
