@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Green Market</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         body { background: #050a05; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; overflow-x: hidden; }
@@ -1192,62 +1193,51 @@
 
 <script>
     // ============================================================
-    // ===== 0. РЕФЕРАЛЬНАЯ СИСТЕМА (САМОЕ ВАЖНОЕ) =====
+    // ===== 0. РЕФЕРАЛЬНАЯ СИСТЕМА — БЕЗОПАСНАЯ ВЕРСИЯ =====
     // ============================================================
-    // Читаем параметр ref из URL (например, ?ref=123456)
-    const urlParams = new URLSearchParams(window.location.search);
-    const referrerId = urlParams.get('ref');
-    
-    if (referrerId) {
-        localStorage.setItem('referrer_id', referrerId);
-        console.log('✅ Реферальный ID сохранён:', referrerId);
+
+    // --- Telegram WebApp SDK ---
+    const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+    if (tg) tg.ready();
+
+    // Получаем реальный Telegram user id из initData (защита от подделки)
+    function getTgUserId() {
+        if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            return String(tg.initDataUnsafe.user.id);
+        }
+        return null;
     }
 
-    // Функция для уведомления бота о регистрации
-    function notifyReferral(userId, referrerId) {
-        if (!referrerId) {
-            console.log('ℹ️ Нет реферального ID, пропускаем');
+    // Читаем реферальный ID только из URL-параметра ?ref= (выставляется ботом)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlRef = urlParams.get('ref');
+    if (urlRef) {
+        localStorage.setItem('referrer_id', urlRef);
+    }
+
+    // Защищённая регистрация: сервер проверяет initData сам
+    async function registerWithServer(referrerId) {
+        if (!tg || !tg.initData) {
+            // Mini App opened outside Telegram — skip server call
             return;
         }
-        
-        console.log('📤 Отправка запроса в бот:', { user_id: userId, referrer_id: referrerId });
-        
-        // Отправляем запрос к боту (через вебхук)
-        fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                user_id: String(userId),
-                referrer_id: String(referrerId)
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('✅ Ответ бота:', data);
-            if (data.status === 'success') {
-                // Можно показать уведомление пользователю
-                console.log('🎉 Бонус начислен! +300 ₽ и +50 тикетов');
+        const initData = tg.initData;
+        try {
+            const resp = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    init_data: initData,
+                    referrer_id: referrerId || null
+                })
+            });
+            const data = await resp.json();
+            if (data.status === 'success' && data.bonus_awarded) {
+                console.log('🎉 Реферальный бонус начислен!');
             }
-        })
-        .catch(error => {
-            console.log('⚠️ Ошибка при отправке в бот:', error);
-            // Если бот не отвечает — пробуем через вебхук
-            try {
-                const webhookUrl = window.location.origin + '/api/register';
-                fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user_id: String(userId),
-                        referrer_id: String(referrerId)
-                    })
-                }).then(res => res.json()).then(data => {
-                    console.log('✅ Ответ через вебхук:', data);
-                });
-            } catch(e) {
-                console.log('⚠️ Ошибка вебхука:', e);
-            }
-        });
+        } catch (e) {
+            console.warn('⚠️ Ошибка регистрации на сервере:', e);
+        }
     }
 
     // ============================================================
@@ -1353,23 +1343,24 @@
         if (!ageCheck.checked) return;
         slideAge.classList.remove('active');
         mainScreen.classList.add('active');
-        
-        // ===== ВАЖНО: при регистрации отправляем реферала =====
-        let userId = localStorage.getItem('swill_user_id');
-        if (!userId) {
-            userId = Math.floor(Math.random() * 1000000);
-            localStorage.setItem('swill_user_id', userId);
+
+        // Use real Telegram user id; fall back to stored value only
+        const tgId = getTgUserId();
+        if (tgId) {
+            localStorage.setItem('swill_user_id', tgId);
         }
-        
+        // Never generate a random fake id — leave undefined if no real id available
+
         const referrerId = localStorage.getItem('referrer_id');
-        
-        if (userId && referrerId) {
-            console.log('📤 Регистрация пользователя с рефералом:', referrerId);
-            notifyReferral(userId, referrerId);
-        } else {
-            console.log('ℹ️ Пользователь зарегистрирован без реферала');
+        const userId = localStorage.getItem('swill_user_id');
+
+        // Self-referral guard on client side too
+        if (userId && referrerId && referrerId !== userId) {
+            registerWithServer(referrerId);
+        } else if (userId) {
+            registerWithServer(null);
         }
-        
+
         initApp();
     });
 
@@ -1675,12 +1666,11 @@
         renderWalletHistory();
 
         // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
-        let userId = localStorage.getItem('swill_user_id');
-        if (!userId) {
-            userId = Math.floor(Math.random() * 1000000);
-            localStorage.setItem('swill_user_id', userId);
-        }
-        const refLink = 'https://t.me/Green_marketBot?start=' + userId;
+        let userId = getTgUserId() || localStorage.getItem('swill_user_id') || '';
+        if (userId) localStorage.setItem('swill_user_id', userId);
+        const refLink = userId
+            ? 'https://t.me/Green_marketBot?start=' + userId
+            : 'https://t.me/Green_marketBot';
         document.getElementById('refLinkMiniText').textContent = refLink;
 
         // ===== КНОПКА КОПИРОВАТЬ =====
@@ -1853,13 +1843,7 @@
         updateUI();
         checkContestProgress();
 
-        console.log('🔥 GREEN MARKET ЗАПУЩЕН');
-        console.log('👤 Никнейм:', currentNick || 'Не выбран');
-        console.log('💰 Баланс:', balance, '₽');
-        console.log('📱 Реферальная ссылка:', refLink);
-        console.log('🔗 Реферальный ID:', localStorage.getItem('referrer_id') || 'Нет');
-        console.log('💡 Для теста вызовите addRealInvite() в консоли');
-        console.log('✅ ВСЕ ДАННЫЕ СОХРАНЯЮТСЯ НАВСЕГДА (localStorage)!');
+        console.log('🌿 GREEN MARKET запущен');
     }
 </script>
 </body>
