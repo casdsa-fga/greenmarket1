@@ -3,533 +3,1641 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Бонусная программа</title>
+    <title>Green Market</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', monospace;
-        }
-        body {
-            background: #0a0f0a;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 12px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background: #050a05; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; overflow-x: hidden; }
         .app {
-            max-width: 420px;
-            width: 100%;
-            background: linear-gradient(160deg, #0d1a0d, #0a120a);
-            border-radius: 32px;
-            padding: 20px 16px 30px;
-            border: 1px solid #1a4a1a;
-            box-shadow: 0 0 60px rgba(0, 255, 100, 0.08);
-            color: #b0d0b0;
+            max-width: 420px; width: 100%;
+            background: linear-gradient(170deg, #071207, #030803);
+            border-radius: 40px; padding: 18px 14px 24px;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 100px rgba(0, 255, 100, 0.03);
+            position: relative; overflow: hidden; min-height: 700px;
+        }
+        .bg-grid {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(76,175,80,0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(76,175,80,0.02) 1px, transparent 1px);
+            background-size: 30px 30px; pointer-events: none; z-index: 0;
+        }
+        .bg-glow {
+            position: absolute; border-radius: 50%; filter: blur(100px);
+            pointer-events: none; z-index: 0;
+        }
+        .bg-glow.g1 { width: 400px; height: 400px; background: rgba(0, 200, 80, 0.04); top: -200px; right: -100px; animation: glowPulse 6s ease-in-out infinite; }
+        .bg-glow.g2 { width: 300px; height: 300px; background: rgba(255, 215, 0, 0.03); bottom: -100px; left: -100px; animation: glowPulse 8s ease-in-out infinite reverse; }
+        @keyframes glowPulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+
+        .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .particle {
+            position: absolute; width: 4px; height: 4px;
+            background: radial-gradient(circle, #4caf50, transparent);
+            border-radius: 50%; opacity: 0;
+            animation: floatParticle 10s infinite;
+        }
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(100%) scale(0); }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { opacity: 0; transform: translateY(-100vh) scale(1); }
         }
 
-        /* Шапка */
+        .confetti-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1000; overflow: hidden;
+        }
+        .confetti {
+            position: absolute; width: 10px; height: 10px; opacity: 0;
+            animation: confettiFall 2.5s ease-out forwards;
+        }
+        @keyframes confettiFall {
+            0% { opacity: 1; transform: translateY(-20px) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.3); }
+        }
+        .confetti-purple { background: #9c27b0; box-shadow: 0 0 15px #9c27b0; }
+        .confetti-red { background: #f44336; box-shadow: 0 0 15px #f44336; }
+        .confetti-gold { background: #fdd835; box-shadow: 0 0 15px #fdd835; }
+        .confetti-green { background: #4caf50; box-shadow: 0 0 15px #4caf50; }
+
+        .slide {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 650px; padding: 20px 10px;
+            animation: fadeSlide 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative; z-index: 1;
+        }
+        .slide.active { display: flex; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .slide-welcome { text-align: center; }
+        .slide-welcome .logo {
+            font-size: 52px; font-weight: 900;
+            background: linear-gradient(135deg, #69f0ae, #00c853, #69f0ae);
+            background-size: 200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradientMove 4s ease infinite;
+            filter: drop-shadow(0 0 40px rgba(0, 200, 80, 0.2));
+        }
+        @keyframes gradientMove { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .slide-welcome .sub { color: #4caf50; font-size: 14px; letter-spacing: 6px; font-weight: 300; margin: 6px 0 30px; opacity: 0.7; }
+        .slide-welcome .features { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 20px 0 35px; }
+        .slide-welcome .features span {
+            background: rgba(0, 255, 100, 0.05); padding: 10px 22px; border-radius: 50px;
+            border: 1px solid rgba(76, 175, 80, 0.12); font-size: 13px; font-weight: 600;
+            color: #a5d6a7; backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .slide-welcome .features span:hover { background: rgba(0, 255, 100, 0.1); border-color: rgba(76, 175, 80, 0.3); transform: translateY(-2px); }
+        .slide-welcome .btn-start {
+            background: linear-gradient(135deg, #fdd835, #f9a825);
+            color: #000;
+            padding: 18px 70px;
+            border-radius: 60px;
+            font-weight: 900;
+            font-size: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 60px rgba(253, 216, 53, 0.25);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .slide-welcome .btn-start::after {
+            content: '';
+            position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        .slide-welcome .btn-start:active { transform: scale(0.95); }
+        .slide-welcome .footer-text { font-size: 11px; color: #3a5a3a; margin-top: 30px; letter-spacing: 0.5px; }
+
+        .slide-age { text-align: center; position: relative; }
+        .slide-age .age-icon { font-size: 80px; margin-bottom: 15px; filter: drop-shadow(0 0 40px rgba(0,200,80,0.15)); }
+        .slide-age h2 { color: #69f0ae; font-size: 24px; margin-bottom: 8px; font-weight: 700; }
+        .slide-age p { color: #6a8a6a; font-size: 14px; margin-bottom: 30px; }
+        .slide-age .checkbox-wrap {
+            display: flex; align-items: center; gap: 14px;
+            background: rgba(0, 30, 0, 0.3); padding: 16px 24px; border-radius: 20px;
+            border: 1px solid rgba(76, 175, 80, 0.15); margin-bottom: 30px;
+            width: 100%; max-width: 300px; cursor: pointer;
+            backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .slide-age .checkbox-wrap:hover { border-color: rgba(76, 175, 80, 0.3); transform: scale(1.02); }
+        .slide-age .checkbox-wrap input[type="checkbox"] { width: 22px; height: 22px; accent-color: #4caf50; cursor: pointer; }
+        .slide-age .checkbox-wrap label { color: #b0d0b0; font-size: 16px; cursor: pointer; font-weight: 500; }
+        .slide-age .btn-continue {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: #e0f0e0; padding: 18px 70px; border-radius: 60px;
+            font-weight: 800; font-size: 18px;
+            border: 1px solid rgba(76, 175, 80, 0.2); cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+            opacity: 0.3; pointer-events: none; box-shadow: 0 0 40px rgba(0,200,80,0);
+        }
+        .slide-age .btn-continue.active { opacity: 1; pointer-events: auto; box-shadow: 0 0 60px rgba(0,200,80,0.15); }
+        .slide-age .btn-continue:active { transform: scale(0.95); }
+        .slide-age .deco-bg {
+            position: absolute; font-size: 180px; opacity: 0.03; pointer-events: none;
+            animation: floatDeco 10s ease-in-out infinite;
+        }
+        @keyframes floatDeco { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
+        .slide-age .deco-bg.d1 { bottom: -20px; right: -30px; }
+        .slide-age .deco-bg.d2 { top: -20px; left: -30px; }
+
+        .main-screen { display: none; flex-direction: column; position: relative; z-index: 1; }
+        .main-screen.active { display: flex; }
+
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px; flex-wrap: wrap; gap: 6px;
         }
         .promo-badge {
-            background: #00c853;
-            color: #000;
-            padding: 4px 14px;
-            border-radius: 40px;
-            font-weight: 800;
-            font-size: 12px;
-            letter-spacing: 0.3px;
-            box-shadow: 0 0 24px #00c85380;
+            background: linear-gradient(135deg, #00c853, #00e676);
+            color: #000; padding: 5px 16px; border-radius: 40px;
+            font-weight: 800; font-size: 11px;
+            box-shadow: 0 0 40px rgba(0,200,80,0.2);
+            animation: pulseBadge 2s infinite;
         }
+        @keyframes pulseBadge { 0%, 100% { box-shadow: 0 0 30px rgba(0,200,80,0.2); } 50% { box-shadow: 0 0 60px rgba(0,200,80,0.4); } }
         .timer-block {
-            background: #0f1a0f;
-            padding: 6px 14px;
-            border-radius: 30px;
-            border: 1px solid #1f4a1f;
-            font-size: 14px;
-            font-weight: 700;
-            color: #8bc34a;
+            background: rgba(15, 26, 15, 0.7); padding: 6px 16px; border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.12); font-size: 14px; font-weight: 700;
+            color: #8bc34a; backdrop-filter: blur(10px); font-variant-numeric: tabular-nums;
         }
+        .online-count {
+            background: rgba(15, 26, 15, 0.7); padding: 6px 14px; border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.12); font-size: 13px; font-weight: 700;
+            color: #69f0ae; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);
+        }
+        .online-count .dot {
+            width: 7px; height: 7px; background: #00e676; border-radius: 50%;
+            animation: blink 1.4s infinite; box-shadow: 0 0 15px #00e676;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.7); } }
 
-        /* Баланс */
-        .balance-block {
-            text-align: center;
-            padding: 14px 0 10px;
-            background: rgba(0, 30, 0, 0.4);
-            border-radius: 24px;
-            border: 1px solid #1a3a1a;
-            margin-bottom: 18px;
+        .balance-banner {
+            background: linear-gradient(135deg, rgba(0, 30, 0, 0.4), rgba(0, 50, 0, 0.2));
+            border-radius: 24px; padding: 18px 20px;
+            border: 1px solid rgba(76, 175, 80, 0.1); margin-bottom: 14px;
+            backdrop-filter: blur(10px); position: relative; overflow: hidden;
         }
-        .balance-number {
-            font-size: 52px;
-            font-weight: 900;
-            color: #69f0ae;
-            text-shadow: 0 0 40px #00e67660;
-            letter-spacing: 2px;
+        .balance-banner::before {
+            content: '';
+            position: absolute; top: -50%; right: -50%;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(0,255,100,0.03), transparent);
+            border-radius: 50%;
         }
-        .balance-label {
-            color: #6a8a6a;
-            font-size: 13px;
-            letter-spacing: 1px;
+        .balance-banner .row { display: flex; justify-content: space-between; align-items: center; }
+        .balance-banner .label { color: #6a8a6a; font-size: 13px; font-weight: 300; letter-spacing: 0.5px; }
+        .balance-banner .amount {
+            font-size: 36px; font-weight: 900;
+            background: linear-gradient(135deg, #69f0ae, #00c853);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(0,200,80,0.15));
         }
+        .balance-banner .sub-info {
+            display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: #4a7a4a;
+        }
+        .balance-banner .sub-info span { display: flex; align-items: center; gap: 4px; }
 
-        /* Кнопка вывода */
         .withdraw-btn {
-            width: 100%;
-            padding: 16px;
-            margin: 12px 0 6px;
+            width: 100%; padding: 16px; margin: 8px 0 4px;
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
-            border: 1px solid #4caf50;
-            border-radius: 60px;
-            font-weight: 800;
-            font-size: 18px;
-            color: #e0f0e0;
-            box-shadow: 0 4px 24px #00c85340;
-            cursor: pointer;
-            transition: 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 60px;
+            font-weight: 800; font-size: 17px; color: #e0f0e0;
+            box-shadow: 0 4px 40px rgba(0,200,80,0.1); cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+            position: relative; overflow: hidden;
         }
-        .withdraw-btn:active {
-            transform: scale(0.96);
+        .withdraw-btn::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
         }
-        .withdraw-btn.disabled {
-            opacity: 0.3;
-            filter: grayscale(0.8);
-            pointer-events: none;
-        }
-        .withdraw-hint {
-            color: #a5d6a7;
-            font-size: 13px;
-            text-align: center;
-            margin-bottom: 8px;
-        }
+        .withdraw-btn:hover::before { left: 100%; }
+        .withdraw-btn:active { transform: scale(0.97); }
+        .withdraw-btn.disabled { opacity: 0.3; filter: grayscale(0.8); pointer-events: none; }
+        .withdraw-hint { color: #a5d6a7; font-size: 13px; text-align: center; margin-bottom: 6px; opacity: 0.6; }
 
-        /* Лента фейковых выводов */
-        .feed-title {
-            color: #4caf50;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            margin: 18px 0 10px;
-            border-bottom: 1px solid #1a3a1a;
-            padding-bottom: 6px;
-            text-transform: uppercase;
+        .tabs {
+            display: flex; gap: 2px; margin: 14px 0 12px;
+            border-bottom: 1px solid rgba(26, 58, 26, 0.3); padding-bottom: 8px;
         }
-        .feed-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 260px;
-            overflow-y: auto;
-            padding-right: 4px;
+        .tab-btn {
+            flex: 1; min-width: 32px; padding: 10px 2px; background: transparent;
+            border: none; color: #4a7a4a; font-weight: 700; font-size: 10px;
+            cursor: pointer; border-radius: 14px 14px 0 0; transition: all 0.3s;
+            text-transform: uppercase; letter-spacing: 0.3px; position: relative;
         }
-        .feed-list::-webkit-scrollbar {
-            width: 3px;
+        .tab-btn::after {
+            content: '';
+            position: absolute; bottom: -1px; left: 20%; width: 60%; height: 2px;
+            background: transparent; transition: 0.3s;
         }
-        .feed-list::-webkit-scrollbar-thumb {
-            background: #2e7d32;
-            border-radius: 10px;
+        .tab-btn.active { color: #69f0ae; background: rgba(0, 255, 100, 0.04); }
+        .tab-btn.active::after { background: linear-gradient(90deg, transparent, #4caf50, transparent); }
+        .tab-content {
+            display: none; flex-direction: column; gap: 10px;
+            max-height: 430px; overflow-y: auto; padding-right: 3px;
         }
-        .feed-item {
-            background: rgba(0, 30, 0, 0.3);
-            border-left: 3px solid #388e3c;
-            padding: 10px 14px;
-            border-radius: 12px;
+        .tab-content.active { display: flex; }
+        .tab-content::-webkit-scrollbar { width: 3px; }
+        .tab-content::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+
+        .feed-banner {
+            background: linear-gradient(135deg, rgba(0, 30, 0, 0.2), rgba(0, 50, 0, 0.1));
+            border-radius: 18px; padding: 14px;
+            border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
+        }
+        .feed-banner .title { color: #6a8a6a; font-size: 12px; font-weight: 300; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; }
+        .feed-scroll {
+            display: flex; gap: 10px; overflow-x: auto;
+            padding: 4px 2px 8px; scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .feed-scroll::-webkit-scrollbar { height: 2px; }
+        .feed-scroll::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+        .feed-card {
+            min-width: 140px; background: rgba(0, 30, 0, 0.3); border-radius: 16px;
+            padding: 12px 14px; border: 1px solid rgba(76, 175, 80, 0.08);
+            scroll-snap-align: start; transition: 0.3s; flex-shrink: 0;
+        }
+        .feed-card:hover { border-color: rgba(76, 175, 80, 0.2); transform: translateY(-2px); }
+        .feed-card .f-name { font-weight: 700; color: #a5d6a7; font-size: 14px; }
+        .feed-card .f-amount {
+            font-weight: 900; font-size: 18px;
+            background: linear-gradient(135deg, #69f0ae, #00c853);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 4px 0 2px;
+        }
+        .feed-card .f-time { color: #4a7a4a; font-size: 11px; }
+
+        .earn-card {
+            background: linear-gradient(135deg, rgba(0, 30, 0, 0.35), rgba(0, 50, 0, 0.15));
+            border-radius: 16px;
+            padding: 12px 14px;
+            border: 1px solid rgba(253, 216, 53, 0.15);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .earn-card::before {
+            content: '💰';
+            position: absolute; font-size: 80px; opacity: 0.04;
+            right: -10px; bottom: -20px; transform: rotate(15deg);
+        }
+        .earn-card .earn-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.6s ease;
-            font-size: 14px;
+            gap: 8px;
         }
-        .feed-user {
-            font-weight: 700;
+        .earn-card .earn-header .earn-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .earn-card .earn-header .earn-left .icon {
+            font-size: 20px;
+        }
+        .earn-card .earn-header .earn-left h4 {
             color: #a5d6a7;
-        }
-        .feed-user span {
-            color: #6a9a6a;
-            font-weight: 400;
-        }
-        .feed-amount {
-            font-weight: 800;
-            color: #69f0ae;
-            font-size: 16px;
-        }
-        .feed-amount small {
-            font-weight: 400;
-            color: #4caf50;
-            font-size: 12px;
-        }
-        .feed-time {
-            color: #4a7a4a;
-            font-size: 12px;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Реклама */
-        .ad-block {
-            margin-top: 18px;
-            background: #0a180a;
-            padding: 12px;
-            border-radius: 16px;
-            text-align: center;
             font-size: 13px;
-            color: #3a6a3a;
-            border: 1px dashed #1a4a1a;
+            font-weight: 600;
+        }
+        .earn-card .earn-header .amount-big {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fdd835, #f9a825);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
         }
 
-        /* Модалка вывода */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
+        .earn-card .ref-link-mini {
+            background: rgba(0, 10, 0, 0.4);
+            border-radius: 10px;
+            padding: 8px 12px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+        }
+        .earn-card .ref-link-mini .ref-text {
+            flex: 1;
+            word-break: break-all;
+            font-size: 11px;
+            color: #8aaa8a;
+            line-height: 1.4;
+        }
+        .earn-card .ref-link-mini .copy-mini {
+            background: rgba(76, 175, 80, 0.2);
+            border: none;
+            color: #69f0ae;
+            padding: 8px 18px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: inline-block;
+            min-width: 90px;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+        .earn-card .ref-link-mini .copy-mini:hover {
+            background: rgba(76, 175, 80, 0.35);
+            transform: scale(1.02);
+        }
+        .earn-card .ref-link-mini .copy-mini:active {
+            transform: scale(0.95);
+        }
+        .earn-card .earn-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 4px;
+            background: linear-gradient(135deg, #fdd835, #f9a825);
+            border: none;
+            border-radius: 30px;
+            font-weight: 800;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 13px;
+            box-shadow: 0 4px 30px rgba(253, 216, 53, 0.15);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .earn-card .earn-btn:active { transform: scale(0.97); }
+
+        .stats-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 4px;
+        }
+        .stats-grid .stat-item {
+            background: rgba(0, 30, 0, 0.2); border-radius: 14px; padding: 10px 4px;
+            text-align: center; border: 1px solid rgba(76, 175, 80, 0.04);
+            backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .stats-grid .stat-item:hover { border-color: rgba(76, 175, 80, 0.1); transform: translateY(-2px); }
+        .stats-grid .stat-item .num { font-size: 14px; font-weight: 900; color: #69f0ae; line-height: 1.2; }
+        .stats-grid .stat-item .num.gold { color: #fdd835; }
+        .stats-grid .stat-item .lbl { font-size: 8px; color: #4a7a4a; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; }
+        .stats-grid .stat-item .icon { font-size: 16px; display: block; margin-bottom: 2px; }
+
+        .reviews-scroll {
+            display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 8px;
+            -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
+        }
+        .reviews-scroll::-webkit-scrollbar { height: 2px; }
+        .reviews-scroll::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+        .review-mini {
+            min-width: 140px;
+            background: rgba(0, 30, 0, 0.2);
+            border-radius: 14px;
+            padding: 10px 12px;
+            border: 1px solid rgba(76, 175, 80, 0.04);
+            backdrop-filter: blur(10px);
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            transition: 0.3s;
+        }
+        .review-mini:hover {
+            border-color: rgba(76, 175, 80, 0.12);
+            transform: translateY(-2px);
+        }
+        .review-mini .review-top {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 3px;
+        }
+        .review-mini .review-top .r-avatar {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 999;
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
         }
-        .modal-overlay.active {
-            display: flex;
+        .review-mini .review-top .r-name {
+            font-weight: 600;
+            color: #a5d6a7;
+            font-size: 12px;
+            flex: 1;
         }
-        .modal {
-            background: #0d1a0d;
-            padding: 28px 20px;
-            border-radius: 32px;
-            max-width: 360px;
+        .review-mini .review-top .r-stars {
+            color: #fdd835;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+        .review-mini .review-text {
+            color: #8aaa8a;
+            font-size: 11px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .online-ribbon {
+            display: flex; gap: 8px; overflow-x: auto; padding: 6px 0 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .online-ribbon::-webkit-scrollbar { height: 2px; }
+        .online-ribbon::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 10px; }
+        .online-user {
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(0, 30, 0, 0.2); padding: 4px 12px 4px 6px; border-radius: 30px;
+            border: 1px solid rgba(76, 175, 80, 0.06); font-size: 12px; color: #a5d6a7;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .online-user .dot-online {
+            width: 6px; height: 6px; background: #00e676; border-radius: 50%;
+            box-shadow: 0 0 10px #00e676; animation: blink 1.4s infinite;
+        }
+        .online-user .avatar-mini {
+            width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: #fff;
+        }
+
+        .contest-card {
+            background: rgba(0, 30, 0, 0.25);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(156, 39, 176, 0.2);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .contest-card:hover {
+            border-color: rgba(156, 39, 176, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(156, 39, 176, 0.1);
+        }
+        .contest-card .prize-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 30px rgba(156, 39, 176, 0.3);
+            z-index: 1;
+        }
+        .contest-card .product-image {
             width: 100%;
-            border: 1px solid #2e7d32;
-            box-shadow: 0 0 60px #00c85330;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, rgba(10, 26, 10, 0.5), rgba(20, 40, 20, 0.3));
+            border: 1px solid rgba(156, 39, 176, 0.2);
+            min-height: 160px;
+            max-height: 220px;
+            object-fit: cover;
+            transition: 0.3s;
         }
-        .modal h3 {
-            color: #69f0ae;
-            margin-bottom: 16px;
+        .contest-card .product-image:hover {
+            transform: scale(1.01);
+            border-color: rgba(156, 39, 176, 0.4);
+        }
+        .contest-card h4 {
+            color: #ce93d8;
+            font-size: 18px;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .contest-card p {
+            color: #6a8a6a;
+            font-size: 13px;
+        }
+
+        .goal-text {
+            font-size: 13px;
+            color: #8aaa8a;
+            margin: 10px 0 6px;
             text-align: center;
+            font-weight: 500;
         }
-        .modal label {
-            display: block;
+        .goal-text strong { color: #ce93d8; }
+        .progress-wrap {
+            margin: 8px 0 6px;
+            background: rgba(10, 26, 10, 0.5);
+            border-radius: 30px;
+            height: 12px;
+            border: 1px solid rgba(156, 39, 176, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-wrap .progress-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(156, 39, 176, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.5s;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .progress-wrap .progress-glow.active {
+            opacity: 1;
+            animation: glowPulse 0.5s ease 3;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #7b1fa2, #9c27b0, #ce93d8);
+            border-radius: 30px;
+            transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2));
+            border-radius: 30px;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
             font-size: 12px;
             color: #6a8a6a;
-            margin: 12px 0 4px;
-            letter-spacing: 0.5px;
         }
-        .modal input, .modal select {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 14px;
-            border: 1px solid #1a3a1a;
-            background: #061206;
-            color: #c0e0c0;
-            font-size: 15px;
-            outline: none;
-        }
-        .modal input:focus, .modal select:focus {
-            border-color: #4caf50;
-        }
-        .modal .row-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .modal .btn-submit {
-            flex: 1;
-            padding: 14px;
-            background: #2e7d32;
-            border: none;
-            border-radius: 40px;
+        .progress-label .label-complete {
+            color: #ce93d8;
             font-weight: 700;
-            color: #e0f0e0;
-            border: 1px solid #4caf50;
+            animation: statusPulse 1s ease infinite;
+        }
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.95); }
+        }
+        .status-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #6a8a6a;
+            margin-top: 4px;
+        }
+        .status-text .status-done {
+            color: #ce93d8;
+            font-weight: 700;
+        }
+
+        .chart-container {
+            background: rgba(0, 30, 0, 0.15); backdrop-filter: blur(20px);
+            border-radius: 20px; padding: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+        }
+        .chart-container .chart-title {
+            display: flex; justify-content: space-between; margin-bottom: 12px;
+            color: #6a8a6a; font-size: 12px;
+        }
+        .chart-container .chart-title span { color: #69f0ae; font-weight: 700; }
+        .chart-bar-wrap {
+            display: flex; align-items: center; gap: 8px;
+            margin: 3px 0; padding: 4px 6px; border-radius: 10px; transition: 0.3s;
+        }
+        .chart-bar-wrap:hover { background: rgba(0, 255, 100, 0.03); }
+        .chart-bar-wrap .rank { font-weight: 900; color: #fdd835; font-size: 13px; min-width: 28px; text-align: center; }
+        .chart-bar-wrap .cname { font-weight: 600; color: #a5d6a7; font-size: 13px; min-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chart-bar-wrap .bar-track {
+            flex: 1; height: 6px; background: rgba(10, 26, 10, 0.5); border-radius: 10px; overflow: hidden;
+        }
+        .chart-bar-wrap .bar-fill {
+            height: 100%; border-radius: 10px;
+            transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+            width: 0%;
+        }
+        .chart-bar-wrap .cvalue { font-weight: 700; color: #69f0ae; font-size: 12px; min-width: 50px; text-align: right; }
+        .chart-bar-wrap.user-row { background: rgba(0, 255, 100, 0.05); border-radius: 10px; border: 1px solid rgba(76, 175, 80, 0.1); }
+
+        .wallet-card {
+            background: rgba(0, 30, 0, 0.15); border-radius: 20px; padding: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.06); backdrop-filter: blur(10px);
+        }
+        .wallet-card .w-row {
+            display: flex; justify-content: space-between; padding: 8px 0;
+            border-bottom: 1px solid rgba(26, 58, 26, 0.08); font-size: 13px;
+        }
+        .wallet-card .w-row .label { color: #6a8a6a; }
+        .wallet-card .w-row .value { color: #69f0ae; font-weight: 700; }
+        .history-item {
+            display: flex; justify-content: space-between; padding: 10px 14px;
+            background: rgba(0, 30, 0, 0.1); border-radius: 14px; font-size: 13px;
+            border-left: 3px solid rgba(76, 175, 80, 0.2); transition: 0.3s;
+        }
+        .history-item:hover { background: rgba(0, 30, 0, 0.2); }
+        .history-item .h-method { font-weight: 600; color: #a5d6a7; font-size: 13px; }
+        .history-item .h-date { color: #4a7a4a; font-size: 11px; }
+        .history-item .h-amount { font-weight: 800; color: #69f0ae; font-size: 15px; }
+        .history-item .h-status { font-size: 11px; }
+        .history-item .h-status.pending { color: #fdd835; }
+        .history-item .h-status.done { color: #69f0ae; }
+
+        .profile-card {
+            background: rgba(0, 30, 0, 0.15);
+            border-radius: 24px;
+            padding: 24px 20px;
+            border: 1px solid rgba(76, 175, 80, 0.06);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .profile-card .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 auto 12px;
+            border: 2px solid rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 40px rgba(0,200,80,0.05);
+            transition: 0.3s;
+            background-size: cover;
+            background-position: center;
+        }
+        .profile-card .avatar:hover { transform: scale(1.05); }
+        .profile-card .nick { color: #69f0ae; font-size: 24px; font-weight: 800; }
+        .profile-card .info { color: #6a8a6a; font-size: 13px; margin: 4px 0; }
+        .profile-card .stat-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin: 16px 0;
+        }
+        .profile-card .stat-grid .item {
+            background: rgba(0, 30, 0, 0.15); border-radius: 12px; padding: 10px 4px;
+            border: 1px solid rgba(76, 175, 80, 0.04);
+        }
+        .profile-card .stat-grid .item .num { font-size: 18px; font-weight: 900; color: #69f0ae; }
+        .profile-card .stat-grid .item .lbl { font-size: 9px; color: #6a8a6a; text-transform: uppercase; letter-spacing: 0.3px; }
+        .profile-card .invite-btn {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            border: 1px solid rgba(76, 175, 80, 0.15); border-radius: 40px;
+            font-weight: 700; color: #e0f0e0; cursor: pointer; transition: 0.3s; font-size: 15px;
+            box-shadow: 0 4px 30px rgba(0,200,80,0.05);
+        }
+        .profile-card .invite-btn:active { transform: scale(0.97); }
+
+        .help-section {
+            background: rgba(0, 30, 0, 0.1); border-radius: 18px; padding: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.04); backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .help-section:hover { border-color: rgba(76, 175, 80, 0.1); }
+        .help-section h4 { color: #69f0ae; font-size: 15px; margin-bottom: 6px; }
+        .help-section p, .help-section li { color: #8aaa8a; font-size: 13px; line-height: 1.7; }
+        .help-section ul { padding-left: 20px; margin: 4px 0; }
+        .help-section li { margin-bottom: 2px; }
+
+        .info-note {
+            font-size: 11px; color: #4a6a4a; text-align: center; margin-top: 12px;
+            border-top: 1px solid rgba(26, 42, 26, 0.2); padding-top: 10px;
+            font-weight: 300; letter-spacing: 0.3px;
+        }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px); align-items: center; justify-content: center; z-index: 999;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: linear-gradient(160deg, #0d1a0d, #0a120a);
+            padding: 32px 24px; border-radius: 36px; max-width: 360px; width: 100%;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 80px rgba(0,200,80,0.03);
+            animation: modalIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal h3 { color: #69f0ae; margin-bottom: 18px; text-align: center; font-size: 22px; }
+        .modal label { display: block; font-size: 12px; color: #6a8a6a; margin: 14px 0 4px; letter-spacing: 0.5px; font-weight: 600; }
+        .modal input, .modal select {
+            width: 100%; padding: 14px 16px; border-radius: 16px;
+            border: 1px solid rgba(26, 58, 26, 0.2); background: rgba(6, 18, 6, 0.8);
+            color: #c0e0c0; font-size: 15px; outline: none; transition: 0.3s;
+        }
+        .modal input:focus, .modal select:focus { border-color: #4caf50; box-shadow: 0 0 30px rgba(0,200,80,0.03); }
+        .modal .row-buttons { display: flex; gap: 12px; margin-top: 22px; }
+        .modal .btn-submit {
+            flex: 1; padding: 16px;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            border: none; border-radius: 40px; font-weight: 700; color: #e0f0e0;
+            border: 1px solid rgba(76, 175, 80, 0.15); cursor: pointer; transition: 0.3s; font-size: 15px;
+            position: relative; overflow: hidden;
+        }
+        .modal .btn-submit::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+        .modal .btn-submit:hover::before { left: 100%; }
+        .modal .btn-submit:active { transform: scale(0.96); }
+        .modal .btn-submit.error {
+            background: linear-gradient(135deg, #c62828, #f44336);
+            animation: shake 0.5s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
         .modal .btn-cancel {
-            flex: 1;
-            padding: 14px;
-            background: #1a2a1a;
-            border: none;
-            border-radius: 40px;
-            font-weight: 700;
-            color: #6a8a6a;
-            border: 1px solid #2a4a2a;
+            flex: 1; padding: 16px;
+            background: rgba(26, 42, 26, 0.4); border: none; border-radius: 40px;
+            font-weight: 700; color: #6a8a6a;
+            border: 1px solid rgba(42, 74, 42, 0.15); cursor: pointer; transition: 0.3s; font-size: 15px;
         }
-        .info-note {
-            font-size: 11px;
-            color: #4a6a4a;
-            text-align: center;
-            margin-top: 14px;
-            border-top: 1px solid #1a2a1a;
-            padding-top: 12px;
+        .modal .btn-cancel:active { transform: scale(0.96); }
+
+        @media (max-width: 400px) {
+            .app { padding: 12px 10px 18px; }
+            .balance-banner .amount { font-size: 28px; }
+            .tab-btn { font-size: 9px; padding: 8px 1px; }
+            .feed-card { min-width: 120px; }
+            .stats-grid .stat-item .num { font-size: 13px; }
+            .earn-card .earn-header .amount-big { font-size: 24px; }
+            .contest-card .product-image { min-height: 120px; max-height: 180px; }
+            .review-mini { min-width: 120px; }
+            .profile-card .stat-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
 <div class="app" id="app">
-    <!-- Шапка -->
-    <div class="header">
-        <div class="promo-badge">⚡ АКЦИЯ</div>
-        <div class="timer-block" id="promoTimer">--:--:--</div>
+    <div class="bg-grid"></div>
+    <div class="bg-glow g1"></div>
+    <div class="bg-glow g2"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- СЛАЙД 1 -->
+    <div class="slide slide-welcome active" id="slideWelcome">
+        <div class="logo">🌿 GREEN MARKET</div>
+        <div class="sub">Premium Подработка</div>
+        <div class="features">
+            <span>🔒 Безопасно</span>
+            <span>⚡ Мгновенно</span>
+            <span>👥 Приглашай</span>
+        </div>
+        <button class="btn-start" id="btnWelcomeStart">Начать</button>
+        <div class="footer-text">© 2026 Все права защищены</div>
     </div>
 
-    <!-- Баланс -->
-    <div class="balance-block">
-        <div class="balance-number" id="balanceDisplay">0</div>
-        <div class="balance-label">Бонусные рубли</div>
+    <!-- СЛАЙД 2 -->
+    <div class="slide slide-age" id="slideAge">
+        <div class="deco-bg d1">🎮</div>
+        <div class="deco-bg d2">🪙</div>
+        <div class="age-icon">🔞</div>
+        <h2>Подтверждение возраста</h2>
+        <p>Для участия необходимо быть старше 18 лет</p>
+        <div class="checkbox-wrap" id="ageCheckWrap">
+            <input type="checkbox" id="ageCheck">
+            <label for="ageCheck">Мне есть 18 лет</label>
+        </div>
+        <button class="btn-continue" id="btnAgeContinue">Продолжить</button>
     </div>
 
-    <!-- Кнопка вывода -->
-    <button class="withdraw-btn disabled" id="withdrawBtn">Вывести 3000 ₽</button>
-    <div class="withdraw-hint" id="withdrawHint">Для вывода накопите 3000 бонусов</div>
+    <!-- ОСНОВНОЙ ЭКРАН -->
+    <div class="main-screen" id="mainScreen">
+        <div class="header">
+            <div class="promo-badge">⚡ Акция</div>
+            <div class="online-count">
+                <span class="dot"></span> <span id="onlineCount">128</span>
+            </div>
+            <div class="timer-block" id="promoTimer">--:--:--</div>
+        </div>
 
-    <!-- Лента фейковых выводов -->
-    <div class="feed-title">📊 Последние выплаты</div>
-    <div class="feed-list" id="feedList">
-        <!-- сюда динамически добавляются элементы -->
-    </div>
+        <div class="balance-banner">
+            <div class="row">
+                <span class="label">💰 Баланс</span>
+                <span class="amount" id="balanceDisplay">0</span>
+            </div>
+            <div class="sub-info">
+                <span>🎯 Тикеты: <strong id="ticketDisplay" style="color:#69f0ae;">0</strong></span>
+                <span>👥 Приглашено: <strong id="inviteDisplay" style="color:#69f0ae;">0</strong></span>
+            </div>
+        </div>
 
-    <!-- Рекламный блок -->
-    <div class="ad-block">
-        📢 Рекламная интеграция (ваш код)
-    </div>
+        <button class="withdraw-btn disabled" id="withdrawBtn">💸 Вывести деньги</button>
+        <div class="withdraw-hint" id="withdrawHint">Накопите 3000 ₽ для вывода</div>
 
-    <div class="info-note">
-        ⏳ Выплаты в течение 30 часов после заявки
+        <!-- ВКЛАДКИ -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tabFeed">🏠</button>
+            <button class="tab-btn" data-tab="tabContests">🎁</button>
+            <button class="tab-btn" data-tab="tabLeaders">🏆</button>
+            <button class="tab-btn" data-tab="tabWallet">💰</button>
+            <button class="tab-btn" data-tab="tabProfile">👤</button>
+            <button class="tab-btn" data-tab="tabHelp">📖</button>
+        </div>
+
+        <!-- ГЛАВНАЯ -->
+        <div class="tab-content active" id="tabFeed">
+            <div class="feed-banner">
+                <div class="title">📊 Последние выплаты</div>
+                <div class="feed-scroll" id="feedScroll"></div>
+            </div>
+
+            <div class="earn-card">
+                <div class="earn-header">
+                    <div class="earn-left">
+                        <span class="icon">👥</span>
+                        <h4>Пригласи друга</h4>
+                    </div>
+                    <span class="amount-big">+300 ₽</span>
+                </div>
+                <div class="ref-link-mini" id="refLinkMini">
+                    <span class="ref-text" id="refLinkMiniText">https://t.me/Green_marketBot?start=...</span>
+                    <button class="copy-mini" id="copyRefLinkMini">📋 Копировать</button>
+                </div>
+                <button class="earn-btn" id="earnInviteBtn">🚀 Пригласить друга</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="icon">💵</span>
+                    <div class="num gold">3M+</div>
+                    <div class="lbl">Выплачено</div>
+                </div>
+                <div class="stat-item">
+                    <span class="icon">⭐</span>
+                    <div class="num">1K+</div>
+                    <div class="lbl">Отзывов</div>
+                </div>
+                <div class="stat-item">
+                    <span class="icon">📅</span>
+                    <div class="num">3+</div>
+                    <div class="lbl">Лет на рынке</div>
+                </div>
+            </div>
+
+            <div style="font-size:12px;color:#6a8a6a;margin:4px 0 2px;display:flex;justify-content:space-between;">
+                <span>🟢 Сейчас в сети</span>
+                <span style="color:#69f0ae;" id="onlineCounter">0</span>
+            </div>
+            <div class="online-ribbon" id="onlineRibbon"></div>
+        </div>
+
+        <!-- КОНКУРСЫ -->
+        <div class="tab-content" id="tabContests">
+            <div class="contest-card" id="iphoneCard">
+                <span class="prize-badge">🏆 ГЛАВНЫЙ ПРИЗ</span>
+                <img class="product-image" src="https://imgfy.ru/ib/fkgtDZGfNawRlKL_1781976450.webp" alt="iPhone 17 Pro Max" id="iphoneImg">
+                <h4>📱 iPhone 17 Pro Max</h4>
+                <p>Белый · 256GB · Розыгрыш</p>
+                <div class="goal-text">
+                    🎯 Пригласите <strong>15 человек</strong> чтобы участвовать
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-glow" id="iphoneGlow"></div>
+                    <div class="progress-bar" id="iphoneProgress" style="width:0%"></div>
+                </div>
+                <div class="progress-label">
+                    <span>Приглашено: <span id="iphoneInvites">0</span>/15</span>
+                    <span id="iphoneLabel" style="color:#6a8a6a;">0%</span>
+                </div>
+                <div class="status-text">
+                    <span>Статус:</span>
+                    <span id="iphoneStatus" style="color:#6a8a6a;">❌ Не участвуете</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ТОП -->
+        <div class="tab-content" id="tabLeaders">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <span>🏆 Топ участников</span>
+                    <span>Тикеты: <span id="leaderTickets">0</span></span>
+                </div>
+                <div id="leadersChart"></div>
+            </div>
+        </div>
+
+        <!-- КОШЕЛЁК -->
+        <div class="tab-content" id="tabWallet">
+            <div class="wallet-card">
+                <div class="w-row">
+                    <span class="label">💰 Баланс</span>
+                    <span class="value" id="walletBalance">0 ₽</span>
+                </div>
+                <div class="w-row">
+                    <span class="label">🎯 Тикеты</span>
+                    <span class="value" id="walletTickets">0</span>
+                </div>
+                <div class="w-row" style="border-bottom:none;">
+                    <span class="label">👥 Приглашено</span>
+                    <span class="value" id="walletInvites">0</span>
+                </div>
+            </div>
+            <div style="font-size:12px;color:#6a8a6a;padding:4px 0;">📜 История операций</div>
+            <div id="walletHistory"></div>
+        </div>
+
+        <!-- ПРОФИЛЬ -->
+        <div class="tab-content" id="tabProfile">
+            <div class="profile-card">
+                <div class="avatar" id="profileAvatar">👤</div>
+                <div class="nick" id="profileNick">Гость</div>
+                <div class="info">🆔 <span id="profileId">#GM0000</span></div>
+                <div class="info">📱 Telegram: <span id="profileTelegram">@username</span></div>
+                
+                <div class="stat-grid">
+                    <div class="item">
+                        <div class="num" id="pInvites">0</div>
+                        <div class="lbl">Приглашено</div>
+                    </div>
+                    <div class="item">
+                        <div class="num" id="pTickets">0</div>
+                        <div class="lbl">Тикеты</div>
+                    </div>
+                    <div class="item">
+                        <div class="num" id="pBalance">0</div>
+                        <div class="lbl">Баланс ₽</div>
+                    </div>
+                    <div class="item">
+                        <div class="num" id="pPlace">#--</div>
+                        <div class="lbl">Место в топе</div>
+                    </div>
+                </div>
+                
+                <button class="invite-btn" id="profileInviteBtn">👥 Пригласить друга</button>
+                
+                <div style="margin-top:16px;border-top:1px solid rgba(76,175,80,0.06);padding-top:12px;">
+                    <div style="font-size:12px;color:#6a8a6a;margin-bottom:8px;display:flex;justify-content:space-between;">
+                        <span>⭐ Отзывы пользователей</span>
+                        <span style="color:#fdd835;">★★★★★ 4.8</span>
+                    </div>
+                    <div class="reviews-scroll" id="reviewsScroll"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ПОМОЩЬ -->
+        <div class="tab-content" id="tabHelp">
+            <div class="help-section">
+                <h4>📋 Общие положения</h4>
+                <p>Сервис предоставляется в Mini App Telegram. Использование = согласие с условиями.</p>
+            </div>
+            <div class="help-section">
+                <h4>💰 Реферальная программа</h4>
+                <p><strong style="color:#fdd835;">+300 ₽</strong> за каждого приглашённого друга. Начисление сразу после запуска бота. Также <strong style="color:#69f0ae;">+50 тикетов</strong> в топ за каждого друга.</p>
+            </div>
+            <div class="help-section">
+                <h4>💳 Выплаты</h4>
+                <p>Заявка обрабатывается <strong style="color:#69f0ae;">24 часа</strong>. СБП или карта — без комиссии.</p>
+            </div>
+            <div class="help-section">
+                <h4>🔒 Защита данных</h4>
+                <p>Данные <strong style="color:#69f0ae;">НЕ передаются</strong> третьим лицам.</p>
+            </div>
+            <div class="help-section">
+                <h4>🚫 Запрещено</h4>
+                <ul>
+                    <li>Мультиаккаунтинг</li>
+                    <li>Боты как рефералы</li>
+                    <li>Автоматизированные скрипты</li>
+                </ul>
+                <p style="color:#fdd835;font-weight:600;">Нарушение → блокировка</p>
+            </div>
+        </div>
+
+        <div class="info-note">⏳ Выплаты в течение 24 часов</div>
     </div>
 </div>
 
-<!-- Модалка вывода -->
+<!-- Модалка -->
 <div class="modal-overlay" id="withdrawModal">
     <div class="modal">
-        <h3>💸 Оформление вывода</h3>
-        <label>Сумма (от 3000)</label>
+        <h3>💸 Вывод денег</h3>
+        <label>Сумма (от 3000 ₽)</label>
         <input type="number" id="withdrawAmount" value="3000" min="3000" step="100">
-
-        <label>Способ получения</label>
+        <label>Способ</label>
         <select id="withdrawMethod">
-            <option value="sbp">СБП (по номеру телефона)</option>
-            <option value="card">Прямо на карту</option>
+            <option value="sbp">СБП (телефон)</option>
+            <option value="card">Карта</option>
         </select>
-
-        <div id="methodField">
-            <label id="methodLabel">Номер телефона (СБП)</label>
-            <input type="text" id="methodValue" placeholder="+7 900 123 45 67">
-        </div>
-
+        <label id="methodLabel">Номер телефона</label>
+        <input type="text" id="methodValue" placeholder="+7 900 123 45 67">
         <div class="row-buttons">
             <button class="btn-cancel" id="modalCancel">Отмена</button>
             <button class="btn-submit" id="modalSubmit">Запросить</button>
         </div>
-        <div style="font-size:11px; color:#4a6a4a; text-align:center; margin-top:10px;">
-            Деньги поступят в течение 30 часов
-        </div>
+        <div style="font-size:11px;color:#4a6a4a;text-align:center;margin-top:12px;">⏳ 24 часа на обработку</div>
     </div>
 </div>
 
+<div class="confetti-container" id="confettiContainer"></div>
+
 <script>
-    // ============================================
-    // 1. БАЛАНС И ПОРОГ
-    // ============================================
-    let userBalance = parseInt(sessionStorage.getItem('swill_balance')) || 420;
-    const WITHDRAW_THRESHOLD = 3000;
+    // ============================================================
+    // 0. РЕФЕРАЛЬНАЯ СИСТЕМА
+    // ============================================================
 
-    const balanceEl = document.getElementById('balanceDisplay');
-    const withdrawBtn = document.getElementById('withdrawBtn');
-    const hintEl = document.getElementById('withdrawHint');
-    const modal = document.getElementById('withdrawModal');
+    // Читаем ?ref= из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const referrerId = urlParams.get('ref');
 
-    function updateBalanceUI() {
-        balanceEl.textContent = userBalance;
-        if (userBalance >= WITHDRAW_THRESHOLD) {
-            withdrawBtn.classList.remove('disabled');
-            hintEl.textContent = '✅ Вы можете вывести средства';
-        } else {
-            withdrawBtn.classList.add('disabled');
-            hintEl.textContent = `❌ Нужно ещё ${WITHDRAW_THRESHOLD - userBalance} бонусов`;
+    if (referrerId) {
+        localStorage.setItem('referrer_id', referrerId);
+        console.log('✅ Реферальный ID сохранён:', referrerId);
+    }
+
+    // Telegram WebApp
+    let tgUser = null;
+    let tgId = null;
+
+    try {
+        if (window.Telegram && window.Telegram.WebApp) {
+            tgUser = window.Telegram.WebApp.initDataUnsafe?.user;
+            if (tgUser) {
+                tgId = tgUser.id;
+                localStorage.setItem('swill_user_id', tgId);
+                console.log('✅ Telegram user loaded:', tgId);
+            }
         }
-        sessionStorage.setItem('swill_balance', userBalance);
-    }
-    updateBalanceUI();
-
-    // Имитация начисления (каждые 12 сек +70)
-    setInterval(() => {
-        userBalance += 70;
-        updateBalanceUI();
-    }, 12000);
-
-    // ============================================
-    // 2. ТАЙМЕР АКЦИИ (до 12:00)
-    // ============================================
-    function updatePromoTimer() {
-        const now = new Date();
-        let target = new Date(now);
-        target.setHours(12, 0, 0, 0);
-        if (now > target) target.setDate(target.getDate() + 1);
-        const diff = Math.max(0, target - now);
-        const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-        const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-        const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-        document.getElementById('promoTimer').textContent = `${h}:${m}:${s}`;
-    }
-    updatePromoTimer();
-    setInterval(updatePromoTimer, 1000);
-
-    // ============================================
-    // 3. ФЕЙКОВАЯ ЛЕНТА ВЫВОДОВ
-    // ============================================
-    const names = [
-        'Алексей', 'Максим', 'Дмитрий', 'Анна', 'Екатерина', 'Сергей', 
-        'Ольга', 'Иван', 'Мария', 'Андрей', 'Татьяна', 'Николай',
-        'Елена', 'Павел', 'Наталья', 'Артём', 'Ирина', 'Денис',
-        'Кристина', 'Владимир', 'Юлия', 'Григорий', 'Виктория', 'Роман',
-        'Анастасия', 'Константин', 'Светлана', 'Даниил', 'Евгения', 'Вадим'
-    ];
-
-    const amounts = [3200, 4500, 5100, 6800, 7300, 8200, 9400, 10100, 12500, 13800, 15200, 16700, 18400, 20300, 22600];
-
-    function randomItem(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
+    } catch (e) {
+        console.log('⚠️ Telegram WebApp not available');
     }
 
-    function randomTime() {
-        const mins = Math.floor(Math.random() * 60);
-        const secs = Math.floor(Math.random() * 60);
-        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    if (!tgId) {
+        tgId = localStorage.getItem('swill_user_id') || Math.floor(Math.random() * 1000000);
+        localStorage.setItem('swill_user_id', tgId);
     }
 
-    function randomDate() {
-        const d = new Date();
-        d.setMinutes(d.getMinutes() - Math.floor(Math.random() * 120));
-        return d;
+    function registerUser() {
+        const userId = localStorage.getItem('swill_user_id');
+        const refId = localStorage.getItem('referrer_id');
+
+        if (!refId) return;
+
+        fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: userId,
+                referrer_id: refId
+            })
+        })
+        .then(response => response.json())
+        .then(data => console.log('✅ Ответ бота:', data))
+        .catch(error => console.log('⚠️ Ошибка:', error));
     }
 
-    function formatTimeAgo(date) {
-        const diff = Math.floor((Date.now() - date.getTime()) / 60000);
-        if (diff < 1) return 'только что';
-        if (diff < 60) return `${diff} мин назад`;
-        const hours = Math.floor(diff / 60);
-        if (hours < 24) return `${hours} ч назад`;
-        return `${Math.floor(hours / 24)} д назад`;
+    registerUser();
+
+    // ============================================================
+    // 1. ПАРТИКЛЫ
+    // ============================================================
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 35; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 10 + 's';
+        p.style.animationDuration = (6 + Math.random() * 8) + 's';
+        p.style.width = (2 + Math.random() * 5) + 'px';
+        p.style.height = p.style.width;
+        particlesContainer.appendChild(p);
     }
 
-    function generateFeedItem() {
-        const name = randomItem(names);
-        const amount = randomItem(amounts);
-        const date = randomDate();
-        const timeAgo = formatTimeAgo(date);
-        return { name, amount, timeAgo };
+    // ============================================================
+    // 2. КОНФЕТТИ
+    // ============================================================
+    function createConfetti(colors, count = 80) {
+        const container = document.getElementById('confettiContainer');
+        const shapes = ['■', '●', '▲', '★', '♦', '◆', '⬟'];
+        for (let i = 0; i < count; i++) {
+            const el = document.createElement('div');
+            el.className = 'confetti ' + colors[Math.floor(Math.random() * colors.length)];
+            el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.top = '-10%';
+            el.style.fontSize = (8 + Math.random() * 16) + 'px';
+            el.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
+            el.style.animationDelay = (Math.random() * 0.8) + 's';
+            el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            container.appendChild(el);
+        }
+        setTimeout(() => { container.innerHTML = ''; }, 4500);
     }
 
-    const feedList = document.getElementById('feedList');
+    // ============================================================
+    // 3. СЛАЙДЫ
+    // ============================================================
+    const slideWelcome = document.getElementById('slideWelcome');
+    const slideAge = document.getElementById('slideAge');
+    const mainScreen = document.getElementById('mainScreen');
+    const btnWelcomeStart = document.getElementById('btnWelcomeStart');
+    const btnAgeContinue = document.getElementById('btnAgeContinue');
+    const ageCheck = document.getElementById('ageCheck');
+    const ageCheckWrap = document.getElementById('ageCheckWrap');
 
-    // Генерируем начальные 12 записей
-    let feedItems = [];
-    for (let i = 0; i < 12; i++) {
-        feedItems.push(generateFeedItem());
-    }
-    // Сортируем по времени (самые новые — первые)
-    feedItems.sort((a, b) => a.timeAgo.localeCompare(b.timeAgo));
+    btnWelcomeStart.addEventListener('click', () => {
+        slideWelcome.classList.remove('active');
+        slideAge.classList.add('active');
+    });
 
-    function renderFeed() {
-        feedList.innerHTML = '';
-        feedItems.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'feed-item';
-            div.innerHTML = `
-                <div class="feed-user">${item.name} <span>вывел(а)</span></div>
-                <div class="feed-amount">${item.amount.toLocaleString()} <small>₽</small></div>
-                <div class="feed-time">${item.timeAgo}</div>
-            `;
-            feedList.appendChild(div);
+    ageCheck.addEventListener('change', function() {
+        btnAgeContinue.classList.toggle('active', this.checked);
+    });
+
+    ageCheckWrap.querySelector('label').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const checkbox = document.getElementById('ageCheck');
+        checkbox.checked = !checkbox.checked;
+        btnAgeContinue.classList.toggle('active', checkbox.checked);
+    });
+
+    btnAgeContinue.addEventListener('click', () => {
+        if (!ageCheck.checked) return;
+        slideAge.classList.remove('active');
+        mainScreen.classList.add('active');
+        initApp();
+    });
+
+    // ============================================================
+    // 4. ОСНОВНАЯ ЛОГИКА
+    // ============================================================
+    function initApp() {
+        let balance = parseInt(localStorage.getItem('swill_balance')) || 0;
+        let tickets = parseInt(localStorage.getItem('swill_tickets')) || 0;
+        let invites = parseInt(localStorage.getItem('swill_invites')) || 0;
+        const WITHDRAW_THRESHOLD = 3000;
+
+        const balanceEl = document.getElementById('balanceDisplay');
+        const ticketDisplay = document.getElementById('ticketDisplay');
+        const inviteDisplay = document.getElementById('inviteDisplay');
+        const walletBalance = document.getElementById('walletBalance');
+        const walletTickets = document.getElementById('walletTickets');
+        const walletInvites = document.getElementById('walletInvites');
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const hintEl = document.getElementById('withdrawHint');
+
+        // ===== ОТЗЫВЫ =====
+        const reviewData = [
+            { name: 'SkyWolfWalker', stars: 5, text: 'Всё отлично! Деньги пришли быстро!' },
+            { name: 'Zayka_3', stars: 4, text: 'Хороший сервис, долго выводили, но пришли.' },
+            { name: 'MC Грегор', stars: 5, text: 'Лучшая подработка! Уже 3 раз вывожу!' },
+            { name: 'FrostByte', stars: 4, text: 'Неплохо, интерфейс можно улучшить.' },
+            { name: 'K1A', stars: 5, text: '🔥 За 2 недели вывел 15000 ₽!' }
+        ];
+
+        const avatarColors = ['#4caf50', '#e91e63', '#fdd835', '#2196f3', '#ff5722'];
+
+        function renderReviews() {
+            const container = document.getElementById('reviewsScroll');
+            container.innerHTML = '';
+            reviewData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'review-mini';
+                const stars = '★'.repeat(item.stars) + '☆'.repeat(5 - item.stars);
+                const color = avatarColors[index % avatarColors.length];
+                div.innerHTML = `
+                    <div class="review-top">
+                        <span class="r-avatar" style="background:${color};">${item.name.charAt(0)}</span>
+                        <span class="r-name">${item.name}</span>
+                        <span class="r-stars">${stars}</span>
+                    </div>
+                    <div class="review-text">${item.text}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        renderReviews();
+
+        function updateUI() {
+            balanceEl.textContent = balance;
+            ticketDisplay.textContent = tickets;
+            inviteDisplay.textContent = invites;
+            walletBalance.textContent = balance + ' ₽';
+            walletTickets.textContent = tickets;
+            walletInvites.textContent = invites;
+            document.getElementById('pTickets').textContent = tickets;
+            document.getElementById('pInvites').textContent = invites;
+            document.getElementById('pBalance').textContent = balance;
+            document.getElementById('leaderTickets').textContent = tickets;
+
+            const place = getPlace();
+            document.getElementById('pPlace').textContent = place;
+
+            if (balance >= WITHDRAW_THRESHOLD) {
+                withdrawBtn.classList.remove('disabled');
+                hintEl.textContent = '✅ Доступен вывод';
+            } else {
+                withdrawBtn.classList.add('disabled');
+                hintEl.textContent = `❌ Нужно ещё ${WITHDRAW_THRESHOLD - balance} ₽`;
+            }
+            localStorage.setItem('swill_balance', balance);
+            localStorage.setItem('swill_tickets', tickets);
+            localStorage.setItem('swill_invites', invites);
+            checkContestProgress();
+        }
+
+        // ===== КОНКУРС =====
+        let iphoneCompleted = false;
+
+        function checkContestProgress() {
+            const iphoneInvites = Math.min(invites, 15);
+            document.getElementById('iphoneInvites').textContent = iphoneInvites;
+            const iphonePercent = (iphoneInvites / 15 * 100);
+            document.getElementById('iphoneProgress').style.width = iphonePercent + '%';
+            document.getElementById('iphoneLabel').textContent = Math.round(iphonePercent) + '%';
+
+            if (iphoneInvites >= 15 && !iphoneCompleted) {
+                iphoneCompleted = true;
+                document.getElementById('iphoneStatus').textContent = '✅ УЧАСТВУЕТЕ!';
+                document.getElementById('iphoneStatus').style.color = '#ce93d8';
+                document.getElementById('iphoneStatus').className = 'status-done';
+                document.getElementById('iphoneLabel').textContent = '🎉 ГОТОВО!';
+                document.getElementById('iphoneLabel').style.color = '#ce93d8';
+                document.getElementById('iphoneLabel').className = 'label-complete';
+                document.getElementById('iphoneGlow').classList.add('active');
+                createConfetti(['confetti-purple', 'confetti-pink', 'confetti-gold'], 120);
+                setTimeout(() => { document.getElementById('iphoneGlow').classList.remove('active'); }, 2000);
+            }
+        }
+
+        function getPlace() {
+            const allData = [...leaderData];
+            if (tickets > 0) allData.push({ name: profileNick, tickets: tickets });
+            allData.sort((a, b) => b.tickets - a.tickets);
+            const index = allData.findIndex(item => item.name === profileNick && item.tickets === tickets);
+            return index >= 0 ? '#' + (index + 1) : '#--';
+        }
+
+        // ===== ЛЕНТА =====
+        const timeOptions = ['только что', '1 мин', '2 мин', '5 мин', '10 мин', '15 мин', '20 мин', '30 мин', '45 мин', '1 ч', '2 ч', '3 ч', '5 ч', '8 ч', '12 ч', 'вчера'];
+        const amountOptions = [3200,4500,5100,6800,7300,8200,9400,10100,12500,13800,15200,16700,18400,20300,22600,25400,28900,31200,34700,38900,41200,45600,50200,57800];
+
+        const feedNicks = ['MC Грегор', 'NektoS', 'SkyWolfWalker', 'K1A', 'Zayka_3', 'CryptoKing', 'Ghost_FPS', 'Lil_Pump', 'Boss_420', 'DiamondHands', 'MoonBoy', 'CyberPunk', 'FrostByte', 'ShadowStrike', 'NightHawk', 'StormBreaker'];
+
+        function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function genFeedCard() {
+            return { name: randomItem(feedNicks), amount: randomItem(amountOptions), time: randomItem(timeOptions) };
+        }
+
+        const feedScroll = document.getElementById('feedScroll');
+        let feedItems = [];
+        for (let i = 0; i < 10; i++) feedItems.push(genFeedCard());
+
+        function renderFeed() {
+            feedScroll.innerHTML = '';
+            feedItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'feed-card';
+                card.innerHTML = `
+                    <div class="f-name">${item.name}</div>
+                    <div class="f-amount">${item.amount.toLocaleString()} ₽</div>
+                    <div class="f-time">${item.time}</div>
+                `;
+                feedScroll.appendChild(card);
+            });
+        }
+        renderFeed();
+
+        setInterval(() => {
+            feedItems.unshift(genFeedCard());
+            if (feedItems.length > 20) feedItems.pop();
+            renderFeed();
+        }, 8000 + Math.random() * 7000);
+
+        // ===== ОНЛАЙН =====
+        const onlineUsers = ['Екатерина', 'FrostByte', 'ShadowStrike', 'Zayka_3', 'NightHawk', 'StormBreaker', 'K1A', 'VenomX', 'RageQuit', 'MC Грегор', 'MoonBoy', 'CyberPunk', 'Ghost_FPS', 'Boss_420', 'DiamondHands'];
+        const onlineColors = ['#1b5e20','#2e7d32','#388e3c','#43a047','#4caf50','#66bb6a','#81c784','#a5d6a7'];
+
+        function renderOnline() {
+            const ribbon = document.getElementById('onlineRibbon');
+            ribbon.innerHTML = '';
+            const count = Math.floor(Math.random() * 8) + 6;
+            const totalOnline = Math.floor(Math.random() * 150) + 80;
+            document.getElementById('onlineCounter').textContent = totalOnline + ' в сети';
+            document.getElementById('onlineCount').textContent = totalOnline;
+            const shuffled = [...onlineUsers].sort(() => Math.random() - 0.5);
+            shuffled.slice(0, count).forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'online-user';
+                const color = randomItem(onlineColors);
+                div.innerHTML = `
+                    <span class="dot-online"></span>
+                    <span class="avatar-mini" style="background:${color};">${name.charAt(0).toUpperCase()}</span>
+                    ${name}
+                `;
+                ribbon.appendChild(div);
+            });
+        }
+        renderOnline();
+        setInterval(renderOnline, 10000);
+
+        // ===== ТОП =====
+        const leaderData = [
+            { name: 'SkyWolfWalker', tickets: 5000 },
+            { name: 'K1A', tickets: 4200 },
+            { name: 'Zayka_3', tickets: 3500 },
+            { name: 'MC Грегор', tickets: 2800 },
+            { name: 'NektoS', tickets: 2200 },
+            { name: 'CryptoKing', tickets: 1700 },
+            { name: 'Ghost_FPS', tickets: 1300 },
+            { name: 'Lil_Pump', tickets: 900 },
+            { name: 'Boss_420', tickets: 600 },
+            { name: 'ShadowStrike', tickets: 350 }
+        ];
+
+        function getUserRank() {
+            const allData = [...leaderData];
+            if (tickets > 0) allData.push({ name: profileNick, tickets: tickets, isUser: true });
+            allData.sort((a, b) => b.tickets - a.tickets);
+            return allData;
+        }
+
+        function renderLeaders() {
+            const container = document.getElementById('leadersChart');
+            container.innerHTML = '';
+            const sorted = getUserRank();
+            const maxTickets = sorted.length > 0 ? sorted[0].tickets : 1;
+            sorted.slice(0, 15).forEach((item, idx) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'chart-bar-wrap' + (item.isUser ? ' user-row' : '');
+                const percent = maxTickets > 0 ? (item.tickets / maxTickets * 100) : 0;
+                const colors = ['#fdd835', '#c0c0c0', '#cd7f32', '#4caf50', '#4caf50', '#4caf50', '#4caf50', '#4caf50', '#4caf50', '#4caf50'];
+                const color = idx < 3 ? colors[idx] : colors[3];
+                wrap.innerHTML = `
+                    <div class="rank">${idx < 3 ? ['🥇','🥈','🥉'][idx] : '#'+(idx+1)}</div>
+                    <div class="cname">${item.name} ${item.isUser ? '👈' : ''}</div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="background:${color};"></div>
+                    </div>
+                    <div class="cvalue">${item.tickets}</div>
+                `;
+                container.appendChild(wrap);
+                setTimeout(() => {
+                    const fill = wrap.querySelector('.bar-fill');
+                    if (fill) fill.style.width = percent + '%';
+                }, 100 + idx * 40);
+            });
+        }
+        renderLeaders();
+
+        // ===== ИСТОРИЯ =====
+        let historyData = JSON.parse(localStorage.getItem('swill_history')) || [];
+
+        function renderWalletHistory() {
+            const container = document.getElementById('walletHistory');
+            container.innerHTML = '';
+            if (historyData.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:#4a6a4a;padding:16px;font-size:13px;">Нет операций</div>';
+                return;
+            }
+            historyData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div>
+                        <div class="h-method">${item.method}</div>
+                        <div class="h-date">${item.date}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="h-amount">${item.amount > 0 ? '+' : ''}${item.amount.toLocaleString()} ₽</div>
+                        <div class="h-status ${item.status === 'В обработке' ? 'pending' : 'done'}">${item.status}</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        renderWalletHistory();
+
+        // ===== ПРОФИЛЬ =====
+        let profileNick = localStorage.getItem('swill_nick') || 'Гость';
+        document.getElementById('profileNick').textContent = profileNick;
+        document.getElementById('profileTelegram').textContent = '@' + profileNick.toLowerCase().replace(/\s/g, '');
+        document.getElementById('profileId').textContent = '#GM' + String(Math.floor(Math.random() * 9000) + 1000);
+
+        const avatarEl = document.getElementById('profileAvatar');
+        avatarEl.style.background = `linear-gradient(135deg, ${randomItem(onlineColors)}, ${randomItem(onlineColors)})`;
+        avatarEl.textContent = profileNick.charAt(0).toUpperCase();
+
+        // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
+        const userId = localStorage.getItem('swill_user_id') || Math.floor(Math.random() * 1000000);
+        const refLink = 'https://t.me/Green_marketBot?start=' + userId;
+        document.getElementById('refLinkMiniText').textContent = refLink;
+
+        // ===== КНОПКА КОПИРОВАТЬ =====
+        document.getElementById('copyRefLinkMini').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const link = document.getElementById('refLinkMiniText').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                this.textContent = '✅ Скопировано!';
+                setTimeout(() => {
+                    this.textContent = '📋 Копировать';
+                }, 2000);
+                createConfetti(['confetti-green', 'confetti-gold'], 30);
+            }).catch(() => {
+                alert('🔗 Ссылка: ' + link);
+            });
         });
-    }
-    renderFeed();
 
-    // Каждые 8-15 секунд добавляем новый фейковый вывод (в начало списка)
-    function addNewFakeWithdraw() {
-        const newItem = generateFeedItem();
-        feedItems.unshift(newItem);
-        if (feedItems.length > 25) feedItems.pop(); // ограничиваем ленту
-        renderFeed();
-    }
-
-    setInterval(addNewFakeWithdraw, Math.random() * 7000 + 8000);
-
-    // Иногда чередуем с большими суммами
-    setInterval(() => {
-        const bigAmounts = [28000, 32100, 40500, 53000, 67200, 81000];
-        const item = {
-            name: randomItem(names),
-            amount: randomItem(bigAmounts),
-            timeAgo: 'только что'
+        // ===== ПРИГЛАШЕНИЕ =====
+        window.addRealInvite = function() {
+            balance += 300;
+            tickets += 50;
+            invites += 1;
+            const newHist = {
+                method: '📥 Приглашение друга',
+                date: new Date().toLocaleDateString('ru-RU') + ' ' + new Date().toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}),
+                amount: 300,
+                status: '✅ Зачислено'
+            };
+            historyData.unshift(newHist);
+            if (historyData.length > 20) historyData.pop();
+            localStorage.setItem('swill_history', JSON.stringify(historyData));
+            updateUI();
+            renderLeaders();
+            renderWalletHistory();
+            createConfetti(['confetti-green', 'confetti-gold', 'confetti-purple'], 60);
         };
-        feedItems.unshift(item);
-        if (feedItems.length > 25) feedItems.pop();
-        renderFeed();
-    }, 45000);
 
-    // ============================================
-    // 4. МОДАЛКА ВЫВОДА
-    // ============================================
-    withdrawBtn.addEventListener('click', () => {
-        if (userBalance < WITHDRAW_THRESHOLD) return;
-        modal.classList.add('active');
-    });
+        document.getElementById('earnInviteBtn').addEventListener('click', function() {
+            alert(`🔗 Ваша реферальная ссылка:\n${refLink}\n\nПоделитесь с друзьями!\n\n💰 +300 ₽ за каждого\n🎯 +50 тикетов в топ\n\n⚠️ Деньги зачислятся только когда друг перейдет по ссылке и запустит бота!`);
+        });
 
-    document.getElementById('withdrawMethod').addEventListener('change', function() {
-        const label = document.getElementById('methodLabel');
-        const input = document.getElementById('methodValue');
-        if (this.value === 'sbp') {
-            label.textContent = 'Номер телефона (СБП)';
-            input.placeholder = '+7 900 123 45 67';
-        } else {
-            label.textContent = 'Номер карты';
-            input.placeholder = '1234 5678 9012 3456';
+        document.getElementById('profileInviteBtn').addEventListener('click', function() {
+            alert(`🔗 Ваша реферальная ссылка:\n${refLink}\n\nПоделитесь с друзьями!\n\n💰 +300 ₽ за каждого\n🎯 +50 тикетов в топ\n\n⚠️ Деньги зачислятся только когда друг перейдет по ссылке и запустит бота!`);
+        });
+
+        // ===== ТАЙМЕР =====
+        function updateTimer() {
+            const now = new Date();
+            let target = new Date(now);
+            target.setHours(15, 0, 0, 0);
+            if (now > target) target.setDate(target.getDate() + 1);
+            const diff = Math.max(0, target - now);
+            document.getElementById('promoTimer').textContent = 
+                String(Math.floor(diff / 3600000)).padStart(2,'0') + ':' +
+                String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0') + ':' +
+                String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
         }
-    });
+        updateTimer();
+        setInterval(updateTimer, 1000);
 
-    document.getElementById('modalCancel').addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
+        // ===== ВКЛАДКИ =====
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById(this.dataset.tab).classList.add('active');
+                if (this.dataset.tab === 'tabLeaders') renderLeaders();
+                if (this.dataset.tab === 'tabWallet') renderWalletHistory();
+            });
+        });
 
-    document.getElementById('modalSubmit').addEventListener('click', () => {
-        const amount = parseInt(document.getElementById('withdrawAmount').value);
-        const method = document.getElementById('withdrawMethod').value;
-        const value = document.getElementById('methodValue').value.trim();
+        // ===== МОДАЛКА =====
+        const modal = document.getElementById('withdrawModal');
+        const modalSubmit = document.getElementById('modalSubmit');
+        const withdrawAmount = document.getElementById('withdrawAmount');
 
-        if (amount < 3000 || isNaN(amount)) {
-            alert('Минимум 3000 ₽');
-            return;
-        }
-        if (!value) {
-            alert('Заполните реквизиты');
-            return;
-        }
+        withdrawBtn.addEventListener('click', () => {
+            if (balance < WITHDRAW_THRESHOLD) return;
+            modal.classList.add('active');
+        });
 
-        alert(`✅ Заявка на ${amount} ₽ принята!\nСпособ: ${method === 'sbp' ? 'СБП' : 'Карта'}\nРеквизиты: ${value}\n⏳ Ожидайте 30 часов.`);
+        document.getElementById('modalCancel').addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-        userBalance -= amount;
-        updateBalanceUI();
-        modal.classList.remove('active');
-    });
+        withdrawAmount.addEventListener('input', function() {
+            const val = parseInt(this.value);
+            if (val < 3000 || isNaN(val)) {
+                modalSubmit.classList.add('error');
+                modalSubmit.textContent = '❌ Минимум 3000 ₽';
+            } else if (val > balance) {
+                modalSubmit.classList.add('error');
+                modalSubmit.textContent = '❌ Недостаточно средств';
+            } else {
+                modalSubmit.classList.remove('error');
+                modalSubmit.textContent = '✅ Запросить';
+            }
+        });
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
-    });
+        modalSubmit.addEventListener('click', function() {
+            const amount = parseInt(withdrawAmount.value);
+            const method = document.getElementById('withdrawMethod').value;
+            const value = document.getElementById('methodValue').value.trim();
 
-    // ============================================
-    // 5. ДОП. ИЛЛЮЗИЯ: ПЕРИОДИЧЕСКИ ОБНОВЛЯЕМ "СРОК АКЦИИ" (уже в таймере)
-    // ============================================
-    console.log('🔥 SWILL ACTIVE: фейковые выводы генерируются автоматически.');
+            if (amount < 3000 || isNaN(amount)) {
+                this.classList.add('error');
+                this.textContent = '❌ Минимум 3000 ₽';
+                createConfetti(['confetti-red', 'confetti-red', 'confetti-red'], 70);
+                setTimeout(() => {
+                    this.classList.remove('error');
+                    this.textContent = '✅ Запросить';
+                }, 2000);
+                return;
+            }
+            if (amount > balance) {
+                this.classList.add('error');
+                this.textContent = '❌ Недостаточно средств';
+                createConfetti(['confetti-red', 'confetti-red'], 60);
+                setTimeout(() => {
+                    this.classList.remove('error');
+                    this.textContent = '✅ Запросить';
+                }, 2000);
+                return;
+            }
+            if (!value) {
+                this.classList.add('error');
+                this.textContent = '❌ Заполните реквизиты';
+                createConfetti(['confetti-red', 'confetti-red'], 50);
+                setTimeout(() => {
+                    this.classList.remove('error');
+                    this.textContent = '✅ Запросить';
+                }, 2000);
+                return;
+            }
+
+            const methodLabel = method === 'sbp' ? 'СБП ' + value.slice(0, 10) + '****' : 'Карта ****' + value.slice(-4);
+            alert(`✅ Заявка на ${amount.toLocaleString()} ₽ принята!\nСпособ: ${method === 'sbp' ? 'СБП' : 'Карта'}\n⏳ Ожидайте 24 часа.`);
+
+            const newHist = {
+                method: methodLabel,
+                date: new Date().toLocaleDateString('ru-RU') + ' ' + new Date().toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}),
+                amount: -amount,
+                status: '⏳ В обработке'
+            };
+            historyData.unshift(newHist);
+            if (historyData.length > 20) historyData.pop();
+            localStorage.setItem('swill_history', JSON.stringify(historyData));
+
+            balance -= amount;
+            updateUI();
+            renderLeaders();
+            renderWalletHistory();
+            modal.classList.remove('active');
+            createConfetti(['confetti-green', 'confetti-gold', 'confetti-purple'], 50);
+        });
+
+        document.getElementById('withdrawMethod').addEventListener('change', function() {
+            const label = document.getElementById('methodLabel');
+            const input = document.getElementById('methodValue');
+            if (this.value === 'sbp') {
+                label.textContent = 'Номер телефона (СБП)';
+                input.placeholder = '+7 900 123 45 67';
+            } else {
+                label.textContent = 'Номер карты';
+                input.placeholder = '1234 5678 9012 3456';
+            }
+        });
+
+        updateUI();
+        checkContestProgress();
+
+        console.log('🔥 GREEN MARKET ЗАПУЩЕН');
+        console.log('👤 Пользователь:', profileNick);
+        console.log('💰 Баланс:', balance, '₽');
+        console.log('📱 Реферальная ссылка:', refLink);
+        console.log('💡 Для теста вызовите addRealInvite() в консоли');
+        console.log('✅ Полная версия с реферальной системой!');
+    }
 </script>
 </body>
 </html>
