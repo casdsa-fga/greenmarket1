@@ -1,0 +1,618 @@
+```html
+<div id="richesta-transition">
+
+  <!-- Стрелка -->
+  <div class="rt-top-arrow">↗</div>
+
+  <div class="rt-content">
+
+    <!-- Telegram иконка -->
+    <div class="rt-logo">
+      <svg viewBox="0 0 240 240">
+        <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+        <path d="M49 116L181 65c7-2.7 13 1.6 10.7 10.3l-22.5 106c-1.7 8-6 9.9-12 6.1l-32.8-24.2-15.8 15.3c-1.8 1.8-3.2 3.2-6.5 3.2l2.3-33.4 60.9-55c2.7-2.4-.6-3.7-4.1-1.3l-75.2 47.4-32.4-10.1c-7.1-2.2-7.2-7.1 1.4-10.3z" fill="white"/>
+      </svg>
+    </div>
+
+    <!-- Надпись -->
+    <div class="rt-badge">
+      TELEGRAM
+    </div>
+
+    <!-- Инструкция -->
+    <div class="rt-card">
+
+      <!-- Пункт 1 -->
+      <div class="rt-step">
+
+        <div class="rt-number">
+          01
+        </div>
+
+        <div class="rt-step-text">
+
+          <strong>
+            Нажми на три точки
+          </strong>
+
+          <span>
+            В правом верхнем углу TikTok
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="rt-line"></div>
+
+      <!-- Пункт 2 -->
+      <div class="rt-step">
+
+        <div class="rt-number">
+          02
+        </div>
+
+        <div class="rt-step-text">
+
+          <strong>
+            Выбери «Открыть в браузере»
+          </strong>
+
+          <span>
+            Telegram откроется автоматически
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+(function () {
+
+  /*
+   * ==========================================
+   * TELEGRAM ССЫЛКА
+   * ==========================================
+   */
+
+  var telegramURL = "https://t.me/RICHESTA";
+
+
+  /*
+   * ==========================================
+   * ОПРЕДЕЛЯЕМ TIKTOK
+   * ==========================================
+   */
+
+  var userAgent =
+    navigator.userAgent ||
+    navigator.vendor ||
+    window.opera;
+
+  userAgent = userAgent.toLowerCase();
+
+  var isTikTok =
+    userAgent.indexOf("tiktok") !== -1 ||
+    userAgent.indexOf("musical_ly") !== -1 ||
+    userAgent.indexOf("musically") !== -1;
+
+
+  /*
+   * ==========================================
+   * МГНОВЕННЫЙ ПЕРЕХОД В TELEGRAM
+   * ==========================================
+   *
+   * Никакой задержки.
+   */
+
+  if (!isTikTok) {
+
+    window.location.replace(telegramURL);
+
+  }
+
+})();
+
+</script>
+
+
+<style>
+
+/* ==========================================
+   ОСНОВНОЙ БЛОК
+========================================== */
+
+#richesta-transition {
+
+  min-height: 100vh;
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(34,158,217,.18) 0%,
+      rgba(34,158,217,.06) 22%,
+      transparent 48%
+    ),
+
+    linear-gradient(
+      145deg,
+      #07090d 0%,
+      #0b1018 48%,
+      #05070a 100%
+    );
+
+  color: #ffffff;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  display: flex;
+
+  justify-content: center;
+
+}
+
+
+/* ==========================================
+   СВЕЧЕНИЕ
+========================================== */
+
+#richesta-transition::before {
+
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+
+  height: 420px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(34,158,217,.12);
+
+  filter:
+    blur(90px);
+
+  top: 25%;
+
+  left: 50%;
+
+  transform:
+    translate(-50%, -50%);
+
+  pointer-events: none;
+
+}
+
+
+/* ==========================================
+   СТРЕЛКА
+========================================== */
+
+.rt-top-arrow {
+
+  position: absolute;
+
+  top: 20px;
+
+  right: 25px;
+
+  font-size: 58px;
+
+  font-weight: 300;
+
+  color: #ffffff;
+
+  line-height: 1;
+
+  transform:
+    rotate(-8deg);
+
+  z-index: 5;
+
+}
+
+
+/* ==========================================
+   КОНТЕНТ
+========================================== */
+
+.rt-content {
+
+  width: 100%;
+
+  max-width: 520px;
+
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  padding:
+    70px 22px
+    35px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+/* ==========================================
+   TELEGRAM ИКОНКА
+========================================== */
+
+.rt-logo {
+
+  width: 112px;
+
+  height: 112px;
+
+  margin-top: 65px;
+
+  border-radius: 50%;
+
+  filter:
+
+    drop-shadow(
+      0 0 12px
+      rgba(34,158,217,.55)
+    )
+
+    drop-shadow(
+      0 0 35px
+      rgba(34,158,217,.22)
+    );
+
+  animation:
+    rt-float 3s ease-in-out infinite;
+
+}
+
+
+.rt-logo svg {
+
+  width: 100%;
+
+  height: 100%;
+
+}
+
+
+/* ==========================================
+   АНИМАЦИЯ
+========================================== */
+
+@keyframes rt-float {
+
+  0%,
+  100% {
+
+    transform:
+      translateY(0);
+
+  }
+
+  50% {
+
+    transform:
+      translateY(-7px);
+
+  }
+
+}
+
+
+/* ==========================================
+   TELEGRAM BADGE
+========================================== */
+
+.rt-badge {
+
+  margin-top: 28px;
+
+  padding:
+    8px 15px;
+
+  border-radius: 50px;
+
+  background:
+    rgba(34,158,217,.10);
+
+  border:
+    1px solid
+    rgba(34,158,217,.35);
+
+  color:
+    #5bc7f5;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+}
+
+
+/* ==========================================
+   КАРТОЧКА
+========================================== */
+
+.rt-card {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding:
+    8px 20px;
+
+  border-radius: 22px;
+
+  background:
+
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.075),
+      rgba(255,255,255,.025)
+    );
+
+  border:
+    1px solid
+    rgba(255,255,255,.08);
+
+  box-shadow:
+
+    0 20px 60px
+    rgba(0,0,0,.25),
+
+    inset 0 1px 0
+    rgba(255,255,255,.04);
+
+  backdrop-filter:
+    blur(12px);
+
+}
+
+
+/* ==========================================
+   ШАГ
+========================================== */
+
+.rt-step {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 17px;
+
+  padding:
+    20px 0;
+
+}
+
+
+/* ==========================================
+   НОМЕР
+========================================== */
+
+.rt-number {
+
+  width: 45px;
+
+  height: 45px;
+
+  min-width: 45px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background:
+
+    linear-gradient(
+      135deg,
+      #229ed9,
+      #1478b5
+    );
+
+  box-shadow:
+
+    0 7px 20px
+    rgba(34,158,217,.22);
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  letter-spacing: .5px;
+
+}
+
+
+/* ==========================================
+   ТЕКСТ
+========================================== */
+
+.rt-step-text {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+}
+
+
+.rt-step-text strong {
+
+  font-size: 16px;
+
+  line-height: 1.25;
+
+}
+
+
+.rt-step-text span {
+
+  color:
+    #7f8998;
+
+  font-size: 13px;
+
+  line-height: 1.3;
+
+}
+
+
+/* ==========================================
+   ЛИНИЯ
+========================================== */
+
+.rt-line {
+
+  height: 1px;
+
+  background:
+    rgba(255,255,255,.07);
+
+  margin-left: 62px;
+
+}
+
+
+/* ==========================================
+   МОБИЛЬНАЯ ВЕРСИЯ
+========================================== */
+
+@media (max-width: 480px) {
+
+  .rt-content {
+
+    padding:
+      55px 18px
+      30px;
+
+  }
+
+
+  .rt-top-arrow {
+
+    top: 15px;
+
+    right: 18px;
+
+    font-size: 52px;
+
+  }
+
+
+  .rt-logo {
+
+    width: 100px;
+
+    height: 100px;
+
+    margin-top: 65px;
+
+  }
+
+
+  .rt-card {
+
+    padding:
+      6px 17px;
+
+    border-radius: 19px;
+
+  }
+
+
+  .rt-step {
+
+    gap: 13px;
+
+  }
+
+
+  .rt-number {
+
+    width: 42px;
+
+    height: 42px;
+
+    min-width: 42px;
+
+  }
+
+
+  .rt-step-text strong {
+
+    font-size: 15px;
+
+  }
+
+
+  .rt-step-text span {
+
+    font-size: 12px;
+
+  }
+
+}
+
+
+/* ==========================================
+   МАЛЕНЬКИЙ ЭКРАН
+========================================== */
+
+@media (max-height: 700px) {
+
+  .rt-logo {
+
+    margin-top: 25px;
+
+    width: 85px;
+
+    height: 85px;
+
+  }
+
+}
+
+</style>
+```
